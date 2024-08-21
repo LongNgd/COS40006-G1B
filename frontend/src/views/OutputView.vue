@@ -1,6 +1,6 @@
 <template>
     <div>
         <h1>Result</h1>
-        <a-skeleton active />
+        <a-empty />
     </div>
 </template>

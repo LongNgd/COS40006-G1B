@@ -31,7 +31,7 @@ const steps = [
     content: 'Upload Data',
   },
   {
-    title: 'Configurating',
+    title: 'Configuration',
     content: 'Configurating',
   },
   {
