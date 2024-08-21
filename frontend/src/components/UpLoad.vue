@@ -11,8 +11,8 @@
     >
       <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
       <div v-else>
-        <loading-outlined v-if="loading"></loading-outlined>
-        <plus-outlined v-else></plus-outlined>
+        <LoadingOutlined v-if="loading"/>
+        <PlusOutlined v-else/>
         <div class="ant-upload-text">Upload</div>
       </div>
     </a-upload>
@@ -20,6 +20,7 @@
   <script setup>
   import { ref } from 'vue';
   import { message } from 'ant-design-vue';
+  import { LoadingOutlined, PlusOutlined } from '@ant-design/icons-vue';
   function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -57,18 +58,3 @@
     return isJpgOrPng && isLt2M;
   };
   </script>
-  <style scoped>
-  .avatar-uploader > .ant-upload {
-    width: 128px;
-    height: 128px;
-  }
-  .ant-upload-select-picture-card i {
-    font-size: 32px;
-    color: #999;
-  }
-  
-  .ant-upload-select-picture-card .ant-upload-text {
-    margin-top: 8px;
-    color: #666;
-  }
-  </style>
