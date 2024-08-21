@@ -5,10 +5,11 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <div>
     <header class="banner">
-      <img alt="Vue logo" src="@/assets/logo.svg" width="100" height="100" />
+      <img alt="Vue logo" src="@/assets/swinburne.png" width="150" height="75" />
 
       <nav>
         <RouterLink class="menu" to="/">Home</RouterLink>
+        <RouterLink class="menu" to="/project">Project</RouterLink>
         <RouterLink class="menu" to="/login">Login</RouterLink>
         <RouterLink class="menu" to="/register">Register</RouterLink>
       </nav>
@@ -22,7 +23,7 @@ import { RouterLink, RouterView } from 'vue-router'
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
+  padding: 20px 40px 0 40px;
 }
 
 nav {
