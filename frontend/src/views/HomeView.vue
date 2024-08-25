@@ -1,11 +1,5 @@
 <script setup>
-import { useRouter } from 'vue-router';
 import { SettingOutlined, UploadOutlined, DesktopOutlined, FileDoneOutlined } from '@ant-design/icons-vue';
-const router = useRouter();
-
-const process = () => {
-  router.push('/setting');
-}
 </script>
 
 <template>
@@ -18,7 +12,7 @@ const process = () => {
               <h1>
                 Data Visualization Tool
               </h1>
-              <a-button type="primary" @click="process">Get Started</a-button>
+              <a-button type="primary" @click="() => $router.push('/setting')">Get Started</a-button>
             </div>
           </div>
         </div>

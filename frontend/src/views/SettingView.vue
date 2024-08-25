@@ -1,50 +1,31 @@
 <template>
     <div class="p-3">
-        <a-steps :current="current" :items="items"></a-steps>
-        <a-card class="my-3">
-            <component :is="steps[current].content" />
-        </a-card>
-        <div class="steps-action">
-            <a-button v-if="current < steps.length - 1" type="primary" @click="next">Next</a-button>
-            <a-button v-if="current == steps.length - 1" type="primary" @click="result">
-                Done
-            </a-button>
-            <a-button v-if="current > 0" style="margin-left: 8px" @click="prev">Previous</a-button>
-        </div>
+        <a-tabs v-model="activeKey" tabPosition="left" size="large">
+            <a-tab-pane key="1">
+                <template #tab>
+                    <span>
+                        <VideoCameraOutlined />
+                        Camera
+                    </span>
+                </template>
+                <CameraUpload />
+            </a-tab-pane>
+            <a-tab-pane key="2">
+                <template #tab>
+                    <span>
+                        <LaptopOutlined />
+                        Deivce
+                    </span>
+                </template>
+                <DeivceUpload />
+            </a-tab-pane>
+        </a-tabs>
     </div>
 </template>
 <script setup>
-import { ref, h } from 'vue';
-import { useRouter } from 'vue-router';
-import Upload from '../components/UploadVideo.vue';
-
-const router = useRouter();
-const current = ref(0);
-const next = () => {
-    current.value++;
-};
-const prev = () => {
-    current.value--;
-};
-const steps = [
-    {
-        title: 'Upload',
-        content: h(Upload),
-    },
-    {
-        title: 'Configuration',
-        content: 'Configurating',
-    },
-    {
-        title: 'Visualize',
-        content: 'Visualization Screen',
-    },
-];
-const items = steps.map(item => ({
-    key: item.title,
-    title: item.title,
-}));
-const result = () => {
-    router.push('/result');
-};
+import { ref } from 'vue';
+import { VideoCameraOutlined, LaptopOutlined } from '@ant-design/icons-vue';
+import DeivceUpload from '../components/DeviceUpload.vue';
+import CameraUpload from '@/components/CameraUpload.vue';
+const activeKey = ref('1');
 </script>

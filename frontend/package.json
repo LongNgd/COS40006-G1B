@@ -11,6 +11,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@display-studio/vue-player": "^0.0.6",
     "ant-design-vue": "^4.2.3",
     "bootstrap": "^5.3.3",
     "jquery": "^3.7.1",

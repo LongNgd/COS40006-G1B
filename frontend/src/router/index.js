@@ -5,6 +5,7 @@ import RegisterView from '@/views/RegisterView.vue'
 import OutputView from '@/views/OutputView.vue'
 import SettingView from '@/views/SettingView.vue'
 import ProjectView from '@/views/ProjectView.vue'
+import ReportView from '@/views/ReportView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +34,11 @@ const router = createRouter({
       path: '/setting',
       name: 'setting',
       component: SettingView
+    },
+    {
+      path: '/report',
+      name: 'report',
+      component: ReportView
     },
     {
       path: '/result',

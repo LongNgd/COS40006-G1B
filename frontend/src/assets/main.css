@@ -35,6 +35,7 @@ body {
 .hero_area {
   background-image: url(background.jpg);
   background-size: cover;
+  height: 500px;
 }
 
 .center-content {
