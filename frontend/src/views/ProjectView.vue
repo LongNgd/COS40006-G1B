@@ -2,17 +2,17 @@
     <div style="background-color: #ececec; padding: 20px">
         <a-row :gutter="16">
             <a-col :span="6">
-                <a-card title="Project 1" :bordered="false">
+                <a-card hoverable title="Project 1" :bordered="false" @click="project">
                     <p>card content</p>
                 </a-card>
             </a-col>
             <a-col :span="6">
-                <a-card title="Project 2" :bordered="false">
+                <a-card hoverable title="Project 2" :bordered="false" @click="project">
                     <p>card content</p>
                 </a-card>
             </a-col>
             <a-col :span="6">
-                <a-card title="Project 3" :bordered="false">
+                <a-card hoverable title="Project 3" :bordered="false" @click="project">
                     <p>card content</p>
                 </a-card>
             </a-col>
@@ -28,6 +28,12 @@
 </template>
 <script setup>
 import { PlusOutlined } from '@ant-design/icons-vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const project = () => {
+    router.push('/result');
+}
 </script>
 <style scoped>
 .btn-size {

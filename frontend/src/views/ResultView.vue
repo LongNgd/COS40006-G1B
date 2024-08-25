@@ -1,5 +1,5 @@
 <template>
-    <a-page-header title="Result" @back="() => $router.push('/setting')">
+    <a-page-header title="Result" @back="() => $router.go(-1)">
         <a-flex justify="center">
             <VuePlayer class="vue-player" :sources="sources" :togglePlayOnClick="true" :loop="true">
                 <ControlVideo />
