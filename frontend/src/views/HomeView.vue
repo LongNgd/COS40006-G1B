@@ -9,9 +9,7 @@ import { SettingOutlined, UploadOutlined, DesktopOutlined, FileDoneOutlined } fr
         <div class="row">
           <div class="col-md-7">
             <div class="center-content">
-              <h1>
-                Data Visualization Tool
-              </h1>
+              <a-typography-title>Data Visualization Tool</a-typography-title>
               <a-button type="primary" @click="() => $router.push('/setting')">Get Started</a-button>
             </div>
           </div>

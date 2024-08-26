@@ -3,17 +3,32 @@
         <a-row :gutter="16">
             <a-col :span="6">
                 <a-card hoverable title="Project 1" :bordered="false" @click="project">
-                    <p>card content</p>
+                    <template #extra>
+                        <a-typography-text type="secondary">
+                            Last saved: 2 days ago
+                        </a-typography-text>
+                    </template>
+                    <img width="300" src="../assets/background.png" />
                 </a-card>
             </a-col>
             <a-col :span="6">
                 <a-card hoverable title="Project 2" :bordered="false" @click="project">
-                    <p>card content</p>
+                    <template #extra>
+                        <a-typography-text type="secondary">
+                            Last saved: 2 days ago
+                        </a-typography-text>
+                    </template>
+                    <img width="300" src="../assets/background.png" />
                 </a-card>
             </a-col>
             <a-col :span="6">
                 <a-card hoverable title="Project 3" :bordered="false" @click="project">
-                    <p>card content</p>
+                    <template #extra>
+                        <a-typography-text type="secondary">
+                            Last saved: 2 days ago
+                        </a-typography-text>
+                    </template>
+                    <img width="300" src="../assets/background.png" />
                 </a-card>
             </a-col>
             <a-col :span="6">

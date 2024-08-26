@@ -40,15 +40,21 @@
 <script setup>
 import { reactive } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
 const formState = reactive({
   username: '',
   password: '',
   remember: true,
 });
-const onFinish = values => {
-  console.log('Success:', values);
+const onFinish = () => {
+  message.success('login success');
+  router.push('/setting');
 };
-const onFinishFailed = errorInfo => {
-  console.log('Failed:', errorInfo);
+const onFinishFailed = () => {
+  message.error('login failed');
 };
 </script>
