@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import jsonify, Flask, request
 from flask_restful import Resource, Api
 from flask_mysqldb import MySQL
 from flask_cors import CORS
@@ -69,6 +69,22 @@ class User(Resource):
         return {'message': 'User deleted successfully!', 'Method': 'DELETE'}
 
 api.add_resource(User, '/api/users/')
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM user WHERE email=%s AND password=%s", (email, password))
+    user = cur.fetchone()
+    cur.close()
+
+    if user:
+        return jsonify({'success': True, 'message': 'Login successful'})
+    else:
+        return jsonify({'success': False, 'message': 'Invalid email or password'})
 
 if __name__ == '__main__':
     app.run(debug=True)
