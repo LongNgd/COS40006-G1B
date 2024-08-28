@@ -1,8 +1,7 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_mysqldb import MySQL
 from flask_cors import CORS
-import json
 
 app = Flask(__name__)
 CORS(app)
@@ -18,7 +17,7 @@ app.config['MYSQL_DB'] = 'cos40006-g1b'
 def dictfetchall(cursor):
     columns = [col[0] for col in cursor.description]
     return [
-        dict(zip(columns,row))
+        dict(zip(columns, row))
         for row in cursor.fetchall()
     ]
 
@@ -32,7 +31,7 @@ class User(Resource):
             cur.execute("SELECT * FROM user")
         data = dictfetchall(cur)
         cur.close()
-        return jsonify({'users': data, 'Method': 'GET'})
+        return {'users': data, 'Method': 'GET'}
 
     def post(self):
         data = request.json
@@ -44,7 +43,7 @@ class User(Resource):
         mysql.connection.commit()
         cur.close()
 
-        return jsonify({'message': 'User created successfully!', 'Method': 'POST'})
+        return {'message': 'User created successfully!', 'Method': 'POST'}
 
     def put(self):
         data = request.json
@@ -52,11 +51,11 @@ class User(Resource):
         password = data.get('password')
 
         cur = mysql.connection.cursor()
-        cur.execute("UPDATE user SET password=%s WHERE email=%s", (password,email))
+        cur.execute("UPDATE user SET password=%s WHERE email=%s", (password, email))
         mysql.connection.commit()
         cur.close()
 
-        return jsonify({'message': 'User updated successfully!', 'Method': 'PUT'})
+        return {'message': 'User updated successfully!', 'Method': 'PUT'}
 
     def delete(self):
         data = request.json
@@ -67,7 +66,7 @@ class User(Resource):
         mysql.connection.commit()
         cur.close()
 
-        return jsonify({'message': 'User deleted successfully!', 'Method': 'DELETE'})
+        return {'message': 'User deleted successfully!', 'Method': 'DELETE'}
 
 api.add_resource(User, '/api/users/')
 
