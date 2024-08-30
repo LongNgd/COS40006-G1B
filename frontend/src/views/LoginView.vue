@@ -1,64 +1,45 @@
 <template>
-  <a-row justify="center">
-    <a-card title="Login" style="width: 700px">
-      <a-form :model="formState" name="normal_login" class="login-form" @finish="onFinish"
-        @finishFailed="onFinishFailed">
-        <a-form-item label="Email" name="email">
-          <a-input v-model="formState.email">
-            <template #prefix>
-              <UserOutlined class="site-form-item-icon" />
-            </template>
-          </a-input>
-        </a-form-item>
+  <div class="container bg-white rounded py-3 col-lg-7" id="login">
+    <h1 class="text-center">Login</h1>
+    <form @submit="loginUser">
+      <label class="form-label" for="email">Email</label>
+      <input type="text" class="form-control" id="email" v-model="email" placeholder="Email" required>
 
-        <a-form-item label="Password" name="password">
-          <a-input-password v-model="formState.password">
-            <template #prefix>
-              <LockOutlined class="site-form-item-icon" />
-            </template>
-          </a-input-password>
-        </a-form-item>
+      <label class="form-label" for="password">Password</label>
+      <input type="password" class="form-control" id="password" v-model="password" placeholder="Password" required>
 
-        <a-form-item>
-          <a-form-item name="remember" no-style>
-            <a-checkbox v-model="formState.remember">Remember me</a-checkbox>
-          </a-form-item>
-          <a class="login-form-forgot" href="">Forgot password</a>
-        </a-form-item>
+      <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-outline-primary mt-3"> Login </button>
+        <router-link to="/" class="btn btn-outline-primary mt-3"> Back to Homepage </router-link>
+      </div>
 
-        <a-form-item>
-          <a-button type="primary" html-type="submit" class="login-form-button">
-            Log in
-          </a-button>
-          Or
-          <RouterLink class="menu" to="/register">register now!</RouterLink>
-        </a-form-item>
-      </a-form>
-    </a-card>
-  </a-row>
+      <div class="d-flex justify-content-around">
+        <router-link to="/register">Don't have account yet? Register Now</router-link>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue';
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
+import { ref } from 'vue';
+// import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const router = useRouter();
+const email = ref('');
+const password = ref('');
+// const remember = '';
 
-const formState = reactive({
-  email: '',
-  password: '',
-  remember: true,
-});
-
-const onFinish = async () => {
+const loginUser = async (e) => {
+  e.preventDefault();
+  console.log(email.value, password.value);
   try {
     // Make a POST request to your login API endpoint
     const response = await axios.post('http://localhost:5000/api/login', {
-      email: "test@gmail.com",
-      password: "newpassword",
+      email: email.value,
+      password: password.value,
     });
 
     // Check if the login was successful
@@ -71,9 +52,5 @@ const onFinish = async () => {
   } catch (error) {
     message.error('Login failed: ' + error.message);
   }
-};
-
-const onFinishFailed = () => {
-  message.error('Login failed');
 };
 </script>
