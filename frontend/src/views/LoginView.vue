@@ -1,7 +1,7 @@
 <template>
   <div class="container bg-white rounded py-3 col-lg-7" id="login">
     <h1 class="text-center">Login</h1>
-    <form @submit="loginUser">
+    <form @submit="login">
       <label class="form-label" for="email">Email</label>
       <input type="text" class="form-control" id="email" v-model="email" placeholder="Email" required>
 
@@ -10,11 +10,11 @@
 
       <div class="d-flex justify-content-between">
         <button type="submit" class="btn btn-outline-primary mt-3"> Login </button>
-        <router-link to="/" class="btn btn-outline-primary mt-3"> Back to Homepage </router-link>
+        <RouterLink to="/" class="btn btn-outline-primary mt-3"> Back to Homepage </RouterLink>
       </div>
 
       <div class="d-flex justify-content-around">
-        <router-link to="/register">Don't have account yet? Register Now</router-link>
+        <RouterLink to="/register">Don't have account yet? Register Now</RouterLink>
       </div>
     </form>
   </div>
@@ -32,9 +32,8 @@ const email = ref('');
 const password = ref('');
 // const remember = '';
 
-const loginUser = async (e) => {
+const login = async (e) => {
   e.preventDefault();
-  console.log(email.value, password.value);
   try {
     // Make a POST request to your login API endpoint
     const response = await axios.post('http://localhost:5000/api/login', {

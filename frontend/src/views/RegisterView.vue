@@ -1,81 +1,59 @@
 <template>
-  <a-row justify="center">
-    <a-card title="Register" style="width: 700px">
-      <a-form :model="formState" name="normal_login" class="login-form" @finish="onFinish"
-        @finishFailed="onFinishFailed">
-        <a-form-item label="Email" name="username">
-          <a-input v-model="formState.username">
-            <template #prefix>
-              <UserOutlined class="site-form-item-icon" />
-            </template>
-          </a-input>
-        </a-form-item>
+  <div class="container bg-white rounded py-3 col-lg-7" id="register">
+    <h1 class="text-center">Create an account</h1>
+    <form @submit="register">
+      <label class="form-label" for="username">User Name</label>
+      <input class="form-control" type="text" id="username" v-model="username" placeholder="User Name" required>
 
-        <a-form-item label="Password" name="password">
-          <a-input-password v-model="formState.password">
-            <template #prefix>
-              <LockOutlined class="site-form-item-icon" />
-            </template>
-          </a-input-password>
-        </a-form-item>
-        <a-form-item label="Confirm Password" name="cpassword">
-          <a-input-password v-model="formState.cpassword">
-            <template #prefix>
-              <LockOutlined class="site-form-item-icon" />
-            </template>
-          </a-input-password>
-        </a-form-item>
+      <label class="form-label" for="mail">Email</label>
+      <input class="form-control" type="email" id="mail" v-model="email" placeholder="Email" required>
 
-        <a-form-item>
-          <a-button type="primary" html-type="submit" class="login-form-button">
-            Register
-          </a-button>
-          Already have an account? <RouterLink class="menu" to="/login">login now!</RouterLink>
-        </a-form-item>
-      </a-form>
-    </a-card>
-  </a-row>
+      <label class="form-label" for="pwd">Password</label>
+      <input class="form-control" type="password" id="pwd" v-model="password" placeholder="Password" required>
+
+      <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-outline-primary mt-3"> Create Account </button>
+        <RouterLink to="/" class="btn btn-outline-primary mt-3"> Back to Homepage </RouterLink>
+      </div>
+
+      <div class="d-flex justify-content-around">
+        <RouterLink to="/login">Already Have Account? Login Now</RouterLink>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue';
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
+import { ref } from 'vue';
+// import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const router = useRouter();
-const formState = reactive({
-  username: '',
-  password: '',
-  cpassword: '',
-});
+const username = ref('');
+const email = ref('');
+const password = ref('');
 
-const onFinish = async () => {
-  console.log("username: ", formState.username, "password: ", formState.password)
-  if (formState.password !== formState.cpassword) {
-    message.error('Passwords do not match!');
-    return;
-  }
-
+const register = async (e) => {
+  e.preventDefault();
   try {
+    // Make a POST request to your register API endpoint
     const response = await axios.post('http://localhost:5000/api/register', {
-      email: formState.username,
-      password: formState.password,
+      username: username.value,
+      email: email.value,
+      password: password.value,
     });
 
+    // Check if the register was successful
     if (response.data.success) {
-      message.success('Registration successful');
-      router.push('/login');
+      message.success('Register successful');
+      router.push('/setting');
     } else {
-      message.error(response.data.message);
+      message.error('Invalid email or password');
     }
   } catch (error) {
-    message.error('Registration failed');
+    message.error('Regiester failed: ' + error.message);
   }
-};
-
-const onFinishFailed = () => {
-  message.error('Please check your input and try again');
 };
 </script>
