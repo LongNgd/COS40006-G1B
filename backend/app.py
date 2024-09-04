@@ -83,7 +83,7 @@ def get_video_path():
         SELECT v.file_path 
         FROM project p
         JOIN video v ON p.source_id = v.video_id
-        WHERE p.source_id = %s
+        WHERE p.project_id = %s
     """, (title,))
     
     video = cur.fetchone()
