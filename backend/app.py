@@ -63,5 +63,37 @@ def register():
 
     return jsonify({'success': True, 'message': 'User registered successfully'})
 
+@app.route('/api/project', methods=['GET'])
+def get_data():
+    cur = mysql.connection.cursor()
+    
+    cur.execute("SELECT * FROM project")
+    data = dictfetchall(cur)
+    
+    cur.close()
+    
+    return jsonify(data)
+
+@app.route('/api/video-path', methods=['GET'])
+def get_video_path():
+    title = request.args.get('title')
+    
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT v.file_path 
+        FROM project p
+        JOIN video v ON p.source_id = v.video_id
+        WHERE p.source_id = %s
+    """, (title,))
+    
+    video = cur.fetchone()
+    cur.close()
+    
+    if video:
+        return jsonify({'file_path': video['file_path']})
+    else:
+        return jsonify({'error': 'Video not found'}), 404
+
+
 if __name__ == '__main__':
     app.run(debug=True)
