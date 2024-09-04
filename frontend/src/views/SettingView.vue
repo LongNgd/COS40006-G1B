@@ -1,5 +1,5 @@
 <template>
-    <div class="p-3">
+    <a-page-header style="border: 1px solid rgb(235, 237, 240)" title="Setting">
         <a-tabs v-model="activeKey" tabPosition="left" size="large">
             <a-tab-pane key="1">
                 <template #tab>
@@ -20,7 +20,7 @@
                 <DeivceUpload />
             </a-tab-pane>
         </a-tabs>
-    </div>
+    </a-page-header>
 </template>
 <script setup>
 import { ref } from 'vue';
