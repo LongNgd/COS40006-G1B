@@ -16,22 +16,12 @@
                         {{ record.name }}
                     </a>
                 </template>
-                <template v-else-if="column.key === 'tags'">
-                    <span>
-                        <a-tag v-for="tag in record.tags" :key="tag"
-                            :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'">
-                            {{ tag.toUpperCase() }}
-                        </a-tag>
-                    </span>
-                </template>
                 <template v-else-if="column.key === 'action'">
                     <span>
-                        <a>
-                            <DeleteOutlined />
-                        </a>
-                        <a>
-                            <FormOutlined />
-                        </a>
+                        <a-button type="link" :icon="h(FormOutlined)" @click="() => $router.push('/result')" />
+                        <a-popconfirm v-if="data.length" title="Sure to delete?" @confirm="onDelete(record.key)">
+                            <a-button danger type="link" :icon="h(DeleteOutlined)" />
+                        </a-popconfirm>
                     </span>
                 </template>
             </template>
@@ -39,6 +29,7 @@
     </a-page-header>
 </template>
 <script setup>
+import { h, ref } from 'vue';
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons-vue';
 const columns = [
     {
@@ -61,7 +52,7 @@ const columns = [
         key: 'action',
     },
 ];
-const data = [
+const data = ref([
     {
         key: '1',
         name: 'project1',
@@ -86,5 +77,8 @@ const data = [
         camera: 'camera1',
         date: '2021-10-10',
     },
-];
+]);
+const onDelete = key => {
+    data.value = data.value.filter(item => item.key !== key);
+};
 </script>
