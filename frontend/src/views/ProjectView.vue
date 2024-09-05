@@ -5,18 +5,13 @@
         </template>
         <a-table :columns="columns" :data-source="data">
             <template #headerCell="{ column }">
-                <template v-if="column.key === 'name'">
-                    Name
+                <template v-if="column.key === 'title'">
+                    Project Name
                 </template>
             </template>
 
             <template #bodyCell="{ column, record }">
-                <template v-if="column.key === 'name'">
-                    <a>
-                        {{ record.name }}
-                    </a>
-                </template>
-                <template v-else-if="column.key === 'action'">
+                <template v-if="column.key === 'action'">
                     <span>
                         <a-button type="link" :icon="h(FormOutlined)" @click="() => $router.push('/result')" />
                         <a-popconfirm v-if="data.length" title="Sure to delete?" @confirm="onDelete(record.key)">
@@ -29,22 +24,24 @@
     </a-page-header>
 </template>
 <script setup>
-import { h, ref } from 'vue';
+import { h, ref, onMounted } from 'vue';
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons-vue';
+import axios from 'axios';
+
 const columns = [
     {
         name: 'Project Name',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'title',
+        key: 'title',
     },
     {
         title: 'Camera',
-        dataIndex: 'camera',
-        key: 'camera',
+        dataIndex: 'duration',
+        key: 'duration',
     },
     {
         title: 'Upload Date',
-        dataIndex: 'date',
+        dataIndex: 'upload_date',
         key: 'date',
     },
     {
@@ -52,32 +49,24 @@ const columns = [
         key: 'action',
     },
 ];
-const data = ref([
-    {
-        key: '1',
-        name: 'project1',
-        camera: 'camera1',
-        date: '2021-10-10',
-    },
-    {
-        key: '2',
-        name: 'project2',
-        camera: 'camera1',
-        date: '2021-10-10',
-    },
-    {
-        key: '3',
-        name: 'project3',
-        camera: 'camera1',
-        date: '2021-10-10',
-    },
-    {
-        key: '4',
-        name: 'project4',
-        camera: 'camera1',
-        date: '2021-10-10',
-    },
-]);
+
+const data = ref([]);
+
+const fetchData = async () => {
+    try {
+        const response = await axios.get('http://localhost:5000/api/project');
+        if (response.status === 200) {
+            data.value = response.data;
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+onMounted(() => {
+    fetchData();
+});
+
 const onDelete = key => {
     data.value = data.value.filter(item => item.key !== key);
 };
