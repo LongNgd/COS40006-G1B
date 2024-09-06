@@ -16,6 +16,7 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'cos40006-g1b' 
 
+
 def dictfetchall(cursor):
     columns = [col[0] for col in cursor.description]
     return [
@@ -66,31 +67,37 @@ def register():
 @app.route('/api/project', methods=['GET'])
 def get_data():
     cur = mysql.connection.cursor()
-    
     cur.execute("SELECT * FROM project")
+
     data = dictfetchall(cur)
-    
     cur.close()
     
     return jsonify(data)
 
-@app.route('/api/video-path', methods=['GET'])
+from flask import request, jsonify
+from flask_mysqldb import MySQL
+
+app = Flask(__name__)
+mysql = MySQL(app)
+
+@app.route('/api/video-path', methods=['POST'])
 def get_video_path():
-    title = request.args.get('title')
+    data = request.json
+    title = data.get('title')
     
     cur = mysql.connection.cursor()
     cur.execute("""
         SELECT v.file_path 
-        FROM project p
-        JOIN video v ON p.source_id = v.video_id
-        WHERE p.project_id = %s
+        FROM video v 
+        JOIN project p ON p.source_id = v.video_id
+        WHERE p.title = %s;
     """, (title,))
     
     video = cur.fetchone()
     cur.close()
     
     if video:
-        return jsonify({'file_path': video['file_path']})
+        return jsonify({'file_path': video[0]})
     else:
         return jsonify({'error': 'Video not found'}), 404
 
