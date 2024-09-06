@@ -41,6 +41,9 @@ const login = async (e) => {
       password: password.value,
     });
 
+    // Debug
+    console.log("Email: " + email.value + " Password: " + password.value)
+
     // Check if the login was successful
     if (response.data.success) {
       message.success('Login successful');

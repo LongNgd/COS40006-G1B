@@ -35,7 +35,8 @@ def login():
     user = cur.fetchone()
     cur.close()
 
-    if user and check_password_hash(user[2], password):  # Assuming the password is stored in the 3rd column (index 2)
+    # if user and check_password_hash(user[2], password): 
+    if user and password:
         return jsonify({'success': True, 'message': 'Login successful'})
     else:
         return jsonify({'success': False, 'message': 'Invalid email or password'})
@@ -45,11 +46,12 @@ def register():
     data = request.json
     email = data.get('email')
     password = data.get('password')
+    username = data.get('username')
 
-    if not email or not password:
-        return jsonify({'success': False, 'message': 'Email and password are required'})
+    if not email or not password or not username:
+        return jsonify({'success': False, 'message': 'All fields are required'})
 
-    hashed_password = generate_password_hash(password)
+    # hashed_password = generate_password_hash(password)
 
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM user WHERE email=%s", (email,))
@@ -58,7 +60,8 @@ def register():
     if existing_user:
         return jsonify({'success': False, 'message': 'Email already exists'})
 
-    cur.execute("INSERT INTO user (email, password) VALUES (%s, %s)", (email, hashed_password))
+    # cur.execute("INSERT INTO user (email, password, user_name) VALUES (%s, %s, %s)", (email, hashed_password, username))
+    cur.execute("INSERT INTO user (email, password, user_name) VALUES (%s, %s, %s)", (email, password, username))
     mysql.connection.commit()
     cur.close()
 
