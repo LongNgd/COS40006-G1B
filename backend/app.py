@@ -74,12 +74,6 @@ def get_data():
     
     return jsonify(data)
 
-from flask import request, jsonify
-from flask_mysqldb import MySQL
-
-app = Flask(__name__)
-mysql = MySQL(app)
-
 @app.route('/api/video-path', methods=['POST'])
 def get_video_path():
     data = request.json
