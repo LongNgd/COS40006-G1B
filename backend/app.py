@@ -37,7 +37,7 @@ def login():
 
     # if user and check_password_hash(user[2], password): 
     if user and password:
-        return jsonify({'success': True, 'message': 'Login successful'})
+        return jsonify({'success': True, 'message': 'Login successful', 'user_id': user[0]})
     else:
         return jsonify({'success': False, 'message': 'Invalid email or password'})
 
@@ -67,15 +67,25 @@ def register():
 
     return jsonify({'success': True, 'message': 'User registered successfully'})
 
-@app.route('/api/project', methods=['GET'])
+@app.route('/api/project', methods=['POST'])
 def get_data():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM project")
+    data = request.json
+    user_id = data.get('user_id')
 
-    data = dictfetchall(cur)
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT *
+        FROM project
+        WHERE user_id = %s;
+    """, (user_id,))
+
+    project = cur.fetchone()
     cur.close()
-    
-    return jsonify(data)
+
+    if project:
+        return jsonify(project)
+    else:
+        return jsonify({'error': 'Project not found'}), 404
 
 @app.route('/api/video-path', methods=['POST'])
 def get_video_path():
