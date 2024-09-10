@@ -35,8 +35,9 @@ def login():
     user = cur.fetchone()
     cur.close()
 
-    if user and check_password_hash(user[2], password):  # Assuming the password is stored in the 3rd column (index 2)
-        return jsonify({'success': True, 'message': 'Login successful'})
+    # if user and check_password_hash(user[2], password): 
+    if user and password:
+        return jsonify({'success': True, 'message': 'Login successful', 'user_id': user[0]})
     else:
         return jsonify({'success': False, 'message': 'Invalid email or password'})
 
@@ -45,11 +46,12 @@ def register():
     data = request.json
     email = data.get('email')
     password = data.get('password')
+    username = data.get('username')
 
-    if not email or not password:
-        return jsonify({'success': False, 'message': 'Email and password are required'})
+    if not email or not password or not username:
+        return jsonify({'success': False, 'message': 'All fields are required'})
 
-    hashed_password = generate_password_hash(password)
+    # hashed_password = generate_password_hash(password)
 
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM user WHERE email=%s", (email,))
@@ -58,21 +60,32 @@ def register():
     if existing_user:
         return jsonify({'success': False, 'message': 'Email already exists'})
 
-    cur.execute("INSERT INTO user (email, password) VALUES (%s, %s)", (email, hashed_password))
+    # cur.execute("INSERT INTO user (email, password, user_name) VALUES (%s, %s, %s)", (email, hashed_password, username))
+    cur.execute("INSERT INTO user (email, password, user_name) VALUES (%s, %s, %s)", (email, password, username))
     mysql.connection.commit()
     cur.close()
 
     return jsonify({'success': True, 'message': 'User registered successfully'})
 
-@app.route('/api/project', methods=['GET'])
+@app.route('/api/project', methods=['POST'])
 def get_data():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM project")
+    data = request.json
+    user_id = data.get('user_id')
 
-    data = dictfetchall(cur)
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT *
+        FROM project
+        WHERE user_id = %s;
+    """, (user_id,))
+
+    project = cur.fetchone()
     cur.close()
-    
-    return jsonify(data)
+
+    if project:
+        return jsonify(project)
+    else:
+        return jsonify({'error': 'Project not found'}), 404
 
 @app.route('/api/video-path', methods=['POST'])
 def get_video_path():
