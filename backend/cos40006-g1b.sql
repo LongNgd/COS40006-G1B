@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 07, 2024 at 08:56 AM
+-- Generation Time: Sep 10, 2024 at 03:46 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.0.25
 
@@ -20,6 +20,32 @@ SET time_zone = "+00:00";
 --
 -- Database: `cos40006-g1b`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `anomaly`
+--
+
+CREATE TABLE `anomaly` (
+  `anomaly_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `timestamp` datetime NOT NULL,
+  `type` varchar(25) DEFAULT NULL,
+  `duration` int(11) DEFAULT NULL,
+  `participants` int(11) DEFAULT NULL,
+  `intensity` varchar(25) DEFAULT NULL,
+  `evidence` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `anomaly`
+--
+
+INSERT INTO `anomaly` (`anomaly_id`, `project_id`, `timestamp`, `type`, `duration`, `participants`, `intensity`, `evidence`) VALUES
+(1, 1, '2021-09-01 12:00:00', 'Fighting', 10, 2, 'High', '/src/assets/background.png'),
+(2, 1, '2021-09-01 12:00:10', 'Fighting', 10, 2, 'High', '/src/assets/background.png'),
+(3, 1, '2021-09-01 12:00:30', 'Fighting', 20, 4, 'Medium', '/src/assets/background.png');
 
 -- --------------------------------------------------------
 
@@ -91,6 +117,12 @@ INSERT INTO `video` (`video_id`, `file_path`) VALUES
 --
 
 --
+-- Indexes for table `anomaly`
+--
+ALTER TABLE `anomaly`
+  ADD PRIMARY KEY (`anomaly_id`);
+
+--
 -- Indexes for table `project`
 --
 ALTER TABLE `project`
@@ -112,6 +144,12 @@ ALTER TABLE `video`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `anomaly`
+--
+ALTER TABLE `anomaly`
+  MODIFY `anomaly_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `project`
