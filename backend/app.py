@@ -37,9 +37,13 @@ def login():
     user = cur.fetchone()
     cur.close()
 
-    # if user and check_password_hash(user[2], password): 
     if user and password:
-        return jsonify({'success': True, 'message': 'Login successful', 'user_id': user[0]})
+        user_info = {
+            'user_id': user[0],
+            'email': user[1],
+            'user_name': user[3]
+        }
+        return jsonify({'success': True, 'message': 'Login successful', 'user_info': user_info})
     else:
         return jsonify({'success': False, 'message': 'Invalid email or password'})
 
