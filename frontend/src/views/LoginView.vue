@@ -30,7 +30,6 @@ import axios from 'axios';
 const router = useRouter();
 const email = ref('');
 const password = ref('');
-// const remember = '';
 
 const login = async (e) => {
   e.preventDefault();

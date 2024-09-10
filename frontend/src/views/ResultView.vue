@@ -15,13 +15,33 @@
 import { VuePlayer } from '@display-studio/vue-player'
 import ControlVideo from '@/components/video-player/ControlVideo.vue';
 import { message } from 'ant-design-vue';
+import axios from 'axios';
+import { useRoute } from 'vue-router';
+import { onMounted } from 'vue';
 
+const route = useRoute();
+const projectId = route.query.projectId;
+console.log(route);
 const sources = [
     {
         src: './violence.mp4',
         type: 'video/mp4',
     }
 ]
+const fetchData = async () => {
+    try {
+        const response = await axios.post('http://localhost:5000/api/login', {
+            title: projectId,
+        });
+        console.log(response);
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+onMounted(() => {
+    fetchData();
+});
+
 const save = () => {
     message.success("Saved", 2)
 };

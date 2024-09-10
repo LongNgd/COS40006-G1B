@@ -13,7 +13,8 @@
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'action'">
                     <span>
-                        <a-button type="link" :icon="h(FormOutlined)" @click="() => $router.push('/result')" />
+                        <a-button type="link" :icon="h(FormOutlined)"
+                            @click="() => $router.push({ path: '/result', query: { projectId: record.dataIndex } })" />
                         <a-popconfirm v-if="data.length" title="Sure to delete?" @confirm="onDelete(record.key)">
                             <a-button danger type="link" :icon="h(DeleteOutlined)" />
                         </a-popconfirm>
@@ -46,6 +47,7 @@ const columns = [
     },
     {
         title: 'Action',
+        dataIndex: 'title',
         key: 'action',
     },
 ];
