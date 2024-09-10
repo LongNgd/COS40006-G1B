@@ -25,9 +25,11 @@
     </a-page-header>
 </template>
 <script setup>
-import { h, ref, onMounted } from 'vue';
+import { h, ref, onMounted, inject } from 'vue';
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons-vue';
 import axios from 'axios';
+
+const userId = inject('userId'); // Add this line
 
 const columns = [
     {
@@ -56,7 +58,9 @@ const data = ref([]);
 
 const fetchData = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/api/project');
+        const response = await axios.post('http://localhost:5000/api/project', {
+            user_id: userId.value,
+        });
         if (response.status === 200) {
             data.value = response.data;
         }

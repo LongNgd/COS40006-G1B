@@ -48,6 +48,8 @@ const register = async (e) => {
     // Check if the register was successful
     if (response.data.success) {
       message.success('Register successful');
+      console.log(response);
+      localStorage.setItem("user", JSON.stringify(response));
       router.push('/setting');
     } else {
       message.error('Invalid email or password');

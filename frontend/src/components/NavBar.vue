@@ -11,6 +11,12 @@
                     <li class="nav-item ">
                         <RouterLink class="nav-link" to="/project">Project</RouterLink>
                     </li>
+                    <!-- <template >
+                        <span>Hello</span>
+                        <li class="nav-item">
+                            <a class="nav-link" @click="logout">Logout</a>
+                        </li>
+                    </template> -->
                     <li class="nav-item">
                         <RouterLink class="nav-link" to="/login">Login</RouterLink>
                     </li>

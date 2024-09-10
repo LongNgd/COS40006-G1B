@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { provide, ref } from 'vue';
 // import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
@@ -30,6 +30,9 @@ import axios from 'axios';
 const router = useRouter();
 const email = ref('');
 const password = ref('');
+const userId = ref(null);
+
+provide('userId', userId);
 
 const login = async (e) => {
   e.preventDefault();
@@ -40,13 +43,13 @@ const login = async (e) => {
       password: password.value,
     });
 
-    // Debug
-    console.log("Email: " + email.value + " Password: " + password.value)
-
     // Check if the login was successful
     if (response.data.success) {
       message.success('Login successful');
-      router.push('/setting');
+      // console.log(response.data.user_id);
+      // localStorage.setItem("user", JSON.stringify(response.data));
+      userId.value = response.data.user_id;
+      router.push('/project');
     } else {
       message.error('Invalid email or password');
     }
