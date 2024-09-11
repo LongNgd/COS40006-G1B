@@ -73,8 +73,8 @@ def register():
 
     return jsonify({'success': True, 'message': 'User registered successfully'})
 
-@app.route('/api/project/getProject', methods=['POST'])
-def get_data():
+@app.route('/api/project/getProjectById', methods=['POST'])
+def get_project_by_id():
     data = request.json
     user_id = data.get('user_id')
 
@@ -85,15 +85,15 @@ def get_data():
         WHERE user_id = %s;
     """, (user_id,))
 
-    project = cur.fetchone()
+    project = dictfetchall(cur)
     cur.close()
 
     if project:
-        return jsonify(project)
+        return jsonify({'success': True, 'data': project}), 200
     else:
         return jsonify({'error': 'Project not found'}), 404
     
-@app.route('/api/project/postProject', methods=['POST'])
+@app.route('/api/project/createProject', methods=['POST'])
 def create_project():
     try:
         # Get the data from the request
@@ -136,7 +136,7 @@ def create_project():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/project/getVideo', methods=['POST'])
-def get_video_path():
+def get_video():
     data = request.json
     title = data.get('title')
     
@@ -156,7 +156,7 @@ def get_video_path():
     else:
         return jsonify({'error': 'Video not found'}), 404
 
-@app.route('/api/project/getAnomalies', methods=['POST'])
+@app.route('/api/project/getAnomaliesByProject', methods=['POST'])
 def get_anomalies_by_project():
     try:
         # Get the JSON data from the POST request
@@ -174,26 +174,13 @@ def get_anomalies_by_project():
             FROM anomaly 
             WHERE project_id = %s;
         """, (project_id,))
-        anomalies = cur.fetchall()
+        
+        anomalies = dictfetchall(cur)
         cur.close()
 
-        # Process the result and return anomalies if found
+        # Return anomalies if found
         if anomalies:
-            anomaly_list = []
-            for anomaly in anomalies:
-                anomaly_dict = {
-                    'anomaly_id': anomaly[0],
-                    'project_id': anomaly[1],
-                    'timestamp': anomaly[2],
-                    'type': anomaly[3],
-                    'duration': anomaly[4],
-                    'participants': anomaly[5],
-                    'intensity': anomaly[6],
-                    'evidence': anomaly[7]
-                }
-                anomaly_list.append(anomaly_dict)
-
-            return jsonify({'success': True, 'data': anomaly_list}), 200
+            return jsonify({'success': True, 'data': anomalies}), 200
         else:
             return jsonify({'error': 'No anomalies found for the given project_id'}), 404
 
