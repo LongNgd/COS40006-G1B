@@ -1,7 +1,7 @@
 <template>
   <div class="container bg-white rounded py-3 col-lg-7" id="login">
     <h1 class="text-center">Login</h1>
-    <form @submit="login">
+    <form @submit.prevent="login">
       <label class="form-label" for="email">Email</label>
       <input type="text" class="form-control" id="email" v-model="email" placeholder="Email" required>
 
@@ -21,18 +21,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 // import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const router = useRouter();
+const emit = defineEmits(['authenticated']);
 const email = ref('');
 const password = ref('');
 
-const login = async (e) => {
-  e.preventDefault();
+const login = async () => {
   try {
     // Make a POST request to your login API endpoint
     const response = await axios.post('http://localhost:5000/api/user/login', {
@@ -43,9 +43,9 @@ const login = async (e) => {
     // Check if the login was successful
     if (response.data.success) {
       message.success('Login successful');
-      console.log(response.data.user_info);
       localStorage.setItem("user", JSON.stringify(response.data.user_info));
-      router.push('/project');
+      emit('authenticated', true);
+      router.push('/');
     } else {
       message.error('Invalid email or password');
     }

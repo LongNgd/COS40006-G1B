@@ -8,19 +8,28 @@
                     <li class="nav-item">
                         <RouterLink class="nav-link" to="/">Home</RouterLink>
                     </li>
-                    <li class="nav-item ">
+                    <li class="nav-item">
                         <RouterLink class="nav-link" to="/project">Project</RouterLink>
                     </li>
-                    <!-- <template >
-                        <span>Hello</span>
-                        <li class="nav-item">
-                            <a class="nav-link" @click="logout">Logout</a>
-                        </li>
-                    </template> -->
-                    <li class="nav-item">
+                    <li v-if="props.checkauth" class="nav-item">
+                        <a-dropdown>
+                            <a class="ant-dropdown-link nav-link" @click.prevent>
+                                Hello, User
+                            </a>
+                            <template #overlay>
+                                <a-menu @click="logout">
+                                    <a-menu-item key="1">
+                                        <LogoutOutlined />
+                                        Logout
+                                    </a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
+                    </li>
+                    <li v-if="!props.checkauth" class="nav-item">
                         <RouterLink class="nav-link" to="/login">Login</RouterLink>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="!props.checkauth" class="nav-item">
                         <RouterLink class="nav-link" to="/register">Register</RouterLink>
                     </li>
                 </ul>
@@ -28,3 +37,24 @@
         </nav>
     </div>
 </template>
+<script setup>
+import { defineProps, defineEmits } from 'vue';
+import { useRouter } from 'vue-router';
+import { LogoutOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
+
+const props = defineProps({
+    checkauth: Boolean,
+});
+
+const emit = defineEmits(['authenticated']);
+
+const route = useRouter();
+
+const logout = () => {
+    localStorage.clear();
+    emit('logout', false);
+    message.success('Logout successful');
+    route.push('/');
+}
+</script>

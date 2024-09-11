@@ -16,12 +16,8 @@ import { VuePlayer } from '@display-studio/vue-player'
 import ControlVideo from '@/components/video-player/ControlVideo.vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios';
-import { useRoute } from 'vue-router';
 import { onMounted } from 'vue';
 
-const route = useRoute();
-const projectId = route.query.projectId;
-console.log(route);
 const sources = [
     {
         src: './violence.mp4',
