@@ -135,6 +135,38 @@ def create_project():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/project/modifyProject', methods=['PUT'])
+def modify_project():
+    try:
+        # Get the data from the request
+        data = request.json
+        project_id = data.get('project_id')
+        new_title = data.get('title')  # New project title
+
+        # Validate the required fields
+        if not all([project_id, new_title]):
+            return jsonify({'error': 'project_id and title are required'}), 400
+
+        # Get the current datetime
+        current_datetime = datetime.now()
+
+        # Update the project title and upload_date
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            UPDATE project 
+            SET title = %s, upload_date = %s
+            WHERE project_id = %s
+        """, (new_title, current_datetime, project_id))
+        
+        # Commit the transaction
+        mysql.connection.commit()
+        cur.close()
+
+        return jsonify({'success': True, 'message': 'Project updated successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/project/getVideo', methods=['POST'])
 def get_video():
     data = request.json
