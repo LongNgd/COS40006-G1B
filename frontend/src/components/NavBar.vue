@@ -8,8 +8,8 @@
                     <li class="nav-item">
                         <RouterLink class="nav-link" to="/">Home</RouterLink>
                     </li>
-                    <li class="nav-item">
-                        <RouterLink class="nav-link" to="/project">Project</RouterLink>
+                    <li class="nav-item" v-if="!props.checkauth" @click="() => message.warning('You must login first', 2)">
+                        <a class="nav-link" style="cursor: pointer;">Project</a>
                     </li>
                     <li v-if="props.checkauth" class="nav-item">
                         <a-dropdown>

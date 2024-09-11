@@ -20,6 +20,6 @@ const setAuthenticated = (status) => {
 <template>
   <div>
     <NavBar @logout="setAuthenticated" :checkauth="authenticated" />
-    <RouterView @authenticated="setAuthenticated" />
+    <RouterView @authenticated="setAuthenticated"  :checkauth="authenticated"/>
   </div>
 </template>

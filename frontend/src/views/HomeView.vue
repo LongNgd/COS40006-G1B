@@ -1,7 +1,3 @@
-<script setup>
-import { SettingOutlined, UploadOutlined, DesktopOutlined, FileDoneOutlined } from '@ant-design/icons-vue';
-</script>
-
 <template>
   <div>
     <div class="hero_area">
@@ -10,7 +6,7 @@ import { SettingOutlined, UploadOutlined, DesktopOutlined, FileDoneOutlined } fr
           <div class="col-md-7">
             <div class="center-content">
               <a-typography-title>Data Visualization Tool</a-typography-title>
-              <a-button type="primary" @click="() => $router.push('/setting')">Get Started</a-button>
+              <a-button type="primary" @click="getStarted">Get Started</a-button>
             </div>
           </div>
         </div>
@@ -89,3 +85,24 @@ import { SettingOutlined, UploadOutlined, DesktopOutlined, FileDoneOutlined } fr
     </section>
   </div>
 </template>
+<script setup>
+import { defineProps } from 'vue';
+import { SettingOutlined, UploadOutlined, DesktopOutlined, FileDoneOutlined } from '@ant-design/icons-vue';
+import { useRouter } from 'vue-router';
+import { message } from 'ant-design-vue';
+
+const route = useRouter();
+
+const props = defineProps({
+  checkauth: Boolean,
+});
+
+const getStarted = () => {
+  if (!props.checkauth) {
+    route.push('/login');
+    message.warning('You must login first', 2);
+  } else {
+    route.push('/setting');
+  }
+}
+</script>
