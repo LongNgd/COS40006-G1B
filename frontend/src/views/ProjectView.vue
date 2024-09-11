@@ -25,11 +25,9 @@
     </a-page-header>
 </template>
 <script setup>
-import { h, ref, onMounted, inject } from 'vue';
+import { h, ref, onMounted } from 'vue';
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons-vue';
 import axios from 'axios';
-
-const userId = inject('userId'); // Add this line
 
 const columns = [
     {
@@ -45,24 +43,27 @@ const columns = [
     {
         title: 'Upload Date',
         dataIndex: 'upload_date',
-        key: 'date',
+        key: 'upload_date',
     },
     {
         title: 'Action',
-        dataIndex: 'title',
+        dataIndex: 'action',
         key: 'action',
     },
 ];
+
+const userId = ref(JSON.parse(localStorage.getItem('user')).user_id);
 
 const data = ref([]);
 
 const fetchData = async () => {
     try {
-        const response = await axios.post('http://localhost:5000/api/project', {
+        const response = await axios.post('http://localhost:5000/api/project/getProject', {
             user_id: userId.value,
         });
         if (response.status === 200) {
-            data.value = response.data;
+            console.log(response);
+            data.value = response;
         }
     } catch (error) {
         console.log(error.message);
