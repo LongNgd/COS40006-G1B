@@ -41,7 +41,7 @@ const router = createRouter({
       component: ReportView
     },
     {
-      path: '/result/:project_id',
+      path: '/result',
       name: 'result',
       component: ResultView
     }

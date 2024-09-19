@@ -39,7 +39,7 @@ const register = async (e) => {
   e.preventDefault();
   try {
     // Make a POST request to your register API endpoint
-    const response = await axios.post('http://localhost:5000/api/register', {
+    const response = await axios.post('http://localhost:5000/api/user/register', {
       username: username.value,
       email: email.value,
       password: password.value,

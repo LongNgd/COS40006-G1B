@@ -41,7 +41,7 @@ onMounted(async () => {
 
 const sources = [
     {
-        src: videopath,
+        src: './violence.mp4',
         type: 'video/mp4',
     }
 ]

@@ -9,8 +9,8 @@
                         <RouterLink class="nav-link" to="/">Home</RouterLink>
                     </li>
                     <li class="nav-item">
-                        <RouterLink class="nav-link" to="/project" v-if="!props.checkauth"
-                            @click="() => message.warning('You must login first', 2)">Project</RouterLink>
+                        <button class="nav-link" v-if="!props.checkauth"
+                            @click="() => message.warning('You must login first', 2)">Project</button>
                         <RouterLink class="nav-link" to="/project" v-if="props.checkauth">Project</RouterLink>
                     </li>
                     <li v-if="props.checkauth" class="nav-item">
