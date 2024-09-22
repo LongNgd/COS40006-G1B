@@ -8,7 +8,7 @@ type RouteContext = {
 export const Route = createRootRouteWithContext<RouteContext>()({
   component: () => {
     return (
-      <div className="min-h-screen bg-slate-100">
+      <div className="min-h-screen">
         <Outlet />
       </div>
     );

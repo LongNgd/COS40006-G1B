@@ -1,21 +1,23 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/login")({
+import LoginForm from '../components/Login/LoginForm'
+
+export const Route = createFileRoute('/login')({
   beforeLoad({ context }) {
-    const { isLogged } = context.auth;
+    const { isLogged } = context.auth
     if (isLogged()) {
       throw redirect({
-        to: "/",
-      });
+        to: '/',
+      })
     }
   },
   component: Login,
-});
+})
 
 function Login() {
   return (
     <div className="min-h-screen grid place-items-center ">
-      <p>Login</p>
+      <LoginForm />
     </div>
-  );
+  )
 }
