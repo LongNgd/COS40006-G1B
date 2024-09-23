@@ -1,4 +1,4 @@
-import { LucideFileSignature, LucideLayoutDashboard, LucideLogOut } from "lucide-react";
+import { LucideFileSignature, LucideLayoutDashboard } from "lucide-react";
 
 export const navigation = [
   {
@@ -10,10 +10,5 @@ export const navigation = [
     name: "Anomaly Report",
     link: "/report",
     icon: LucideFileSignature,
-  },
-  {
-    name: "Login",
-    link: "/login",
-    icon: LucideLogOut,
   },
 ];

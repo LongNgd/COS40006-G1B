@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { loginSchema } from "./login.validation";
 import { useAuth } from "../../hooks/useAuth.hook";
-import { LucideMail, LucideSchool } from "lucide-react";
+import { LucideSchool } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
@@ -52,7 +52,6 @@ const LoginForm = () => {
                     <Input
                       placeholder="a@gmail.com"
                       {...field}
-                      suffix={<LucideMail />}
                     />
                   </FormControl>
                   <FormMessage />
@@ -73,11 +72,11 @@ const LoginForm = () => {
               )}
             />
             <div className="flex justify-between">
-              <FormItem>
+              <FormItem className=" flex items-center">
                 <FormControl>
                   <Checkbox />
                 </FormControl>
-                <FormLabel>Remember me</FormLabel>
+                <FormLabel className="m-0">Remember me</FormLabel>
               </FormItem>
               <a href="" className="text-primary">
                 Forgot password?
