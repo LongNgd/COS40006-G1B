@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LucideLogOut, LucideSchool } from "lucide-react";
+import { LucideActivitySquare, LucideLogOut } from "lucide-react";
 import { navigation } from "./navigation";
 import React from "react";
 import { useAuth } from "../../hooks/useAuth.hook";
@@ -15,8 +15,8 @@ const Navbar = () => {
   return (
     <div className="flex flex-col w-64 text-[#d0cde4] bg-[#2f3349] p-3 h-lvh">
       <div className="text-2xl font-bold flex gap-2 items-center">
-        <LucideSchool />
-        SchoolHub
+        <LucideActivitySquare />
+        Visualization Tool
       </div>
       <nav>
         {navigation.map((item, index) => (

@@ -1,3 +1,4 @@
+import { Button } from "../ui/button";
 import {
   Table,
   TableBody,
@@ -14,7 +15,7 @@ const invoices = [
     time: "20 seconds",
     maxattendance: "5",
     warningtime: "None",
-    evidence: "None",
+    timestamp: "None",
   },
   {
     camera: "INV002",
@@ -22,7 +23,7 @@ const invoices = [
     time: "20 seconds",
     maxattendance: "5",
     warningtime: "None",
-    evidence: "None",
+    timestamp: "None",
   },
   {
     camera: "INV003",
@@ -30,7 +31,7 @@ const invoices = [
     time: "20 seconds",
     maxattendance: "6",
     warningtime: "None",
-    evidence: "None",
+    timestamp: "None",
   },
   {
     camera: "INV004",
@@ -38,7 +39,7 @@ const invoices = [
     time: "20 seconds",
     maxattendance: "4",
     warningtime: "None",
-    evidence: "None",
+    timestamp: "None",
   },
   {
     camera: "INV005",
@@ -46,7 +47,7 @@ const invoices = [
     time: "20 seconds",
     maxattendance: "3",
     warningtime: "None",
-    evidence: "None",
+    timestamp: "None",
   },
   {
     camera: "INV006",
@@ -54,7 +55,7 @@ const invoices = [
     time: "20 seconds",
     maxattendance: "4",
     warningtime: "None",
-    evidence: "None",
+    timestamp: "None",
   },
   {
     camera: "INV007",
@@ -62,7 +63,7 @@ const invoices = [
     time: "20 seconds",
     maxattendance: "5",
     warningtime: "None",
-    evidence: "None",
+    timestamp: "None",
   },
 ];
 
@@ -71,23 +72,27 @@ export function TableC() {
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead>No</TableHead>
           <TableHead>Camera</TableHead>
           <TableHead>Area</TableHead>
-          <TableHead>Time of Abnormality</TableHead>
-          <TableHead>Maximum Attendance</TableHead>
+          <TableHead>TimeStamp</TableHead>
+          <TableHead>Duration</TableHead>
+          <TableHead>Max Participant</TableHead>
           <TableHead>Warning Time (seconds)</TableHead>
           <TableHead>Evidence</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.camera}>
+        {invoices.map((invoice, index) => (
+          <TableRow key={index}>
+            <TableCell>{index + 1}</TableCell>
             <TableCell>{invoice.camera}</TableCell>
             <TableCell>{invoice.area}</TableCell>
+            <TableCell>{invoice.timestamp}</TableCell>
             <TableCell>{invoice.time}</TableCell>
             <TableCell>{invoice.maxattendance}</TableCell>
             <TableCell>{invoice.warningtime}</TableCell>
-            <TableCell>{invoice.evidence}</TableCell>
+            <TableCell><Button>view</Button></TableCell>
           </TableRow>
         ))}
       </TableBody>
