@@ -1,4 +1,4 @@
-import { TrendingUp } from "lucide-react"
+import { } from "lucide-react"
 import { Bar, BarChart, CartesianGrid } from "recharts"
 
 import {
@@ -19,22 +19,16 @@ import {
 export const description = "A multiple bar chart"
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { time_and_area: "6h-8h-Floor 1", highest_anomalies: 186},
+  { time_and_area: "7h-9h-Floor 2", highest_anomalies: 150},
+  { time_and_area: "12h-15h-Floor 3", highest_anomalies: 80},
+  { time_and_area: "20h-23h-Floor 4", highest_anomalies: 200},
 ]
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  time_and_area: {
+    label: "Anomaly Peak",
     color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
 
@@ -42,8 +36,8 @@ export function BarC() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Bar Chart </CardTitle>
+        <CardDescription>Time peak in Area</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -53,18 +47,12 @@ export function BarC() {
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <Bar dataKey="highest_anomalies" fill="var(--color-desktop)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
+      <CardFooter>
+
       </CardFooter>
     </Card>
   )

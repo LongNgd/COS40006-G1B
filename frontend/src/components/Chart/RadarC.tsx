@@ -1,7 +1,5 @@
-"use client"
-
-import { TrendingUp } from "lucide-react"
-import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
+import { TrendingDown } from "lucide-react";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -10,74 +8,86 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card"
+} from "../ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../ui/chart"
+} from "../ui/chart";
 
-export const description = "A radar chart with multiple data"
+export const description = "A smaller line chart";
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-]
+  { day: "Monday", number_of_anomalies: 200 },
+  { day: "Tuesday", number_of_anomalies: 160 },
+  { day: "Wednesday", number_of_anomalies: 150 },
+  { day: "Thursday", number_of_anomalies: 160 },
+  { day: "Friday", number_of_anomalies: 100 },
+  { day: "Saturday", number_of_anomalies: 20 },
+  { day: "Sunday", number_of_anomalies: 0 },
+];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  number_of_anomalies: {
+    label: "Num of Anomalies",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function RadarC() {
+export function Line_Graph() {
   return (
     <Card>
-      <CardHeader className="items-center pb-4">
-        <CardTitle>Radar Chart - Multiple</CardTitle>
-        <CardDescription>
-          Showing total visitors for the last 6 months
-        </CardDescription>
+      <CardHeader>
+        <CardTitle>Line Chart</CardTitle>
+        <CardDescription>Number of Anomalies per Week</CardDescription>
       </CardHeader>
-      <CardContent className="pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
-        >
-          <RadarChart data={chartData}>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <LineChart
+            width={300}  // Smaller width
+            height={200}  // Smaller height
+            data={chartData}
+            margin={{
+              top: 5,
+              bottom: 5,
+              left: 10,
+              right: 10,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="day"
+              label={{ value: "Day", position: "insideBottom", offset: -5 }}
+              tickMargin={5}
             />
-            <PolarAngleAxis dataKey="month" />
-            <PolarGrid />
-            <Radar
-              dataKey="desktop"
-              fill="var(--color-desktop)"
-              fillOpacity={0.6}
+            <YAxis
+              label={{ value: "Anomalies", angle: -90, position: "insideLeft" }}
+              tickMargin={5}
             />
-            <Radar dataKey="mobile" fill="var(--color-mobile)" />
-          </RadarChart>
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <Line
+              dataKey="number_of_anomalies"
+              type="monotone"
+              stroke={chartConfig.number_of_anomalies.color}
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="flex items-center gap-2 leading-none text-muted-foreground">
-          January - June 2024
+      <CardFooter>
+        <div className="flex w-full items-start gap-2 text-sm">
+          <div className="grid gap-2">
+            <div className="flex items-center gap-2 font-medium leading-none">
+              Trending down by 5.2% <TrendingDown className="h-4 w-4" />
+            </div>
+            <div className="flex items-center gap-2 leading-none text-muted-foreground">
+              Showing total visitors for the last 6 months
+            </div>
+          </div>
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
