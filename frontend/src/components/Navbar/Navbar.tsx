@@ -4,7 +4,9 @@ import { navigation } from './navigation'
 import React from 'react'
 import { useAuth } from '../../hooks/useAuth.hook'
 
-const Navbar: React.FC<{ handleItemClick: (item: string) => void }> = ({ handleItemClick }) => {
+const Navbar: React.FC<{ handleItemClick: (item: string) => void }> = ({
+  handleItemClick,
+}) => {
   const navigate = useNavigate()
   const { signOut } = useAuth()
 
@@ -18,7 +20,7 @@ const Navbar: React.FC<{ handleItemClick: (item: string) => void }> = ({ handleI
         <LucideActivitySquare />
         Visualization Tool
       </div>
-      <nav>
+      <nav className='flex-grow'>
         {navigation.map((item, index) => (
           <Link
             key={index}
@@ -34,14 +36,14 @@ const Navbar: React.FC<{ handleItemClick: (item: string) => void }> = ({ handleI
             {item.name}
           </Link>
         ))}
-        <a
-          className="flex gap-2 items-center mt-2 py-1 px-6 hover:bg-[#3d4056] hover:cursor-pointer rounded text-lg"
-          onClick={handleSignOut}
-        >
-          <LucideLogOut />
-          Logout
-        </a>
       </nav>
+      <a
+        className="flex gap-2 items-center mt-2 py-1 px-6 hover:bg-[#ff0000] hover:cursor-pointer rounded text-lg"
+        onClick={handleSignOut}
+      >
+        <LucideLogOut />
+        Logout
+      </a>
     </div>
   )
 }
