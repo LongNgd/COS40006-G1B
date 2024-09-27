@@ -1,26 +1,21 @@
-import { AreaC } from "../Chart/AreaC";
 import { BarC } from "../Chart/BarC";
-import LineC from "../Chart/LineC";
-import { Line2C } from "../Chart/LineC2";
-// import { PieC } from "../Chart/PieC";
-// import { Pie2C } from "../Chart/PieC2";
-import { Line_Graph } from "../Chart/RadarC";
+import { Line_Graph } from "../Chart/LineC";
+import { AreaC2 } from "../Chart/AreaC2";
+import { PieC } from "../Chart/PieC";
+import { PieC2 } from "../Chart/PieC2";
 
 const Dashboard = () => {
   return (
     <div>
       <div>Dashboard</div>
       <div className="grid grid-cols-3 gap-4">
-        <LineC />
-        <BarC />
-        {/* <PieC /> */}
-        <div className="col-span-3">
-          <AreaC />
-        </div>
-        <Line2C />
         <Line_Graph />
-        
-        {/* <Pie2C /> */}
+        <BarC />
+        <PieC />
+        <div className="col-span-3">
+          <AreaC2 />
+        </div>
+        <PieC2 />
       </div>
     </div>
   );
