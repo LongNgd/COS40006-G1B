@@ -1,10 +1,18 @@
-import { LucideBell, LucideSun } from "lucide-react"
+import { LucideBell, LucideSun } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
-const HorizontalNavbar = () => {
+const HorizontalNavbar: React.FC<{ name: string }>  = ({name}) => {
   return (
-    <div className="p-2 rounded flex flex-row-reverse items-center gap-4">
-      <LucideBell className='w-5 h-5'/>
-      <LucideSun className='w-5 h-5'/>
+    <div className="bg-[#d3d3d3] mb-4 flex justify-between rounded items-center">
+      <div className='p-2'>{name}</div>
+      <div className="p-2 flex items-center gap-4">
+        <LucideSun className="w-5 h-5" />
+        <LucideBell className="w-5 h-5" />
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      </div>
     </div>
   )
 }

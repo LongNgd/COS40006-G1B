@@ -60,6 +60,8 @@ export function Line_Graph() {
               dataKey="day"
               label={{ value: "Day", position: "insideBottom", offset: -5 }}
               tickMargin={5}
+              // Set default props directly in the component if needed
+              // defaultProps={{ tickMargin: 5 }} // Remove this line if it exists
             />
             <YAxis
               label={{ value: "Anomalies", angle: -90, position: "insideLeft" }}
