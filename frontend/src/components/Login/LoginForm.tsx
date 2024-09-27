@@ -82,11 +82,11 @@ const LoginForm = () => {
               )}
             />
             <div className="flex justify-between">
-              <FormItem className=" flex items-center">
+              <FormItem>
                 <FormControl>
                   <Checkbox />
                 </FormControl>
-                <FormLabel className="m-0">Remember me</FormLabel>
+                <FormLabel>Remember me</FormLabel>
               </FormItem>
               <a href="" className="text-primary">
                 Forgot password?

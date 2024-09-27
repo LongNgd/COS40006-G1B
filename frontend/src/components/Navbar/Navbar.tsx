@@ -34,7 +34,7 @@ const Navbar = () => {
           </Link>
         ))}
         <a
-          className="flex gap-2 items-center mt-2 py-1 px-6 hover:bg-[#3d4056] hover:cursor-pointer rounded text-lg"
+          className="flex gap-2 items-center mt-2 py-1 px-6 hover:bg-[#ff4545] hover:cursor-pointer rounded text-lg"
           onClick={handleSignOut}
         >
           <LucideLogOut />

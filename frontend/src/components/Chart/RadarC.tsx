@@ -1,5 +1,5 @@
-import { TrendingDown } from "lucide-react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { TrendingDown } from 'lucide-react'
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
 
 import {
   Card,
@@ -8,32 +8,32 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from '../ui/card'
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../ui/chart";
+} from '../ui/chart'
 
-export const description = "A smaller line chart";
+export const description = 'A smaller line chart'
 
 const chartData = [
-  { day: "Monday", number_of_anomalies: 200 },
-  { day: "Tuesday", number_of_anomalies: 160 },
-  { day: "Wednesday", number_of_anomalies: 150 },
-  { day: "Thursday", number_of_anomalies: 160 },
-  { day: "Friday", number_of_anomalies: 100 },
-  { day: "Saturday", number_of_anomalies: 20 },
-  { day: "Sunday", number_of_anomalies: 0 },
-];
+  { day: 'Monday', number_of_anomalies: 200 },
+  { day: 'Tuesday', number_of_anomalies: 160 },
+  { day: 'Wednesday', number_of_anomalies: 150 },
+  { day: 'Thursday', number_of_anomalies: 160 },
+  { day: 'Friday', number_of_anomalies: 100 },
+  { day: 'Saturday', number_of_anomalies: 20 },
+  { day: 'Sunday', number_of_anomalies: 0 },
+]
 
 const chartConfig = {
   number_of_anomalies: {
-    label: "Num of Anomalies",
-    color: "hsl(var(--chart-1))",
+    label: 'Num of Anomalies',
+    color: 'hsl(var(--chart-1))',
   },
-} satisfies ChartConfig;
+} satisfies ChartConfig
 
 export function Line_Graph() {
   return (
@@ -44,25 +44,15 @@ export function Line_Graph() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <LineChart
-            width={300}  // Smaller width
-            height={200}  // Smaller height
-            data={chartData}
-            margin={{
-              top: 5,
-              bottom: 5,
-              left: 10,
-              right: 10,
-            }}
-          >
+          <LineChart data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="day"
-              label={{ value: "Day", position: "insideBottom", offset: -5 }}
+              label={{ position: 'insideBottom' }}
               tickMargin={5}
             />
             <YAxis
-              label={{ value: "Anomalies", angle: -90, position: "insideLeft" }}
+              label={{ value: 'Anomalies', angle: -90, position: 'insideLeft' }}
               tickMargin={5}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
@@ -89,5 +79,5 @@ export function Line_Graph() {
         </div>
       </CardFooter>
     </Card>
-  );
+  )
 }
