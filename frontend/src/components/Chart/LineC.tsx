@@ -1,5 +1,6 @@
-import { TrendingUp } from "lucide-react";
-import { Area, AreaChart, CartesianGrid } from "recharts";
+import { TrendingDown } from "lucide-react";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+
 import {
   Card,
   CardContent,
@@ -15,84 +16,76 @@ import {
   ChartTooltipContent,
 } from "../ui/chart";
 
-export const description = "A stacked area chart";
+export const description = "A smaller line chart";
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { day: "Monday", number_of_anomalies: 200 },
+  { day: "Tuesday", number_of_anomalies: 160 },
+  { day: "Wednesday", number_of_anomalies: 150 },
+  { day: "Thursday", number_of_anomalies: 160 },
+  { day: "Friday", number_of_anomalies: 100 },
+  { day: "Saturday", number_of_anomalies: 20 },
+  { day: "Sunday", number_of_anomalies: 0 },
 ];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  number_of_anomalies: {
+    label: "Num of Anomalies",
     color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
-const LineC = () => {
+export function Line_Graph() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Stacked</CardTitle>
-        <CardDescription>
-          Showing total visitors for the last 6 months
-        </CardDescription>
+        <CardTitle>Line Chart</CardTitle>
+        <CardDescription>Number of Anomalies per Week</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <AreaChart
-            accessibilityLayer
+          <LineChart
+            width={300}  // Smaller width
+            height={200}  // Smaller height
             data={chartData}
             margin={{
-              left: 12,
-              right: 12,
+              top: 5,
+              bottom: 5,
+              left: 10,
+              right: 10,
             }}
           >
             <CartesianGrid vertical={false} />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dot" />}
+            <XAxis
+              dataKey="day"
+              label={{ value: "Day", position: "insideBottom", offset: -5 }}
+              tickMargin={5}
             />
-            <Area
-              dataKey="mobile"
-              type="natural"
-              fill="var(--color-mobile)"
-              fillOpacity={0.4}
-              stroke="var(--color-mobile)"
-              stackId="a"
+            <YAxis
+              label={{ value: "Anomalies", angle: -90, position: "insideLeft" }}
+              tickMargin={5}
             />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill="var(--color-desktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
-              stackId="a"
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <Line
+              dataKey="number_of_anomalies"
+              type="monotone"
+              stroke={chartConfig.number_of_anomalies.color}
+              strokeWidth={2}
+              dot={false}
             />
-          </AreaChart>
+          </LineChart>
         </ChartContainer>
       </CardContent>
       <CardFooter>
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              Trending down by 5.2% <TrendingDown className="h-4 w-4" />
             </div>
-            <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
-            </div>
+            
           </div>
         </div>
       </CardFooter>
     </Card>
   );
 }
-export default LineC;
