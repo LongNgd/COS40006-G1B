@@ -1,14 +1,26 @@
-import { LucideFileSignature, LucideLayoutDashboard } from "lucide-react";
+import { LucideFileSignature, LucideLayoutDashboard, LucideUsers } from 'lucide-react'
 
 export const navigation = [
   {
-    name: "Dashboard",
-    link: "/dashboard",
-    icon: LucideLayoutDashboard,
+    link: '/dashboard',
+    label: 'Dashboard',
+    isParent: false,
+    icon: <LucideLayoutDashboard />,
   },
   {
-    name: "Anomaly Report",
-    link: "/report",
-    icon: LucideFileSignature,
+    link: '/about',
+    label: 'About',
+    isParent: false,
+    icon: <LucideUsers />,
   },
-];
+  {
+    label: 'Report',
+    isParent: true,
+    icon: <LucideFileSignature />,
+    children: [
+      { label: 'Physical Assault', link: '/report' },
+      { label: 'Student lateness', link: '/demo1' },
+      { label: 'Exam cheating', link: '/demo2' },
+    ],
+  },
+]

@@ -3,11 +3,15 @@ import { Line_Graph } from "../Chart/LineC";
 import { AreaC2 } from "../Chart/AreaC2";
 import { PieC } from "../Chart/PieC";
 import { PieC2 } from "../Chart/PieC2";
+import OverallInformation from "../Chart/OverallInformation";
 
 const Dashboard = () => {
   return (
     <div>
       <div className="grid grid-cols-3 gap-4">
+        <div className="col-span-3">
+          <OverallInformation />
+        </div>
         <Line_Graph />
         <BarC />
         <PieC />
