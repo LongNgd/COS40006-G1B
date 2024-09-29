@@ -1,5 +1,5 @@
-import { TrendingDown } from "lucide-react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { TrendingDown } from 'lucide-react'
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
 
 import {
   Card,
@@ -8,64 +8,58 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from '../ui/card'
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../ui/chart";
+} from '../ui/chart'
+import { anomalyData } from '../../assets/anomalydata'
 
-export const description = "A smaller line chart";
-
-const chartData = [
-  { day: "Monday", number_of_anomalies: 200 },
-  { day: "Tuesday", number_of_anomalies: 160 },
-  { day: "Wednesday", number_of_anomalies: 150 },
-  { day: "Thursday", number_of_anomalies: 160 },
-  { day: "Friday", number_of_anomalies: 100 },
-  { day: "Saturday", number_of_anomalies: 20 },
-  { day: "Sunday", number_of_anomalies: 0 },
-];
+interface Line_GraphProps {
+  timeRange: string
+}
 
 const chartConfig = {
   number_of_anomalies: {
-    label: "Num of Anomalies",
-    color: "hsl(var(--chart-1))",
+    label: 'Num of Anomalies',
+    color: 'hsl(var(--chart-1))',
   },
-} satisfies ChartConfig;
+} satisfies ChartConfig
 
-export function Line_Graph() {
+export function Line_Graph({ timeRange }: Line_GraphProps) {
+  const filteredData = anomalyData.filter((item) => {
+    const [day, month, year] = item.date.split('/').map(Number) // Parse date correctly
+    const date = new Date(year, month - 1, day) // Create date object
+    const now = new Date('2024-07-02') // Adjusted date format
+    let daysToSubtract = 7
+    if (timeRange === 'month') {
+      daysToSubtract = 30
+    } else if (timeRange === '3month') {
+      daysToSubtract = 90
+    }
+    now.setDate(now.getDate() - daysToSubtract)
+    console.log(date, now)
+
+    return date >= now
+  })
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Line Chart</CardTitle>
+        <CardTitle>Number of Anomalies</CardTitle>
         <CardDescription>Number of Anomalies per Week</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <LineChart
-            width={300}  // Smaller width
-            height={200}  // Smaller height
-            data={chartData}
-            margin={{
-              top: 5,
-              bottom: 5,
-              left: 10,
-              right: 10,
-            }}
-          >
+          <LineChart data={filteredData}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="day"
-              label={{ value: "Day", position: "insideBottom", offset: -5 }}
-              tickMargin={5}
-              // Set default props directly in the component if needed
-              // defaultProps={{ tickMargin: 5 }} // Remove this line if it exists
+              dataKey="date"
+              label={{ value: 'Day', position: 'insideBottom', offset: 0 }}
             />
             <YAxis
-              label={{ value: "Anomalies", angle: -90, position: "insideLeft" }}
-              tickMargin={5}
+              label={{ value: 'Anomalies', angle: -90, position: 'insideLeft' }}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Line
@@ -84,10 +78,9 @@ export function Line_Graph() {
             <div className="flex items-center gap-2 font-medium leading-none">
               Trending down by 5.2% <TrendingDown className="h-4 w-4" />
             </div>
-            
           </div>
         </div>
       </CardFooter>
     </Card>
-  );
+  )
 }

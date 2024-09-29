@@ -1,5 +1,5 @@
-interface Anomaly {
-    id: number;
+export interface Anomaly {
+    key: number;
     date: string;
     number_of_anomalies: number;
     camera_id: string;
@@ -11,7 +11,7 @@ interface Anomaly {
 
 export const anomalyData: Anomaly[] = [
   {
-    id: 1,
+    key: 1,
     date: '29/02/2024',
     number_of_anomalies: 78,
     camera_id: 'CAM10-1',
@@ -21,7 +21,7 @@ export const anomalyData: Anomaly[] = [
     duration: 6,
   },
   {
-    id: 2,
+    key: 2,
     date: '04/07/2024',
     number_of_anomalies: 45,
     camera_id: 'CAM08-1',
@@ -31,7 +31,7 @@ export const anomalyData: Anomaly[] = [
     duration: 16,
   },
   {
-    id: 3,
+    key: 3,
     date: '17/03/2024',
     number_of_anomalies: 70,
     camera_id: 'CAM10-2',
@@ -41,7 +41,7 @@ export const anomalyData: Anomaly[] = [
     duration: 20,
   },
   {
-    id: 4,
+    key: 4,
     date: '19/10/2023',
     number_of_anomalies: 69,
     camera_id: 'CAM10-3',
@@ -51,7 +51,7 @@ export const anomalyData: Anomaly[] = [
     duration: 15,
   },
   {
-    id: 5,
+    key: 5,
     date: '03/10/2023',
     number_of_anomalies: 48,
     camera_id: 'CAM10-2',
@@ -61,7 +61,7 @@ export const anomalyData: Anomaly[] = [
     duration: 7,
   },
   {
-    id: 6,
+    key: 6,
     date: '03/11/2023',
     number_of_anomalies: 74,
     camera_id: 'CAM10-2',
@@ -71,7 +71,7 @@ export const anomalyData: Anomaly[] = [
     duration: 12,
   },
   {
-    id: 7,
+    key: 7,
     date: '02/07/2024',
     number_of_anomalies: 81,
     camera_id: 'CAM05-5',
@@ -81,7 +81,7 @@ export const anomalyData: Anomaly[] = [
     duration: 19,
   },
   {
-    id: 8,
+    key: 8,
     date: '16/01/2024',
     number_of_anomalies: 14,
     camera_id: 'CAM02-6',
@@ -91,7 +91,7 @@ export const anomalyData: Anomaly[] = [
     duration: 11,
   },
   {
-    id: 9,
+    key: 9,
     date: '10/04/2024',
     number_of_anomalies: 62,
     camera_id: 'CAM01-3',
@@ -101,7 +101,7 @@ export const anomalyData: Anomaly[] = [
     duration: 8,
   },
   {
-    id: 10,
+    key: 10,
     date: '17/11/2023',
     number_of_anomalies: 39,
     camera_id: 'CAM10-2',
@@ -111,7 +111,7 @@ export const anomalyData: Anomaly[] = [
     duration: 6,
   },
   {
-    id: 11,
+    key: 11,
     date: '20/02/2024',
     number_of_anomalies: 6,
     camera_id: 'CAM10-3',
@@ -121,7 +121,7 @@ export const anomalyData: Anomaly[] = [
     duration: 14,
   },
   {
-    id: 12,
+    key: 12,
     date: '17/01/2024',
     number_of_anomalies: 59,
     camera_id: 'CAM10-9',
@@ -131,7 +131,7 @@ export const anomalyData: Anomaly[] = [
     duration: 20,
   },
   {
-    id: 13,
+    key: 13,
     date: '03/12/2023',
     number_of_anomalies: 44,
     camera_id: 'CAM02-5',
@@ -141,7 +141,7 @@ export const anomalyData: Anomaly[] = [
     duration: 17,
   },
   {
-    id: 14,
+    key: 14,
     date: '04/06/2024',
     number_of_anomalies: 4,
     camera_id: 'CAM10-3',
@@ -151,7 +151,7 @@ export const anomalyData: Anomaly[] = [
     duration: 13,
   },
   {
-    id: 15,
+    key: 15,
     date: '04/04/2024',
     number_of_anomalies: 19,
     camera_id: 'CAM10-5',
@@ -161,7 +161,7 @@ export const anomalyData: Anomaly[] = [
     duration: 7,
   },
   {
-    id: 16,
+    key: 16,
     date: '29/11/2023',
     number_of_anomalies: 86,
     camera_id: 'CAM10-8',
@@ -171,7 +171,7 @@ export const anomalyData: Anomaly[] = [
     duration: 20,
   },
   {
-    id: 17,
+    key: 17,
     date: '28/10/2023',
     number_of_anomalies: 71,
     camera_id: 'CAM01-5',
@@ -181,7 +181,7 @@ export const anomalyData: Anomaly[] = [
     duration: 3,
   },
   {
-    id: 18,
+    key: 18,
     date: '06/12/2023',
     number_of_anomalies: 43,
     camera_id: 'CAM01-5',
@@ -191,7 +191,7 @@ export const anomalyData: Anomaly[] = [
     duration: 7,
   },
   {
-    id: 19,
+    key: 19,
     date: '28/06/2024',
     number_of_anomalies: 34,
     camera_id: 'CAM10-9',
@@ -201,7 +201,7 @@ export const anomalyData: Anomaly[] = [
     duration: 3,
   },
   {
-    id: 20,
+    key: 20,
     date: '09/11/2023',
     number_of_anomalies: 32,
     camera_id: 'CAM05-6',
@@ -211,7 +211,7 @@ export const anomalyData: Anomaly[] = [
     duration: 6,
   },
   {
-    id: 21,
+    key: 21,
     date: '14/11/2023',
     number_of_anomalies: 72,
     camera_id: 'CAM10-8',
@@ -221,7 +221,7 @@ export const anomalyData: Anomaly[] = [
     duration: 9,
   },
   {
-    id: 22,
+    key: 22,
     date: '14/07/2024',
     number_of_anomalies: 68,
     camera_id: 'CAM10-9',
@@ -231,7 +231,7 @@ export const anomalyData: Anomaly[] = [
     duration: 14,
   },
   {
-    id: 23,
+    key: 23,
     date: '14/08/2024',
     number_of_anomalies: 73,
     camera_id: 'CAM03-4',
@@ -241,7 +241,7 @@ export const anomalyData: Anomaly[] = [
     duration: 18,
   },
   {
-    id: 24,
+    key: 24,
     date: '10/01/2024',
     number_of_anomalies: 58,
     camera_id: 'CAM10-8',
@@ -251,7 +251,7 @@ export const anomalyData: Anomaly[] = [
     duration: 15,
   },
   {
-    id: 25,
+    key: 25,
     date: '30/11/2023',
     number_of_anomalies: 26,
     camera_id: 'CAM10-5',
@@ -261,7 +261,7 @@ export const anomalyData: Anomaly[] = [
     duration: 16,
   },
   {
-    id: 26,
+    key: 26,
     date: '30/04/2024',
     number_of_anomalies: 62,
     camera_id: 'CAM05-3',
@@ -271,7 +271,7 @@ export const anomalyData: Anomaly[] = [
     duration: 4,
   },
   {
-    id: 27,
+    key: 27,
     date: '19/01/2024',
     number_of_anomalies: 84,
     camera_id: 'CAM02-2',
@@ -281,7 +281,7 @@ export const anomalyData: Anomaly[] = [
     duration: 7,
   },
   {
-    id: 28,
+    key: 28,
     date: '25/11/2023',
     number_of_anomalies: 10,
     camera_id: 'CAM05-7',
@@ -291,7 +291,7 @@ export const anomalyData: Anomaly[] = [
     duration: 10,
   },
   {
-    id: 29,
+    key: 29,
     date: '06/10/2023',
     number_of_anomalies: 52,
     camera_id: 'CAM01-4',
@@ -301,7 +301,7 @@ export const anomalyData: Anomaly[] = [
     duration: 6,
   },
   {
-    id: 30,
+    key: 30,
     date: '09/11/2023',
     number_of_anomalies: 65,
     camera_id: 'CAM02-9',
@@ -311,7 +311,7 @@ export const anomalyData: Anomaly[] = [
     duration: 14,
   },
   {
-    id: 31,
+    key: 31,
     date: '04/02/2024',
     number_of_anomalies: 63,
     camera_id: 'CAM10-1',
@@ -321,7 +321,7 @@ export const anomalyData: Anomaly[] = [
     duration: 17,
   },
   {
-    id: 32,
+    key: 32,
     date: '14/10/2023',
     number_of_anomalies: 53,
     camera_id: 'CAM10-1',
@@ -331,7 +331,7 @@ export const anomalyData: Anomaly[] = [
     duration: 7,
   },
   {
-    id: 33,
+    key: 33,
     date: '10/07/2024',
     number_of_anomalies: 3,
     camera_id: 'CAM06-1',
@@ -341,7 +341,7 @@ export const anomalyData: Anomaly[] = [
     duration: 18,
   },
   {
-    id: 34,
+    key: 34,
     date: '30/05/2024',
     number_of_anomalies: 94,
     camera_id: 'CAM07-3',
@@ -351,7 +351,7 @@ export const anomalyData: Anomaly[] = [
     duration: 8,
   },
   {
-    id: 35,
+    key: 35,
     date: '23/09/2024',
     number_of_anomalies: 75,
     camera_id: 'CAM10-8',
@@ -361,7 +361,7 @@ export const anomalyData: Anomaly[] = [
     duration: 18,
   },
   {
-    id: 36,
+    key: 36,
     date: '05/01/2024',
     number_of_anomalies: 86,
     camera_id: 'CAM07-5',
@@ -371,7 +371,7 @@ export const anomalyData: Anomaly[] = [
     duration: 15,
   },
   {
-    id: 37,
+    key: 37,
     date: '28/09/2023',
     number_of_anomalies: 89,
     camera_id: 'CAM02-4',
@@ -381,7 +381,7 @@ export const anomalyData: Anomaly[] = [
     duration: 13,
   },
   {
-    id: 38,
+    key: 38,
     date: '05/12/2023',
     number_of_anomalies: 60,
     camera_id: 'CAM10-2',
@@ -391,7 +391,7 @@ export const anomalyData: Anomaly[] = [
     duration: 15,
   },
   {
-    id: 39,
+    key: 39,
     date: '20/07/2024',
     number_of_anomalies: 60,
     camera_id: 'CAM10-5',
@@ -401,7 +401,7 @@ export const anomalyData: Anomaly[] = [
     duration: 4,
   },
   {
-    id: 40,
+    key: 40,
     date: '29/10/2023',
     number_of_anomalies: 96,
     camera_id: 'CAM10-2',
@@ -411,7 +411,7 @@ export const anomalyData: Anomaly[] = [
     duration: 16,
   },
   {
-    id: 41,
+    key: 41,
     date: '06/11/2023',
     number_of_anomalies: 79,
     camera_id: 'CAM04-9',
@@ -421,7 +421,7 @@ export const anomalyData: Anomaly[] = [
     duration: 7,
   },
   {
-    id: 42,
+    key: 42,
     date: '17/08/2024',
     number_of_anomalies: 21,
     camera_id: 'CAM05-6',
@@ -431,7 +431,7 @@ export const anomalyData: Anomaly[] = [
     duration: 12,
   },
   {
-    id: 43,
+    key: 43,
     date: '21/07/2024',
     number_of_anomalies: 43,
     camera_id: 'CAM10-7',
@@ -441,7 +441,7 @@ export const anomalyData: Anomaly[] = [
     duration: 14,
   },
   {
-    id: 44,
+    key: 44,
     date: '03/05/2024',
     number_of_anomalies: 27,
     camera_id: 'CAM10-3',
@@ -451,7 +451,7 @@ export const anomalyData: Anomaly[] = [
     duration: 9,
   },
   {
-    id: 45,
+    key: 45,
     date: '31/03/2024',
     number_of_anomalies: 83,
     camera_id: 'CAM10-9',
@@ -461,7 +461,7 @@ export const anomalyData: Anomaly[] = [
     duration: 17,
   },
   {
-    id: 46,
+    key: 46,
     date: '08/04/2024',
     number_of_anomalies: 52,
     camera_id: 'CAM03-6',
@@ -471,7 +471,7 @@ export const anomalyData: Anomaly[] = [
     duration: 18,
   },
   {
-    id: 47,
+    key: 47,
     date: '11/12/2023',
     number_of_anomalies: 78,
     camera_id: 'CAM07-3',
@@ -481,7 +481,7 @@ export const anomalyData: Anomaly[] = [
     duration: 13,
   },
   {
-    id: 48,
+    key: 48,
     date: '22/06/2024',
     number_of_anomalies: 58,
     camera_id: 'CAM10-9',
@@ -491,7 +491,7 @@ export const anomalyData: Anomaly[] = [
     duration: 5,
   },
   {
-    id: 49,
+    key: 49,
     date: '11/10/2023',
     number_of_anomalies: 100,
     camera_id: 'CAM10-1',
@@ -501,7 +501,7 @@ export const anomalyData: Anomaly[] = [
     duration: 19,
   },
   {
-    id: 50,
+    key: 50,
     date: '11/03/2024',
     number_of_anomalies: 78,
     camera_id: 'CAM06-1',
@@ -511,7 +511,7 @@ export const anomalyData: Anomaly[] = [
     duration: 6,
   },
   {
-    id: 51,
+    key: 51,
     date: '25/01/2024',
     number_of_anomalies: 29,
     camera_id: 'CAM08-5',
@@ -521,7 +521,7 @@ export const anomalyData: Anomaly[] = [
     duration: 5,
   },
   {
-    id: 52,
+    key: 52,
     date: '04/09/2024',
     number_of_anomalies: 64,
     camera_id: 'CAM10-9',
@@ -531,7 +531,7 @@ export const anomalyData: Anomaly[] = [
     duration: 8,
   },
   {
-    id: 53,
+    key: 53,
     date: '10/05/2024',
     number_of_anomalies: 89,
     camera_id: 'CAM01-7',
@@ -541,7 +541,7 @@ export const anomalyData: Anomaly[] = [
     duration: 8,
   },
   {
-    id: 54,
+    key: 54,
     date: '22/07/2024',
     number_of_anomalies: 43,
     camera_id: 'CAM03-5',
@@ -551,7 +551,7 @@ export const anomalyData: Anomaly[] = [
     duration: 9,
   },
   {
-    id: 55,
+    key: 55,
     date: '21/09/2024',
     number_of_anomalies: 61,
     camera_id: 'CAM04-2',
@@ -561,7 +561,7 @@ export const anomalyData: Anomaly[] = [
     duration: 5,
   },
   {
-    id: 56,
+    key: 56,
     date: '17/07/2024',
     number_of_anomalies: 72,
     camera_id: 'CAM02-9',
@@ -571,7 +571,7 @@ export const anomalyData: Anomaly[] = [
     duration: 20,
   },
   {
-    id: 57,
+    key: 57,
     date: '14/06/2024',
     number_of_anomalies: 62,
     camera_id: 'CAM06-6',
@@ -581,7 +581,7 @@ export const anomalyData: Anomaly[] = [
     duration: 9,
   },
   {
-    id: 58,
+    key: 58,
     date: '24/05/2024',
     number_of_anomalies: 74,
     camera_id: 'CAM10-3',
@@ -591,7 +591,7 @@ export const anomalyData: Anomaly[] = [
     duration: 10,
   },
   {
-    id: 59,
+    key: 59,
     date: '21/06/2024',
     number_of_anomalies: 93,
     camera_id: 'CAM05-7',
@@ -601,7 +601,7 @@ export const anomalyData: Anomaly[] = [
     duration: 17,
   },
   {
-    id: 60,
+    key: 60,
     date: '27/10/2023',
     number_of_anomalies: 34,
     camera_id: 'CAM10-8',
@@ -611,7 +611,7 @@ export const anomalyData: Anomaly[] = [
     duration: 4,
   },
   {
-    id: 61,
+    key: 61,
     date: '27/07/2024',
     number_of_anomalies: 45,
     camera_id: 'CAM10-4',
@@ -621,7 +621,7 @@ export const anomalyData: Anomaly[] = [
     duration: 4,
   },
   {
-    id: 62,
+    key: 62,
     date: '28/04/2024',
     number_of_anomalies: 93,
     camera_id: 'CAM10-2',
@@ -631,7 +631,7 @@ export const anomalyData: Anomaly[] = [
     duration: 8,
   },
   {
-    id: 63,
+    key: 63,
     date: '04/10/2023',
     number_of_anomalies: 31,
     camera_id: 'CAM05-3',
@@ -641,7 +641,7 @@ export const anomalyData: Anomaly[] = [
     duration: 7,
   },
   {
-    id: 64,
+    key: 64,
     date: '19/07/2024',
     number_of_anomalies: 84,
     camera_id: 'CAM10-8',
@@ -651,7 +651,7 @@ export const anomalyData: Anomaly[] = [
     duration: 14,
   },
   {
-    id: 65,
+    key: 65,
     date: '20/01/2024',
     number_of_anomalies: 13,
     camera_id: 'CAM10-2',
@@ -661,7 +661,7 @@ export const anomalyData: Anomaly[] = [
     duration: 5,
   },
   {
-    id: 66,
+    key: 66,
     date: '20/05/2024',
     number_of_anomalies: 72,
     camera_id: 'CAM10-7',
@@ -671,7 +671,7 @@ export const anomalyData: Anomaly[] = [
     duration: 3,
   },
   {
-    id: 67,
+    key: 67,
     date: '10/12/2023',
     number_of_anomalies: 68,
     camera_id: 'CAM10-9',
@@ -681,7 +681,7 @@ export const anomalyData: Anomaly[] = [
     duration: 7,
   },
   {
-    id: 68,
+    key: 68,
     date: '27/01/2024',
     number_of_anomalies: 80,
     camera_id: 'CAM10-7',
@@ -691,7 +691,7 @@ export const anomalyData: Anomaly[] = [
     duration: 9,
   },
   {
-    id: 69,
+    key: 69,
     date: '26/02/2024',
     number_of_anomalies: 8,
     camera_id: 'CAM10-5',
@@ -701,7 +701,7 @@ export const anomalyData: Anomaly[] = [
     duration: 14,
   },
   {
-    id: 70,
+    key: 70,
     date: '28/08/2024',
     number_of_anomalies: 16,
     camera_id: 'CAM10-7',
@@ -711,7 +711,7 @@ export const anomalyData: Anomaly[] = [
     duration: 6,
   },
   {
-    id: 71,
+    key: 71,
     date: '19/04/2024',
     number_of_anomalies: 48,
     camera_id: 'CAM05-4',
@@ -721,7 +721,7 @@ export const anomalyData: Anomaly[] = [
     duration: 6,
   },
   {
-    id: 72,
+    key: 72,
     date: '10/12/2023',
     number_of_anomalies: 44,
     camera_id: 'CAM10-4',
@@ -731,7 +731,7 @@ export const anomalyData: Anomaly[] = [
     duration: 7,
   },
   {
-    id: 73,
+    key: 73,
     date: '29/02/2024',
     number_of_anomalies: 54,
     camera_id: 'CAM08-5',
@@ -741,7 +741,7 @@ export const anomalyData: Anomaly[] = [
     duration: 18,
   },
   {
-    id: 74,
+    key: 74,
     date: '01/10/2023',
     number_of_anomalies: 46,
     camera_id: 'CAM10-6',
@@ -751,7 +751,7 @@ export const anomalyData: Anomaly[] = [
     duration: 20,
   },
   {
-    id: 75,
+    key: 75,
     date: '11/04/2024',
     number_of_anomalies: 27,
     camera_id: 'CAM10-8',
@@ -761,7 +761,7 @@ export const anomalyData: Anomaly[] = [
     duration: 20,
   },
   {
-    id: 76,
+    key: 76,
     date: '10/08/2024',
     number_of_anomalies: 36,
     camera_id: 'CAM10-5',
@@ -771,7 +771,7 @@ export const anomalyData: Anomaly[] = [
     duration: 15,
   },
   {
-    id: 77,
+    key: 77,
     date: '31/10/2023',
     number_of_anomalies: 34,
     camera_id: 'CAM09-5',
@@ -781,7 +781,7 @@ export const anomalyData: Anomaly[] = [
     duration: 14,
   },
   {
-    id: 78,
+    key: 78,
     date: '23/10/2023',
     number_of_anomalies: 29,
     camera_id: 'CAM10-9',
@@ -791,7 +791,7 @@ export const anomalyData: Anomaly[] = [
     duration: 6,
   },
   {
-    id: 79,
+    key: 79,
     date: '25/04/2024',
     number_of_anomalies: 74,
     camera_id: 'CAM06-8',
@@ -801,7 +801,7 @@ export const anomalyData: Anomaly[] = [
     duration: 17,
   },
   {
-    id: 80,
+    key: 80,
     date: '05/07/2024',
     number_of_anomalies: 77,
     camera_id: 'CAM04-1',
@@ -811,7 +811,7 @@ export const anomalyData: Anomaly[] = [
     duration: 17,
   },
   {
-    id: 81,
+    key: 81,
     date: '10/09/2024',
     number_of_anomalies: 66,
     camera_id: 'CAM10-8',
@@ -821,7 +821,7 @@ export const anomalyData: Anomaly[] = [
     duration: 14,
   },
   {
-    id: 82,
+    key: 82,
     date: '06/02/2024',
     number_of_anomalies: 43,
     camera_id: 'CAM10-3',
@@ -831,7 +831,7 @@ export const anomalyData: Anomaly[] = [
     duration: 6,
   },
   {
-    id: 83,
+    key: 83,
     date: '28/09/2023',
     number_of_anomalies: 28,
     camera_id: 'CAM08-6',
@@ -841,7 +841,7 @@ export const anomalyData: Anomaly[] = [
     duration: 15,
   },
   {
-    id: 84,
+    key: 84,
     date: '03/06/2024',
     number_of_anomalies: 42,
     camera_id: 'CAM05-6',
@@ -851,7 +851,7 @@ export const anomalyData: Anomaly[] = [
     duration: 14,
   },
   {
-    id: 85,
+    key: 85,
     date: '18/03/2024',
     number_of_anomalies: 10,
     camera_id: 'CAM06-1',
@@ -861,7 +861,7 @@ export const anomalyData: Anomaly[] = [
     duration: 13,
   },
   {
-    id: 86,
+    key: 86,
     date: '07/11/2023',
     number_of_anomalies: 82,
     camera_id: 'CAM06-3',
@@ -871,7 +871,7 @@ export const anomalyData: Anomaly[] = [
     duration: 9,
   },
   {
-    id: 87,
+    key: 87,
     date: '17/12/2023',
     number_of_anomalies: 38,
     camera_id: 'CAM10-9',
@@ -881,7 +881,7 @@ export const anomalyData: Anomaly[] = [
     duration: 13,
   },
   {
-    id: 88,
+    key: 88,
     date: '04/12/2023',
     number_of_anomalies: 96,
     camera_id: 'CAM10-6',
@@ -891,7 +891,7 @@ export const anomalyData: Anomaly[] = [
     duration: 13,
   },
   {
-    id: 89,
+    key: 89,
     date: '22/12/2023',
     number_of_anomalies: 19,
     camera_id: 'CAM10-7',
@@ -901,7 +901,7 @@ export const anomalyData: Anomaly[] = [
     duration: 7,
   },
   {
-    id: 90,
+    key: 90,
     date: '07/12/2023',
     number_of_anomalies: 99,
     camera_id: 'CAM10-1',
@@ -911,7 +911,7 @@ export const anomalyData: Anomaly[] = [
     duration: 18,
   },
   {
-    id: 91,
+    key: 91,
     date: '17/03/2024',
     number_of_anomalies: 11,
     camera_id: 'CAM10-1',
@@ -921,7 +921,7 @@ export const anomalyData: Anomaly[] = [
     duration: 12,
   },
   {
-    id: 92,
+    key: 92,
     date: '05/08/2024',
     number_of_anomalies: 46,
     camera_id: 'CAM07-8',
@@ -931,7 +931,7 @@ export const anomalyData: Anomaly[] = [
     duration: 12,
   },
   {
-    id: 93,
+    key: 93,
     date: '21/10/2023',
     number_of_anomalies: 31,
     camera_id: 'CAM03-8',
@@ -941,7 +941,7 @@ export const anomalyData: Anomaly[] = [
     duration: 12,
   },
   {
-    id: 94,
+    key: 94,
     date: '30/05/2024',
     number_of_anomalies: 27,
     camera_id: 'CAM01-9',
@@ -951,7 +951,7 @@ export const anomalyData: Anomaly[] = [
     duration: 11,
   },
   {
-    id: 95,
+    key: 95,
     date: '17/11/2023',
     number_of_anomalies: 96,
     camera_id: 'CAM04-6',
@@ -961,7 +961,7 @@ export const anomalyData: Anomaly[] = [
     duration: 19,
   },
   {
-    id: 96,
+    key: 96,
     date: '11/11/2023',
     number_of_anomalies: 91,
     camera_id: 'CAM10-9',
@@ -971,7 +971,7 @@ export const anomalyData: Anomaly[] = [
     duration: 12,
   },
   {
-    id: 97,
+    key: 97,
     date: '29/01/2024',
     number_of_anomalies: 66,
     camera_id: 'CAM07-7',
@@ -981,7 +981,7 @@ export const anomalyData: Anomaly[] = [
     duration: 9,
   },
   {
-    id: 98,
+    key: 98,
     date: '10/10/2023',
     number_of_anomalies: 11,
     camera_id: 'CAM07-8',
@@ -991,7 +991,7 @@ export const anomalyData: Anomaly[] = [
     duration: 20,
   },
   {
-    id: 99,
+    key: 99,
     date: '15/03/2024',
     number_of_anomalies: 0,
     camera_id: 'CAM01-3',
@@ -1001,7 +1001,7 @@ export const anomalyData: Anomaly[] = [
     duration: 15,
   },
   {
-    id: 100,
+    key: 100,
     date: '21/04/2024',
     number_of_anomalies: 20,
     camera_id: 'CAM10-4',

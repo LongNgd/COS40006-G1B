@@ -13,9 +13,9 @@ const Layout = () => {
   return (
     <div className="flex">
       <Navbar getLabel={handleClick}/>
-      <ScrollArea className="p-4 flex-1 h-lvh">
+      <ScrollArea className="flex-1 h-lvh">
         <HorizontalNavbar name={name}/>
-        <Outlet />
+        <Outlet/>
       </ScrollArea>
     </div>
   )

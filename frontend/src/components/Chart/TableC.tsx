@@ -1,100 +1,93 @@
-import { Button } from '../ui/button'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../ui/table'
-
-import { anomalyData } from '../../assets/anomalydata'
-import { useState } from 'react'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '../ui/pagination'
+import { Modal, Table, Button } from 'antd'
+import { Anomaly, anomalyData } from '../../assets/anomalydata'
+import { Key, useState } from 'react'
+import Evidence from './Evidence'
 
 export function TableC() {
-  const rowPerPage = 10
-  const [startIndex, setStartIndex] = useState(0)
-  const [endIndex, setEndIndex] = useState(rowPerPage)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const columns = [
+    {
+      title: 'No',
+      dataIndex: 'key',
+      key: 'key',
+    },
+    {
+      title: 'Camera',
+      dataIndex: 'camera_id',
+      key: 'camera_id',
+      filters: Array.from({ length: 10 }, (_, i) => ({
+        text: `Floor ${i + 1}`,
+        value: `CAM0${i + 1}`,
+      })),
+      onFilter: (value: Key | boolean, record: Anomaly) => {
+        return record.camera_id.startsWith(value.toString())
+      },
+    },
+    {
+      title: 'Area',
+      dataIndex: 'area',
+      key: 'area',
+      filters: [
+        { text: 'Classroom', value: 'classroom' },
+        { text: 'Gymnasium', value: 'gymnasium' },
+        { text: 'Cafeteria', value: 'cafeteria' },
+        { text: 'Playground', value: 'playground' },
+        { text: 'Library', value: 'library' },
+      ],
+      onFilter: (value: Key | boolean, record: Anomaly) => {
+        return record.area.includes(value.toString())
+      },
+    },
+    {
+      title: 'TimeStamp',
+      dataIndex: 'date',
+      key: 'date',
+    },
+    {
+      title: 'Duration',
+      dataIndex: 'duration',
+      key: 'duration',
+      render: (duration: number) => <span>{duration} seconds</span>,
+    },
+    {
+      title: 'Warning',
+      dataIndex: 'warning',
+      key: 'warning',
+      filters: [
+        { text: 'no weapon', value: 'no' },
+        { text: 'have weapon', value: 'have' },
+      ],
+      onFilter: (value: Key | boolean, record: Anomaly) => {
+        return record.warning.startsWith(value.toString())
+      },
+    },
+    {
+      title: 'Evidence',
+      dataIndex: '',
+      key: 'x',
+      render: () => (
+        <>
+          <Button onClick={() => setIsModalOpen(true)}>View</Button>
+          <Modal
+            width={1000}
+            title="Show Evidence Video"
+            open={isModalOpen}
+            onOk={() => setIsModalOpen(false)}
+            onCancel={() => setIsModalOpen(false)}
+          >
+            <Evidence />
+          </Modal>
+        </>
+      ),
+    },
+  ]
 
   return (
-    <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>No</TableHead>
-            <TableHead>Camera</TableHead>
-            <TableHead>Area</TableHead>
-            <TableHead>TimeStamp</TableHead>
-            <TableHead>Duration</TableHead>
-            <TableHead>Max Participant</TableHead>
-            <TableHead>Warning Time (seconds)</TableHead>
-            <TableHead>Evidence</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {anomalyData.slice(startIndex, endIndex).map((data, index) => (
-            <TableRow key={index}>
-              <TableCell>{index + 1}</TableCell>
-              <TableCell>{data.camera_id}</TableCell>
-              <TableCell>{data.area}</TableCell>
-              <TableCell>{data.date}</TableCell>
-              <TableCell>{data.duration} seconds</TableCell>
-              <TableCell>{data.max_attendance}</TableCell>
-              <TableCell>{data.warning}</TableCell>
-              <TableCell>
-                <Button>view</Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              className={
-                startIndex === 0 ? 'pointer-events-none opacity-50' : undefined
-              }
-              href="#"
-              size="default"
-              onClick={() => {
-                setStartIndex(startIndex - rowPerPage)
-                setEndIndex(endIndex - rowPerPage)
-              }}
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink size="default" href="#">
-              1
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              className={
-                endIndex === anomalyData.length ? 'pointer-events-none opacity-50' : undefined
-              }
-              href="#"
-              size="default"
-              onClick={() => {
-                setStartIndex(startIndex + rowPerPage)
-                setEndIndex(endIndex + rowPerPage)
-              }}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    </>
+    <Table
+      dataSource={anomalyData}
+      columns={columns}
+      showSorterTooltip={{ target: 'sorter-icon' }}
+    />
   )
 }
