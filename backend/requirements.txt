@@ -2,3 +2,5 @@ flask
 flask_restful
 flask_mysqldb
 flask_cors
+flask-swagger-ui
+flasgger
