@@ -10,7 +10,7 @@ pip install -r requirements.txt
 
 ## Config connection from Flask app to MySQL database
 Open app.py file, config the connection correctly
-![app.config](image-1.png)
+![app.config](image.png)
 
 ## run the api
 ```sh
