@@ -1,16 +1,31 @@
 import { Modal, Table, Button } from 'antd'
-import { Anomaly, anomalyData } from '../../assets/anomalydata'
-import { Key, useState } from 'react'
+import { Key, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchAnomalies } from '../../redux/thunks'
+import { AppDispatch, RootState } from '../../redux/store' // Adjust the import according to your store setup
 import Evidence from './Evidence'
+import { Anomaly } from '../../assets/anomalydata'
 
 export function TableC() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const dispatch: AppDispatch = useDispatch();
+  const { anomalies, loading, error } = useSelector(
+    (state: RootState) => state.anomalies,
+  )
+  console.log(anomalies)
+
+  useEffect(() => {
+    dispatch(fetchAnomalies())
+  }, [dispatch])
+
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>Error: {error}</div>
 
   const columns = [
     {
       title: 'No',
-      dataIndex: 'key',
-      key: 'key',
+      dataIndex: 'anomaly_id',
+      key: 'anomaly_id',
     },
     {
       title: 'Camera',
@@ -40,9 +55,14 @@ export function TableC() {
       },
     },
     {
-      title: 'TimeStamp',
+      title: 'Date',
       dataIndex: 'date',
       key: 'date',
+    },
+    {
+      title: 'Time',
+      dataIndex: 'time',
+      key: 'time',
     },
     {
       title: 'Duration',
@@ -55,11 +75,12 @@ export function TableC() {
       dataIndex: 'warning',
       key: 'warning',
       filters: [
-        { text: 'no weapon', value: 'no' },
-        { text: 'have weapon', value: 'have' },
+        { text: 'no weapon', value: false },
+        { text: 'have weapon', value: true },
       ],
+      render: (warning: boolean) => <span>{warning ? 'have weapon' : 'no weapon'}</span>,
       onFilter: (value: Key | boolean, record: Anomaly) => {
-        return record.warning.startsWith(value.toString())
+        return record.warning === value
       },
     },
     {
@@ -85,7 +106,7 @@ export function TableC() {
 
   return (
     <Table
-      dataSource={anomalyData}
+      dataSource={anomalies.data}
       columns={columns}
       showSorterTooltip={{ target: 'sorter-icon' }}
     />
