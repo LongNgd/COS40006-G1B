@@ -1,6 +1,5 @@
 // thunks.ts
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { fetchAnomaliesRequest, fetchAnomaliesSuccess, fetchAnomaliesFailure } from './actions';
 import { Anomaly } from '../assets/anomalydata';
 

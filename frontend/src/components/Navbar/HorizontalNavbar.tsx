@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useAuth } from '../../hooks/useAuth.hook'
 
-const HorizontalNavbar: React.FC<{ name: string }> = ({ name }) => {
+const HorizontalNavbar: React.FC<{ name: string | undefined }> = ({ name }) => {
   const navigate = useNavigate()
   const { signOut } = useAuth()
 
