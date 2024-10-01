@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from flasgger import Swagger, swag_from
+from datetime import timedelta, datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -89,7 +90,7 @@ def login():
     # Fetch the user from the database
     user = get_user_by_email(email)
 
-    if user and check_password_hash(user[2], password):  # Validate password securely
+    if user and password == user[2]: 
         user_info = {
             'user_id': user[0],
             'email': user[1],
@@ -167,6 +168,66 @@ def register():
     cur.close()
 
     return jsonify({'success': True, 'message': 'User registered successfully'}), 200
+
+@app.route('/api/anomalies/getAnomalies', methods=['GET'])
+@swag_from({
+    'tags': ['Anomalies'],
+    'summary': 'Get All Anomalies',
+    'description': 'Retrieves all anomalies from the database.',
+    'responses': {
+        '200': {
+            'description': 'List of anomalies retrieved successfully',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'success': {'type': 'boolean'},
+                    'data': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'anomaly_id': {'type': 'integer'},  
+                                'camera_id': {'type': 'integer'},
+                                'date': {'type': 'string', 'format': 'date'},
+                                'duration': {'type': 'integer'},  
+                                'evidence_path': {'type': 'string'},
+                                'participant': {'type': 'integer'},
+                                'time': {'type': 'string', 'format': 'time'},
+                                'warning_time': {'type': 'interger'}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        '404': {
+            'description': 'No anomalies found',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'success': {'type': 'boolean'},
+                    'message': {'type': 'string'}
+                }
+            }
+        }
+    }
+})
+def get_anomalies():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM anomaly")
+        
+    anomalies = dictfetchall(cur)
+    cur.close()
+
+    for anomaly in anomalies:
+        if isinstance(anomaly['time'], timedelta):
+            anomaly['time'] = str(anomaly['time'])
+
+    if anomalies:
+        return jsonify({'success': True, 'data': anomalies}), 200
+    else:
+        return jsonify({'success': False, 'message': 'No anomalies found'}), 404
+
 
 if __name__ == '__main__':
     app.run(debug=True)
