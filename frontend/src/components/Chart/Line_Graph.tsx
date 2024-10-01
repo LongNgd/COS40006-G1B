@@ -1,6 +1,8 @@
 import { TrendingDown } from 'lucide-react'
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
 
+import { chartConfig } from '../../assets/anomalydata'
+import { useGetAnomaliesQuery } from '../../redux/anomaliesApi'
 import {
   Card,
   CardContent,
@@ -10,28 +12,49 @@ import {
   CardTitle,
 } from '../ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart'
-import { anomalyData, chartConfig } from '../../assets/anomalydata'
 
 interface Line_GraphProps {
   timeRange: string
 }
 
 export function Line_Graph({ timeRange }: Line_GraphProps) {
-  const filteredData = anomalyData.filter((item) => {
-    const [day, month, year] = item.date.split('/').map(Number) // Parse date correctly
-    // console.log([day, month, year])
-    const date = new Date(year, month - 1, day) // Create date object
-    const now = new Date('2024-07-02') // Adjusted date format
-    let daysToSubtract = 7
-    if (timeRange === 'month') {
-      daysToSubtract = 30
-    } else if (timeRange === '3month') {
-      daysToSubtract = 90
-    }
-    now.setDate(now.getDate() - daysToSubtract)
+  const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
 
-    return date >= now
-  })
+  if (isLoading) return <div>Loading...</div>
+  if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
+
+  const anomalyByDate = Object.entries(
+    anomalies.data.reduce(
+      (acc, curr) => {
+        const date = curr.date
+        if (!acc[date]) {
+          acc[date] = { total: 0 }
+        }
+        acc[date].total += 1
+        return acc
+      },
+      {} as Record<string, { total: number }>,
+    ),
+  ).map(([date, counts]) => ({
+    date,
+    total: counts.total,
+  }))
+
+  // const filteredData = anomalies?.data.filter((item) => {
+  //   const [day, month, year] = item.date.split('/').map(Number) // Parse date correctly
+  //   // console.log([day, month, year])
+  //   const date = new Date(year, month - 1, day) // Create date object
+  //   const now = new Date('2024-07-02') // Adjusted date format
+  //   let daysToSubtract = 7
+  //   if (timeRange === 'month') {
+  //     daysToSubtract = 30
+  //   } else if (timeRange === '3month') {
+  //     daysToSubtract = 90
+  //   }
+  //   now.setDate(now.getDate() - daysToSubtract)
+
+  //   return date >= now
+  // })
   return (
     <Card>
       <CardHeader>
@@ -40,7 +63,7 @@ export function Line_Graph({ timeRange }: Line_GraphProps) {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <LineChart data={filteredData}>
+          <LineChart data={anomalyByDate}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="date"
@@ -51,7 +74,7 @@ export function Line_Graph({ timeRange }: Line_GraphProps) {
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Line
-              dataKey="number_of_anomalies"
+              dataKey="total"
               type="monotone"
               stroke={chartConfig.number_of_anomalies.color}
               strokeWidth={2}

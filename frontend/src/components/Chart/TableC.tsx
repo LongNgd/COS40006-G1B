@@ -1,42 +1,35 @@
-import { Modal, Table, Button } from 'antd'
-import { Key, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchAnomalies } from '../../redux/thunks'
-import { AppDispatch, RootState } from '../../redux/store' // Adjust the import according to your store setup
-import Evidence from './Evidence'
+import { Button, Modal, Table } from 'antd'
+import { useState } from 'react'
 import { Anomaly } from '../../assets/anomalydata'
+import Evidence from './Evidence'
+import { useGetAnomaliesQuery } from '../../redux/anomaliesApi'
+import { ColumnsType } from 'antd/es/table'
 
 export function TableC() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const dispatch: AppDispatch = useDispatch();
-  const { anomalies, loading, error } = useSelector(
-    (state: RootState) => state.anomalies,
-  )
-  console.log(anomalies)
 
-  useEffect(() => {
-    dispatch(fetchAnomalies())
-  }, [dispatch])
+  const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error: {error}</div>
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error: {JSON.stringify(error)}</div>
 
-  const columns = [
+  console.log(anomalies?.data)
+
+  const columns: ColumnsType<Anomaly> = [
     {
       title: 'No',
-      dataIndex: 'anomaly_id',
-      key: 'anomaly_id',
+      dataIndex: 'index',
+      key: 'index',
     },
     {
       title: 'Camera',
-      dataIndex: 'camera_id',
-      key: 'camera_id',
-      filters: Array.from({ length: 10 }, (_, i) => ({
-        text: `Floor ${i + 1}`,
-        value: `CAM0${i + 1}`,
-      })),
-      onFilter: (value: Key | boolean, record: Anomaly) => {
-        return record.camera_id.startsWith(value.toString())
+      dataIndex: 'camera_name',
+      key: 'camera_name',
+      filters: [
+        ...new Set(anomalies?.data.map((anomaly) => anomaly.camera_name)),
+      ].map((camera_name) => ({ text: camera_name, value: camera_name })),
+      onFilter: (value, record) => {
+        return record.camera_name.startsWith(value.toString())
       },
     },
     {
@@ -44,13 +37,9 @@ export function TableC() {
       dataIndex: 'area',
       key: 'area',
       filters: [
-        { text: 'Classroom', value: 'classroom' },
-        { text: 'Gymnasium', value: 'gymnasium' },
-        { text: 'Cafeteria', value: 'cafeteria' },
-        { text: 'Playground', value: 'playground' },
-        { text: 'Library', value: 'library' },
-      ],
-      onFilter: (value: Key | boolean, record: Anomaly) => {
+        ...new Set(anomalies?.data.map((anomaly) => anomaly.area)),
+      ].map((area) => ({ text: area, value: area })),
+      onFilter: (value, record) => {
         return record.area.includes(value.toString())
       },
     },
@@ -75,11 +64,11 @@ export function TableC() {
       dataIndex: 'warning',
       key: 'warning',
       filters: [
-        { text: 'no weapon', value: false },
-        { text: 'have weapon', value: true },
+        { text: 'no weapon', value: 0 },
+        { text: 'have weapon', value: 1 },
       ],
-      render: (warning: boolean) => <span>{warning ? 'have weapon' : 'no weapon'}</span>,
-      onFilter: (value: Key | boolean, record: Anomaly) => {
+      render: (warning) => <span>{warning ? 'have weapon' : 'no weapon'}</span>,
+      onFilter: (value, record) => {
         return record.warning === value
       },
     },
@@ -106,9 +95,10 @@ export function TableC() {
 
   return (
     <Table
-      dataSource={anomalies.data}
+      dataSource={anomalies?.data}
       columns={columns}
       showSorterTooltip={{ target: 'sorter-icon' }}
+      pagination={{ showSizeChanger: false }}
     />
   )
 }

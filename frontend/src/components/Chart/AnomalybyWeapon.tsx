@@ -17,7 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
-import { anomalyData } from '../../assets/anomalydata'
+import { useGetAnomaliesQuery } from '../../redux/anomaliesApi'
 
 const chartConfig = {
   true: {
@@ -31,14 +31,19 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function AnomalybyWeapon() {
+  const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
+
+  if (isLoading) return <div>Loading...</div>
+  if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
+  
   const warningsByDate = Object.entries(
-    anomalyData.reduce(
+    anomalies.data.reduce(
       (acc, curr) => {
         const date = curr.date
         if (!acc[date]) {
           acc[date] = { true: 0, false: 0 }
         }
-        const warningKey = curr.warning ? 'true' : 'false' // Convert boolean to string
+        const warningKey = curr.warning ? 'true' : 'false'
         acc[date][warningKey] += 1
         return acc
       },
@@ -49,8 +54,6 @@ export function AnomalybyWeapon() {
     true: counts.true,
     false: counts.false,
   }))
-
-  //   console.log(warningsByDate)
 
   return (
     <Card>

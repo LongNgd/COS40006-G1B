@@ -16,40 +16,43 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
-import { anomalyData } from '../../assets/anomalydata'
+import { useGetAnomaliesQuery } from '../../redux/anomaliesApi'
 
 const chartConfig = {
-  playground: {
-    label: 'playground',
+  floor1: {
+    label: 'floor 1',
     color: '#16a34a',
   },
-  classroom: {
-    label: 'classroom',
+  floor2: {
+    label: 'floor 2',
     color: '#2563eb',
   },
-  gymnasium: {
-    label: 'gymnasium',
+  floor3: {
+    label: 'floor 3',
     color: '#dc2626',
   },
-  cafeteria: {
-    label: 'cafeteria',
+  floor4: {
+    label: 'floor 4',
     color: '#facc15',
-  },
-  library: {
-    label: 'library',
-    color: '#f97316',
   },
 } satisfies ChartConfig
 
 export function AnomalyArea() {
+  const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
+
+  if (isLoading) return <div>Loading...</div>
+  if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
+
   const totalData = Object.entries(
-    anomalyData.reduce(
+    anomalies.data.reduce(
       (acc, curr) => {
         const area = curr.area
         if (!acc[area]) {
           acc[area] = {
             count: 0,
-            fill: chartConfig[area as keyof typeof chartConfig]?.color,
+            fill: chartConfig[
+              area.replace(' ', '').toLowerCase() as keyof typeof chartConfig
+            ]?.color,
           }
         }
         acc[area].count += 1
@@ -62,6 +65,7 @@ export function AnomalyArea() {
     count,
     fill,
   }))
+
   const totalAnomaly = totalData.reduce((acc, curr) => acc + curr.count, 0)
 
   return (

@@ -1,6 +1,20 @@
-import { LucideFileSignature, LucideLayoutDashboard, LucideUsers } from 'lucide-react'
+import {
+  LucideFileSignature,
+  LucideLayoutDashboard,
+  LucideUsers,
+} from 'lucide-react'
 
-export const navigation = [
+type NavigationItem = {
+  link?: string
+  label: string
+  isParent: boolean
+  icon?: JSX.Element
+  children?: NavigationChild[]
+}
+
+type NavigationChild = Pick<NavigationItem, 'label' | 'link'>
+
+export const navigation: NavigationItem[] = [
   {
     link: '/dashboard',
     label: 'Dashboard',

@@ -9,10 +9,19 @@ import { navigation } from '../Navbar/navigation'
 const Layout = () => {
   const location = useLocation()
 
-  const [name, setName] = useState(
-    () =>
-      navigation.find((item) => item.link === location.pathname)?.label,
-  )
+  const getLabel = () => {
+    const navItem = navigation.find((item) => item.link === location.pathname)
+    if (navItem) return navItem.label
+    const childItem = navigation
+      .map((item) => item.children)
+      .flat()
+      .find((item) => item?.link === location.pathname)
+
+    if (childItem) return childItem.label
+    return ''
+  }
+
+  const [name, setName] = useState(getLabel)
 
   const handleClick = (itemName: string) => {
     setName(itemName)

@@ -49,12 +49,12 @@ const Dashboard = () => {
         <Line_Graph timeRange={timeRange} />
         <AnomalybyWeapon/>
         <AnomalyArea/>
-        <div className="col-span-3">
+        {/* <div className="col-span-3">
           <AreaC2 timeRange={timeRange} />
-        </div>
-        <PieC/>
+        </div> */}
+        {/* <PieC/>
         <PieC2/>
-        <BarC />
+        <BarC /> */}
       </div>
     </div>
   )
