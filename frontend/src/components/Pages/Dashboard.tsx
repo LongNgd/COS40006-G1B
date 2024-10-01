@@ -1,11 +1,14 @@
 import { BarC } from '../Chart/BarC'
-import { Line_Graph } from '../Chart/LineC'
+import { Line_Graph } from '../Chart/Line_Graph'
 import { AreaC2 } from '../Chart/AreaC2'
 import OverallInformation from '../Chart/OverallInformation'
 import { DatePicker, Flex, Radio, RadioChangeEvent } from 'antd'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { AnomalyArea } from '../Chart/AnomalyArea'
+import { PieC } from '../Chart/PieC'
+import { PieC2 } from '../Chart/PieC2'
+import { AnomalybyWeapon } from '../Chart/AnomalybyWeapon'
 
 const Dashboard = () => {
   const defaultDate = new Date()
@@ -44,11 +47,14 @@ const Dashboard = () => {
       </div>
       <div className="grid grid-cols-3 gap-4">
         <Line_Graph timeRange={timeRange} />
-        <BarC />
+        <AnomalybyWeapon/>
         <AnomalyArea/>
         <div className="col-span-3">
           <AreaC2 timeRange={timeRange} />
         </div>
+        <PieC/>
+        <PieC2/>
+        <BarC />
       </div>
     </div>
   )

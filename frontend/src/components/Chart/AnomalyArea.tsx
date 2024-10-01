@@ -11,6 +11,8 @@ import {
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
@@ -44,15 +46,21 @@ export function AnomalyArea() {
     anomalyData.reduce(
       (acc, curr) => {
         const area = curr.area
-        acc[area] = (acc[area] || 0) + 1
+        if (!acc[area]) {
+          acc[area] = {
+            count: 0,
+            fill: chartConfig[area as keyof typeof chartConfig]?.color,
+          }
+        }
+        acc[area].count += 1
         return acc
       },
-      {} as Record<string, number>,
+      {} as Record<string, { count: number; fill: string | undefined }>,
     ),
-  ).map(([area, count]) => ({
+  ).map(([area, { count, fill }]) => ({
     area,
     count,
-    fill: chartConfig[area as keyof typeof chartConfig]?.color, // Assign color
+    fill,
   }))
   const totalAnomaly = totalData.reduce((acc, curr) => acc + curr.count, 0)
 
@@ -76,7 +84,7 @@ export function AnomalyArea() {
               data={totalData}
               dataKey="count"
               nameKey="area"
-              innerRadius={60}
+              innerRadius={50}
               strokeWidth={5}
             >
               <Label
@@ -109,6 +117,10 @@ export function AnomalyArea() {
                 }}
               />
             </Pie>
+            <ChartLegend
+              content={<ChartLegendContent nameKey="area" />}
+              className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>

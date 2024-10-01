@@ -46,7 +46,7 @@ const LoginForm = () => {
   return (
     <Card className="w-[500px]">
       <CardHeader>
-        <CardTitle suffix={<img src="../src/assets/logo.png" alt="logo" />}>School Vision</CardTitle>
+        <CardTitle suffix={<img src="../src/assets/logo.png" alt="logo" width={100}/>}>School Vision</CardTitle>
         <CardDescription>
           Please sign-in to your account and start the adventure
         </CardDescription>

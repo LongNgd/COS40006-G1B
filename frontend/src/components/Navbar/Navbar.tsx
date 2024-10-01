@@ -15,8 +15,8 @@ const Navbar: React.FC<{ getLabel: (item: string) => void }> = ({
 
   return (
     <div className="flex flex-col w-64 text-[#d0cde4] bg-[#2f3349] p-3 h-lvh">
-      <div className="text-2xl font-bold flex gap-2 items-center justify-center">
-        <img src="../src/assets/logo.png" alt="logo" />
+      <div className="text-2xl font-bold flex gap-2 items-center justify-center pb-3">
+        <img src="../src/assets/logo.png" alt="logo" height={50} width={50}/>
         School Vision
       </div>
       <Separator/>
