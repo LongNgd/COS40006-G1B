@@ -215,9 +215,9 @@ def register():
 def get_anomalies():
     cur = mysql.connection.cursor()
     cur.execute("""
-    select name as camera_name, area, date, time, duration, participant, warning, evidence_path
-    from anomaly a
-    join camera c on a.camera_id = c.camera_id
+        select name as camera_name, area, date, time, duration, participant, warning, evidence_path
+        from anomaly a
+        join camera c on a.camera_id = c.camera_id;
     """)
         
     anomalies = dictfetchall(cur)
@@ -231,6 +231,99 @@ def get_anomalies():
         return jsonify({'success': True, 'data': anomalies}), 200
     else:
         return jsonify({'success': False, 'message': 'No anomalies found'}), 404
+
+@app.route('/api/anomalies/getAnomaliesByUser', methods=['POST'])
+@swag_from({
+    'tags': ['Anomalies'],
+    'summary': 'Get Anomalies by User ID',
+    'description': 'Retrieves all anomalies related to a specific user ID.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'description': 'JSON body containing user_id',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'user_id': {'type': 'string'}
+                }
+            }
+        }
+    ],
+    'responses': {
+        '200': {
+            'description': 'List of anomalies retrieved successfully',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'success': {'type': 'boolean'},
+                    'data': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'camera_name': {'type': 'string'},
+                                'area': {'type': 'string'},
+                                'date': {'type': 'string', 'format': 'date'},
+                                'time': {'type': 'string', 'format': 'time'},
+                                'duration': {'type': 'integer'},
+                                'participant': {'type': 'string'},
+                                'warning': {'type': 'string'},
+                                'evidence_path': {'type': 'string'}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        '400': {
+            'description': 'user_id missing in request',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'error': {'type': 'string'}
+                }
+            }
+        },
+        '404': {
+            'description': 'No anomalies found for the given user_id',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'error': {'type': 'string'}
+                }
+            }
+        }
+    }
+})
+def get_anomalies_by_user():
+    data = request.json
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'user_id is required'}), 400
+
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT name AS camera_name, area, date, time, duration, participant, warning, evidence_path
+        FROM anomaly a
+        JOIN camera c ON a.camera_id = c.camera_id
+        JOIN user u ON u.user_id = c.user_id
+        WHERE u.user_id = %s;
+    """, (user_id,))
+        
+    anomalies = dictfetchall(cur)
+    cur.close()
+
+    for anomaly in anomalies:
+        if isinstance(anomaly['time'], timedelta):
+            anomaly['time'] = str(anomaly['time'])
+
+    if anomalies:
+        return jsonify({'success': True, 'data': anomalies}), 200
+    else:
+        return jsonify({'error': 'No anomalies found for the given user_id'}), 404
 
 
 if __name__ == '__main__':
