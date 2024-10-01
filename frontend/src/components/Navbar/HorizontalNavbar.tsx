@@ -13,8 +13,8 @@ const HorizontalNavbar: React.FC<{ name: string }> = ({ name }) => {
     navigate({ to: '/' })
   }
   return (
-    <div className="bg-[#d3d3d3] m-4 flex justify-between rounded items-center">
-      <div className="p-2">{name}</div>
+    <div className="m-4 flex justify-between rounded items-center">
+      <div className="p-2 text-3xl font-bold">{name}</div>
       <div className="p-2 flex items-center gap-4">
         <LucideSun className="w-5 h-5" />
         <LucideBell className="w-5 h-5" />

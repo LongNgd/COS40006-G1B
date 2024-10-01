@@ -5,7 +5,6 @@ import { z } from 'zod'
 
 import { loginSchema } from './login.validation'
 import { useAuth } from '../../hooks/useAuth.hook'
-import { LucideActivitySquare } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -47,7 +46,7 @@ const LoginForm = () => {
   return (
     <Card className="w-[500px]">
       <CardHeader>
-        <CardTitle suffix={<LucideActivitySquare />}>Visualization Tool</CardTitle>
+        <CardTitle suffix={<img src="../src/assets/logo.png" alt="logo" />}>School Vision</CardTitle>
         <CardDescription>
           Please sign-in to your account and start the adventure
         </CardDescription>

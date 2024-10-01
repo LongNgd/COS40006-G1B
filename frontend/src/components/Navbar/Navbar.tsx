@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router'
-import { LucideActivitySquare } from 'lucide-react'
 import { navigation } from './navigation'
 import React from 'react'
 import {
@@ -17,7 +16,7 @@ const Navbar: React.FC<{ getLabel: (item: string) => void }> = ({
   return (
     <div className="flex flex-col w-64 text-[#d0cde4] bg-[#2f3349] p-3 h-lvh">
       <div className="text-2xl font-bold flex gap-2 items-center justify-center">
-        <LucideActivitySquare />
+        <img src="../src/assets/logo.png" alt="logo" />
         School Vision
       </div>
       <Separator/>

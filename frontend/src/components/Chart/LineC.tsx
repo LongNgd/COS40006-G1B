@@ -9,28 +9,17 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card'
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '../ui/chart'
-import { anomalyData } from '../../assets/anomalydata'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart'
+import { anomalyData, chartConfig } from '../../assets/anomalydata'
 
 interface Line_GraphProps {
   timeRange: string
 }
 
-const chartConfig = {
-  number_of_anomalies: {
-    label: 'Num of Anomalies',
-    color: 'hsl(var(--chart-1))',
-  },
-} satisfies ChartConfig
-
 export function Line_Graph({ timeRange }: Line_GraphProps) {
   const filteredData = anomalyData.filter((item) => {
     const [day, month, year] = item.date.split('/').map(Number) // Parse date correctly
+    // console.log([day, month, year])
     const date = new Date(year, month - 1, day) // Create date object
     const now = new Date('2024-07-02') // Adjusted date format
     let daysToSubtract = 7
@@ -40,7 +29,6 @@ export function Line_Graph({ timeRange }: Line_GraphProps) {
       daysToSubtract = 90
     }
     now.setDate(now.getDate() - daysToSubtract)
-    console.log(date, now)
 
     return date >= now
   })
