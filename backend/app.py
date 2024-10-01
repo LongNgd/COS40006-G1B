@@ -3,7 +3,7 @@ from flask_mysqldb import MySQL
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from flasgger import Swagger, swag_from
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 app = Flask(__name__)
 CORS(app)
@@ -186,14 +186,14 @@ def register():
                         'items': {
                             'type': 'object',
                             'properties': {
-                                'anomaly_id': {'type': 'integer'},  
-                                'camera_id': {'type': 'integer'},
+                                'camera_name': {'type': 'string'},  
+                                'area': {'type': 'string'},
                                 'date': {'type': 'string', 'format': 'date'},
-                                'duration': {'type': 'integer'},  
-                                'evidence_path': {'type': 'string'},
-                                'participant': {'type': 'integer'},
                                 'time': {'type': 'string', 'format': 'time'},
-                                'warning_time': {'type': 'interger'}
+                                'duration': {'type': 'integer'},  
+                                'participant': {'type': 'integer'},
+                                'warning': {'type': 'integer'},
+                                'evidence_path': {'type': 'string'}
                             }
                         }
                     }
@@ -214,7 +214,11 @@ def register():
 })
 def get_anomalies():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM anomaly")
+    cur.execute("""
+    select name as camera_name, area, date, time, duration, participant, warning, evidence_path
+    from anomaly a
+    join camera c on a.camera_id = c.camera_id
+    """)
         
     anomalies = dictfetchall(cur)
     cur.close()
