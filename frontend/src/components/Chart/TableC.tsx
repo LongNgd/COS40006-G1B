@@ -1,6 +1,6 @@
 import { Button, Modal, Table } from 'antd'
 import { useState } from 'react'
-import { Anomaly } from '../../assets/anomalydata'
+import { Anomaly } from '../../assets/anomaly.type'
 import Evidence from './Evidence'
 import { useGetAnomaliesQuery } from '../../redux/anomaliesApi'
 import { ColumnsType } from 'antd/es/table'

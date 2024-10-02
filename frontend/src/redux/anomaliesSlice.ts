@@ -1,6 +1,6 @@
 // reducer.ts
 import { createSlice } from '@reduxjs/toolkit'
-import { Anomaly } from '../assets/anomalydata'
+import { Anomaly } from '../assets/anomaly.type'
 
 interface AnomaliesState {
   anomalies: Anomaly[]
