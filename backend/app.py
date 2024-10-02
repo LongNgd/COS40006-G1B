@@ -186,7 +186,7 @@ def register():
                         'items': {
                             'type': 'object',
                             'properties': {
-                                'index': {'type': 'integer'},
+                                'row_index': {'type': 'integer'},
                                 'camera_name': {'type': 'string'},  
                                 'area': {'type': 'string'},
                                 'date': {'type': 'string', 'format': 'date'},
@@ -216,7 +216,7 @@ def register():
 def get_anomalies():
     cur = mysql.connection.cursor()
     cur.execute("""
-        select ROW_NUMBER() OVER () AS index, name as camera_name, area, date, time, duration, participant, warning, evidence_path
+        select ROW_NUMBER() OVER () AS row_index, name as camera_name, area, date, time, duration, participant, warning, evidence_path
         from anomaly a
         join camera c on a.camera_id = c.camera_id;
     """)
@@ -264,7 +264,7 @@ def get_anomalies():
                         'items': {
                             'type': 'object',
                             'properties': {
-                                'index': {'type': 'integer'},
+                                'row_index': {'type': 'integer'},
                                 'camera_name': {'type': 'string'},
                                 'area': {'type': 'string'},
                                 'date': {'type': 'string', 'format': 'date'},
@@ -308,7 +308,7 @@ def get_anomalies_by_user():
 
     cur = mysql.connection.cursor()
     cur.execute("""
-        SELECT ROW_NUMBER() OVER () AS index, name AS camera_name, area, date, time, duration, participant, warning, evidence_path
+        SELECT ROW_NUMBER() OVER () AS row_index, name AS camera_name, area, date, time, duration, participant, warning, evidence_path
         FROM anomaly a
         JOIN camera c ON a.camera_id = c.camera_id
         JOIN user u ON u.user_id = c.user_id
