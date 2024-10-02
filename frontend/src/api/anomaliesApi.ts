@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { Anomaly } from '../assets/anomaly.type'
+import { Anomaly } from './anomaly.type'
 
 type AnomaliesResponse = {
   data: Anomaly[]

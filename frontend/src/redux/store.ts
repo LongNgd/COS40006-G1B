@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import anomaliesReducer from './anomaliesSlice'
-import { anomaliesApi } from './anomaliesApi'
+import { anomaliesApi } from '../api/anomaliesApi'
 import { setupListeners } from '@reduxjs/toolkit/query'
-import { authApi } from './authApi'
+import { authApi } from '../api/authApi'
 
 const store = configureStore({
   reducer: {

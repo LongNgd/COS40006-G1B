@@ -14,7 +14,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../ui/chart"
-import { useGetAnomaliesQuery } from "../../redux/anomaliesApi"
+import { useGetAnomaliesQuery } from "../../api/anomaliesApi"
 
 const chartConfig = {
   time_and_area: {

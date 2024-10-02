@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 import { message } from 'antd'
 import { useAuth } from '../../hooks/useAuth.hook'
-import { useLoginMutation } from '../../redux/authApi'
+import { useLoginMutation } from '../../api/authApi'
 import { Button } from '../ui/button'
 import {
   Card,

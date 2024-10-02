@@ -1,6 +1,6 @@
 import { TrendingDown } from 'lucide-react'
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
-import { useGetAnomaliesQuery } from '../../redux/anomaliesApi'
+import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
 import {
   Card,
   CardContent,

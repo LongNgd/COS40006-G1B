@@ -1,6 +1,6 @@
 import { Label, Pie, PieChart } from 'recharts'
 
-import { useGetAnomaliesQuery } from '../../redux/anomaliesApi'
+import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
 import {
   Card,
   CardContent,
