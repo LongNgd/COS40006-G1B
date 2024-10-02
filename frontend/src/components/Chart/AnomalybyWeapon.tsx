@@ -56,8 +56,6 @@ export function AnomalybyWeapon() {
     fill,
   }))
 
-  console.log(anomalybyWeapon)
-
   const totalAnomaly = anomalybyWeapon.reduce(
     (acc, curr) => acc + curr.count,
     0,
