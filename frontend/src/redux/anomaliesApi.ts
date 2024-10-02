@@ -13,7 +13,7 @@ export const anomaliesApi = createApi({
   }),
   endpoints: (builder) => ({
     getAnomalies: builder.query<AnomaliesResponse, void>({
-      query: () => `anomalies/getAnomalies`,
+      query: () => ({ url: 'anomalies/getAnomalies', method: 'GET' }),
     }),
   }),
 })

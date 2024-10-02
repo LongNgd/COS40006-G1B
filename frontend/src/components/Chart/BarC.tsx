@@ -14,8 +14,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../ui/chart"
-
-import { anomalyData } from "../../assets/anomalydata"
+import { useGetAnomaliesQuery } from "../../redux/anomaliesApi"
 
 const chartConfig = {
   time_and_area: {
@@ -25,6 +24,11 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function BarC() {
+  const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
+
+  if (isLoading) return <div>Loading...</div>
+  if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
+
   return (
     <Card>
       <CardHeader>
@@ -33,7 +37,7 @@ export function BarC() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={anomalyData}>
+          <BarChart accessibilityLayer data={anomalies.data}>
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}

@@ -18,8 +18,8 @@ export function TableC() {
   const columns: ColumnsType<Anomaly> = [
     {
       title: 'No',
-      dataIndex: 'index',
-      key: 'index',
+      dataIndex: 'row_index',
+      key: 'row_index',
     },
     {
       title: 'Camera',

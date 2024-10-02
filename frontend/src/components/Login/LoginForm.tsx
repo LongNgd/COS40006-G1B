@@ -1,10 +1,12 @@
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
+import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { loginSchema } from './login.validation'
+import { message } from 'antd'
 import { useAuth } from '../../hooks/useAuth.hook'
+import { useLoginMutation } from '../../redux/authApi'
+import { Button } from '../ui/button'
 import {
   Card,
   CardContent,
@@ -12,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card'
+import { Checkbox } from '../ui/checkbox'
 import {
   Form,
   FormControl,
@@ -22,10 +25,10 @@ import {
 } from '../ui/form'
 import { Input } from '../ui/input'
 import { PasswordInput } from '../ui/password-input'
-import { Checkbox } from '../ui/checkbox'
-import { Button } from '../ui/button'
+import { loginSchema } from './login.validation'
 
 const LoginForm = () => {
+  const [login, { isLoading }] = useLoginMutation()
   const navigate = useNavigate()
   const { signIn } = useAuth()
 
@@ -37,16 +40,31 @@ const LoginForm = () => {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    signIn()
-    navigate({ to: '/dashboard' })
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    try {
+      const loginRes = await login(values)
+      if (loginRes.error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const error = loginRes.error as any
+        message.error(error.data.message as string)
+        return
+      }
+      signIn()
+      navigate({ to: '/dashboard' })
+      message.success('Welcome!')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <Card className="w-[500px]">
       <CardHeader>
-        <CardTitle suffix={<img src="../src/assets/logo.png" alt="logo" width={100}/>}>School Vision</CardTitle>
+        <CardTitle
+          suffix={<img src="../src/assets/logo.png" alt="logo" width={100} />}
+        >
+          School Vision
+        </CardTitle>
         <CardDescription>
           Please sign-in to your account and start the adventure
         </CardDescription>
@@ -61,7 +79,11 @@ const LoginForm = () => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="a@gmail.com" {...field} />
+                    <Input
+                      placeholder="a@gmail.com"
+                      {...field}
+                      disabled={isLoading}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -74,7 +96,11 @@ const LoginForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <PasswordInput placeholder="********" {...field} />
+                    <PasswordInput
+                      placeholder="********"
+                      {...field}
+                      disabled={isLoading}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -91,7 +117,9 @@ const LoginForm = () => {
                 Forgot password?
               </a>
             </div>
-            <Button type="submit">Login</Button>
+            <Button type="submit" disabled={isLoading}>
+              Login
+            </Button>
           </form>
         </Form>
       </CardContent>

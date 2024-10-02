@@ -1,6 +1,6 @@
-import { TrendingUp } from 'lucide-react'
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
+import { Label, Pie, PieChart } from 'recharts'
 
+import { useGetAnomaliesQuery } from '../../redux/anomaliesApi'
 import {
   Card,
   CardContent,
@@ -17,7 +17,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
-import { useGetAnomaliesQuery } from '../../redux/anomaliesApi'
 
 const chartConfig = {
   true: {
@@ -35,71 +34,96 @@ export function AnomalybyWeapon() {
 
   if (isLoading) return <div>Loading...</div>
   if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
-  
-  const warningsByDate = Object.entries(
+
+  const anomalybyWeapon = Object.entries(
     anomalies.data.reduce(
       (acc, curr) => {
-        const date = curr.date
-        if (!acc[date]) {
-          acc[date] = { true: 0, false: 0 }
+        const warningKey = curr.warning === 1 ? 'true' : 'false'
+        if (!acc[warningKey]) {
+          acc[warningKey] = {
+            count: 0,
+            fill: chartConfig[warningKey as keyof typeof chartConfig]?.color,
+          }
         }
-        const warningKey = curr.warning ? 'true' : 'false'
-        acc[date][warningKey] += 1
+        acc[warningKey].count += 1
         return acc
       },
-      {} as Record<string, { true: number; false: number }>,
+      {} as Record<string, { count: number; fill: string }>,
     ),
-  ).map(([date, counts]) => ({
-    date,
-    true: counts.true,
-    false: counts.false,
+  ).map(([warning, { count, fill }]) => ({
+    warning,
+    count,
+    fill,
   }))
 
+  console.log(anomalybyWeapon)
+
+  const totalAnomaly = anomalybyWeapon.reduce(
+    (acc, curr) => acc + curr.count,
+    0,
+  )
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Anomaly by Weapon</CardTitle>
-        <CardDescription>Anomaly by Weapon</CardDescription>
+    <Card className="flex flex-col">
+      <CardHeader className="items-center pb-0">
+        <CardTitle>Anomalies by Weapon Detection</CardTitle>
+        <CardDescription>Breakdown of anomalies by weapon detection warning</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={warningsByDate}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+      <CardContent className="flex-1 pb-0">
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto aspect-square max-h-[250px]"
+        >
+          <PieChart>
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
             />
-            <YAxis
-              label={{ value: 'Anomalies', angle: -90, position: 'insideLeft' }}
+            <Pie
+              data={anomalybyWeapon}
+              dataKey="count"
+              nameKey="warning"
+              innerRadius={50}
+              strokeWidth={5}
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-foreground text-3xl font-bold"
+                        >
+                          {totalAnomaly}
+                        </tspan>
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 24}
+                          className="fill-muted-foreground"
+                        >
+                          Anomalies
+                        </tspan>
+                      </text>
+                    )
+                  }
+                }}
+              />
+            </Pie>
+            <ChartLegend
+              content={<ChartLegendContent nameKey="warning" />}
+              className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
             />
-            <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Bar
-              dataKey="true"
-              stackId="a"
-              fill="#e11d48"
-              radius={[0, 0, 4, 4]}
-            />
-            <Bar
-              dataKey="false"
-              stackId="a"
-              fill="#2563eb"
-              radius={[4, 4, 0, 0]}
-            />
-          </BarChart>
+          </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
+      <CardFooter className="flex-col gap-2 text-sm"></CardFooter>
     </Card>
   )
 }

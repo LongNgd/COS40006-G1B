@@ -15,7 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
-import { anomalyData } from '../../assets/anomalydata'
+import { useGetAnomaliesQuery } from '../../redux/anomaliesApi';
 
 interface AreaC2Props {
   timeRange: string; // Add this line
@@ -36,8 +36,12 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function AreaC2({ timeRange }: AreaC2Props) {
+  const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
 
-  const filteredData = anomalyData.filter((item) => {
+  if (isLoading) return <div>Loading...</div>
+  if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
+
+  const filteredData = anomalies.data.filter((item) => {
     const date = new Date(item.date)
     const now = new Date('02/07/2024')
     let daysToSubtract = 90

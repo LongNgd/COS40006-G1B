@@ -20,24 +20,24 @@ import { useGetAnomaliesQuery } from '../../redux/anomaliesApi'
 
 const chartConfig = {
   floor1: {
-    label: 'floor 1',
+    label: 'Floor 1',
     color: '#16a34a',
   },
   floor2: {
-    label: 'floor 2',
+    label: 'Floor 2',
     color: '#2563eb',
   },
   floor3: {
-    label: 'floor 3',
+    label: 'Floor 3',
     color: '#dc2626',
   },
   floor4: {
-    label: 'floor 4',
+    label: 'Floor 4',
     color: '#facc15',
   },
 } satisfies ChartConfig
 
-export function AnomalyArea() {
+export function AnomalyByArea() {
   const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
 
   if (isLoading) return <div>Loading...</div>
@@ -46,13 +46,11 @@ export function AnomalyArea() {
   const totalData = Object.entries(
     anomalies.data.reduce(
       (acc, curr) => {
-        const area = curr.area
+        const area = curr.area.replace(' ', '').toLowerCase()
         if (!acc[area]) {
           acc[area] = {
             count: 0,
-            fill: chartConfig[
-              area.replace(' ', '').toLowerCase() as keyof typeof chartConfig
-            ]?.color,
+            fill: chartConfig[area as keyof typeof chartConfig]?.color,
           }
         }
         acc[area].count += 1
@@ -65,14 +63,15 @@ export function AnomalyArea() {
     count,
     fill,
   }))
+  console.log(totalData)
 
   const totalAnomaly = totalData.reduce((acc, curr) => acc + curr.count, 0)
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Number of Anomalies by Area</CardTitle>
-        <CardDescription>Number of Anomalies by Area</CardDescription>
+        <CardTitle>Anomaly by Area</CardTitle>
+        <CardDescription> Breakdown of anomalies by floor area</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer

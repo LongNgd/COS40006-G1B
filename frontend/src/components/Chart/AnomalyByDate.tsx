@@ -1,7 +1,5 @@
 import { TrendingDown } from 'lucide-react'
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
-
-import { chartConfig } from '../../assets/anomalydata'
 import { useGetAnomaliesQuery } from '../../redux/anomaliesApi'
 import {
   Card,
@@ -11,13 +9,20 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card'
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart'
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart'
 
 interface Line_GraphProps {
   timeRange: string
 }
 
-export function Line_Graph({ timeRange }: Line_GraphProps) {
+const chartConfig = {
+  total: {
+    label: 'Total of Anomalies',
+    color: '#e11d48',
+  }
+} satisfies ChartConfig
+
+export function AnomalyByDate({ timeRange }: Line_GraphProps) {
   const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
 
   if (isLoading) return <div>Loading...</div>
@@ -58,8 +63,8 @@ export function Line_Graph({ timeRange }: Line_GraphProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Number of Anomalies</CardTitle>
-        <CardDescription>Number of Anomalies per Week</CardDescription>
+        <CardTitle>Anomalies Over Time</CardTitle>
+        <CardDescription>Number of anomalies per week over the selected time period</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -76,7 +81,7 @@ export function Line_Graph({ timeRange }: Line_GraphProps) {
             <Line
               dataKey="total"
               type="monotone"
-              stroke={chartConfig.number_of_anomalies.color}
+              stroke={chartConfig.total.color}
               strokeWidth={2}
               dot={false}
             />
