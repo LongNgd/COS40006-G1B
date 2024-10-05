@@ -17,7 +17,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
-import { transformData } from '../../redux/function'
 
 const chartConfig = {
   floor1: {
@@ -44,8 +43,21 @@ export function AnomalyByArea() {
   if (isLoading) return <div>Loading...</div>
   if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
 
-  const anomalybyArea = transformData(anomalies.data, 'area', chartConfig)
-  console.log(anomalybyArea)
+  const anomalybyArea = Object.entries(
+    anomalies?.data.reduce(
+      (acc, curr) => {
+        const area = curr.camera_area.toString().replace(' ', '').toLowerCase()
+        acc[area] = (acc[area] || 0) + 1
+        return acc
+      },
+      {} as Record<string, number>,
+    ),
+  ).map(([area, count]) => ({
+    area,
+    count,
+    fill: chartConfig[area as keyof typeof chartConfig]?.color, // Assign color
+  }))
+  // console.log('data', anomalies)
 
   return (
     <Card className="flex flex-col">
@@ -67,12 +79,10 @@ export function AnomalyByArea() {
               data={anomalybyArea}
               dataKey="count"
               nameKey="area"
-              innerRadius={50}
-              strokeWidth={5}
             ></Pie>
             <ChartLegend
               content={<ChartLegendContent nameKey="area" />}
-              className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+              className="-translate-y-2 flex-wrap gap-2 basis-1/4 justify-center"
             />
           </PieChart>
         </ChartContainer>

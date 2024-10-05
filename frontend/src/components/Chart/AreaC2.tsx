@@ -1,30 +1,23 @@
+import { TrendingUp } from 'lucide-react'
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '../ui/card'
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
-import { useGetAnomaliesQuery } from '../../api/anomaliesApi';
-
-interface AreaC2Props {
-  timeRange: string; // Add this line
-}
+import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
 
 const chartConfig = {
-  visitors: {
-    label: 'Visitors',
-  },
   desktop: {
     label: 'Desktop',
     color: 'hsl(var(--chart-1))',
@@ -35,41 +28,55 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function AreaC2({ timeRange }: AreaC2Props) {
+export function AreaC2() {
   const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
 
   if (isLoading) return <div>Loading...</div>
   if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
 
-  const filteredData = anomalies.data.filter((item) => {
-    const date = new Date(item.date)
-    const now = new Date('02/07/2024')
-    let daysToSubtract = 90
-    if (timeRange === 'month') {
-      daysToSubtract = 30
-    } else if (timeRange === 'week') {
-      daysToSubtract = 7
-    }
-    now.setDate(now.getDate() - daysToSubtract)
-    return date >= now
-  })
-
+  const participatebyArea = Object.entries(
+    anomalies.data.reduce(
+      (acc, curr) => {
+        const date = curr.date
+        if (!acc[date]) {
+          acc[date] = { total: 0 }
+        }
+        acc[date].total += 1
+        return acc
+      },
+      {} as Record<string, { total: number }>,
+    ),
+  ).map(([date, counts]) => ({
+    date,
+    total: counts.total,
+  }))
   return (
     <Card>
-      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-        <div className="grid flex-1 gap-1 text-center sm:text-left">
-          <CardTitle>Area Chart - Interactive</CardTitle>
-          <CardDescription>
-            Showing total visitors for the last 3 months
-          </CardDescription>
-        </div>
+      <CardHeader>
+        <CardTitle>Area Chart - Gradient</CardTitle>
+        <CardDescription>
+          Showing total visitors for the last 6 months
+        </CardDescription>
       </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
-        >
-          <AreaChart data={filteredData}>
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <AreaChart
+            accessibilityLayer
+            data={participatebyArea}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <defs>
               <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
                 <stop
@@ -96,46 +103,37 @@ export function AreaC2({ timeRange }: AreaC2Props) {
                 />
               </linearGradient>
             </defs>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value)
-                return date.toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                })
-              }}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                    })
-                  }}
-                  indicator="dot"
-                />
-              }
-            />
             <Area
-              dataKey="number_of_anomalies"
+              dataKey="mobile"
               type="natural"
               fill="url(#fillMobile)"
+              fillOpacity={0.4}
               stroke="var(--color-mobile)"
               stackId="a"
             />
-            <ChartLegend content={<ChartLegendContent />} />
+            <Area
+              dataKey="desktop"
+              type="natural"
+              fill="url(#fillDesktop)"
+              fillOpacity={0.4}
+              stroke="var(--color-desktop)"
+              stackId="a"
+            />
           </AreaChart>
         </ChartContainer>
       </CardContent>
+      <CardFooter>
+        <div className="flex w-full items-start gap-2 text-sm">
+          <div className="grid gap-2">
+            <div className="flex items-center gap-2 font-medium leading-none">
+              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+            </div>
+            <div className="flex items-center gap-2 leading-none text-muted-foreground">
+              January - June 2024
+            </div>
+          </div>
+        </div>
+      </CardFooter>
     </Card>
   )
 }

@@ -17,7 +17,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
-import { transformData } from '../../redux/function'
 
 const chartConfig = {
   true: {
@@ -36,35 +35,43 @@ export function AnomalybyWeapon() {
   if (isLoading) return <div>Loading...</div>
   if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
 
-  const anomalybyWeapon = transformData(anomalies.data, 'warning', chartConfig);
+  const anomalybyWeapon = Object.entries(
+    anomalies?.data.reduce(
+      (acc, curr) => {
+        const warning = curr.warning == 1 ? 'true' : 'false'
+        acc[warning] = (acc[warning] || 0) + 1
+        return acc
+      },
+      {} as Record<string, number>,
+    ),
+  ).map(([warning, count]) => ({
+    warning,
+    count,
+    fill: chartConfig[warning as keyof typeof chartConfig]?.color, // Assign color
+  }))
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>Anomalies by Weapon Detection</CardTitle>
-        <CardDescription>Breakdown of anomalies by weapon detection warning</CardDescription>
+        <CardDescription>
+          Breakdown of anomalies by weapon detection warning
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
+          className="mx-auto aspect-square max-h-[300px]"
         >
           <PieChart>
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Pie
-              data={anomalybyWeapon}
-              dataKey="count"
-              nameKey="warning"
-              innerRadius={50}
-              strokeWidth={5}
-            >
-            </Pie>
+            <Pie data={anomalybyWeapon} dataKey="count" nameKey="warning" />
             <ChartLegend
               content={<ChartLegendContent nameKey="warning" />}
-              className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+              className="-translate-y-2 flex-wrap gap-2 justify-center"
             />
           </PieChart>
         </ChartContainer>

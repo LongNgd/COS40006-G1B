@@ -13,7 +13,8 @@ import { PieC } from '../Chart/PieC'
 const Dashboard = () => {
   const defaultDate = new Date()
   const [timeRange, setTimeRange] = useState('today')
-
+  console.log(timeRange);
+  
   const options = [
     { label: 'Today', value: 'today' },
     { label: 'This week', value: 'week' },
@@ -46,11 +47,11 @@ const Dashboard = () => {
         </Flex>
       </div>
       <div className="grid grid-cols-3 gap-4">
-        <AnomalyByDate timeRange={timeRange} />
+        <AnomalyByDate/>
         <AnomalybyWeapon/>
         <AnomalyByArea/>
         <div className="col-span-3">
-          <AreaC2 timeRange={timeRange} />
+          <AreaC2/>
         </div>
         <PieC/>
         <BarC />

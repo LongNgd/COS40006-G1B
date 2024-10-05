@@ -18,8 +18,8 @@ export function TableC() {
   const columns: ColumnsType<Anomaly> = [
     {
       title: 'No',
-      dataIndex: 'row_index',
-      key: 'row_index',
+      dataIndex: 'anomaly_id',
+      key: 'anomaly_id',
     },
     {
       title: 'Camera',
@@ -34,13 +34,13 @@ export function TableC() {
     },
     {
       title: 'Area',
-      dataIndex: 'area',
-      key: 'area',
+      dataIndex: 'camera_area',
+      key: 'camera_area',
       filters: [
-        ...new Set(anomalies?.data.map((anomaly) => anomaly.area)),
+        ...new Set(anomalies?.data.map((anomaly) => anomaly.camera_area)),
       ].map((area) => ({ text: area, value: area })),
       onFilter: (value, record) => {
-        return record.area.includes(value.toString())
+        return record.camera_area.includes(value.toString())
       },
     },
     {
@@ -95,7 +95,7 @@ export function TableC() {
 
   return (
     <Table
-      dataSource={anomalies?.data}
+      dataSource={anomalies?.data.map((anomaly) => ({ ...anomaly, key: anomaly.anomaly_id }))}
       columns={columns}
       showSorterTooltip={{ target: 'sorter-icon' }}
       pagination={{ showSizeChanger: false }}

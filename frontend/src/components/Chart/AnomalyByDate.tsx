@@ -11,10 +11,6 @@ import {
 } from '../ui/card'
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart'
 
-interface Line_GraphProps {
-  timeRange: string
-}
-
 const chartConfig = {
   total: {
     label: 'Total of Anomalies',
@@ -22,7 +18,7 @@ const chartConfig = {
   }
 } satisfies ChartConfig
 
-export function AnomalyByDate({ timeRange }: Line_GraphProps) {
+export function AnomalyByDate() {
   const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
 
   if (isLoading) return <div>Loading...</div>
@@ -45,21 +41,6 @@ export function AnomalyByDate({ timeRange }: Line_GraphProps) {
     total: counts.total,
   }))
 
-  // const filteredData = anomalies?.data.filter((item) => {
-  //   const [day, month, year] = item.date.split('/').map(Number) // Parse date correctly
-  //   // console.log([day, month, year])
-  //   const date = new Date(year, month - 1, day) // Create date object
-  //   const now = new Date('2024-07-02') // Adjusted date format
-  //   let daysToSubtract = 7
-  //   if (timeRange === 'month') {
-  //     daysToSubtract = 30
-  //   } else if (timeRange === '3month') {
-  //     daysToSubtract = 90
-  //   }
-  //   now.setDate(now.getDate() - daysToSubtract)
-
-  //   return date >= now
-  // })
   return (
     <Card>
       <CardHeader>

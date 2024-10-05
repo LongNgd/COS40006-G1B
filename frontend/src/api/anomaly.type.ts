@@ -1,8 +1,7 @@
 export interface Anomaly {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any,
+  anomaly_id: number,
   row_index: number
-  area: string
+  camera_area: string
   camera_name: string
   date: string
   duration: number
