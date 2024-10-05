@@ -9,6 +9,7 @@ import { AnomalyByDate } from '../Chart/AnomalyByDate'
 import OverallInformation from '../Chart/OverallInformation'
 import { PieC } from '../Chart/PieC'
 
+
 const Dashboard = () => {
   const defaultDate = new Date()
   const [timeRange, setTimeRange] = useState('today')

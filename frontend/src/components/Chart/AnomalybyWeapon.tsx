@@ -1,4 +1,4 @@
-import { Label, Pie, PieChart } from 'recharts'
+import { Pie, PieChart } from 'recharts'
 
 import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
 import {
@@ -17,6 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
+import { transformData } from '../../redux/function'
 
 const chartConfig = {
   true: {
@@ -35,31 +36,7 @@ export function AnomalybyWeapon() {
   if (isLoading) return <div>Loading...</div>
   if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
 
-  const anomalybyWeapon = Object.entries(
-    anomalies.data.reduce(
-      (acc, curr) => {
-        const warningKey = curr.warning === 1 ? 'true' : 'false'
-        if (!acc[warningKey]) {
-          acc[warningKey] = {
-            count: 0,
-            fill: chartConfig[warningKey as keyof typeof chartConfig]?.color,
-          }
-        }
-        acc[warningKey].count += 1
-        return acc
-      },
-      {} as Record<string, { count: number; fill: string }>,
-    ),
-  ).map(([warning, { count, fill }]) => ({
-    warning,
-    count,
-    fill,
-  }))
-
-  const totalAnomaly = anomalybyWeapon.reduce(
-    (acc, curr) => acc + curr.count,
-    0,
-  )
+  const anomalybyWeapon = transformData(anomalies.data, 'warning', chartConfig);
 
   return (
     <Card className="flex flex-col">
@@ -84,35 +61,6 @@ export function AnomalybyWeapon() {
               innerRadius={50}
               strokeWidth={5}
             >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
-                        >
-                          {totalAnomaly}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Anomalies
-                        </tspan>
-                      </text>
-                    )
-                  }
-                }}
-              />
             </Pie>
             <ChartLegend
               content={<ChartLegendContent nameKey="warning" />}
