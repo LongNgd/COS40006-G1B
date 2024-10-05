@@ -1,36 +1,65 @@
 from flask import jsonify, Flask, request
-from flask_mysqldb import MySQL
 from flask_cors import CORS
-from werkzeug.security import generate_password_hash, check_password_hash
 from flasgger import Swagger, swag_from
-from datetime import timedelta
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 
 app = Flask(__name__)
 CORS(app)
-mysql = MySQL(app)
 
 # Swagger initialization
 swagger = Swagger(app)
 
-# Connection configuration
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'cos40006-g1b'
+# SQLAlchemy configuration for PostgreSQL
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.tlpiifklkbuedzfowczl:c56IfgElqS3eASfE@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize the database
+db = SQLAlchemy(app)
+
+# Define User model
+class User(db.Model):
+    __tablename__ = 'user'
+    user_id = db.Column(db.BigInteger, primary_key=True) 
+    user_name = db.Column(db.String(25), nullable=False) 
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(25), nullable=False)
+
+# Define Anomaly model
+class Anomaly(db.Model):
+    __tablename__ = 'anomaly'
+
+    anomaly_id = db.Column(db.Integer, primary_key=True, nullable=False)
+    camera_id = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Time, nullable=False)
+    duration = db.Column(db.Integer, nullable=False)
+    participant = db.Column(db.Integer, nullable=False)
+    warning = db.Column(db.Integer, nullable=False)
+    evidence_path = db.Column(db.Integer, nullable=False)
+
+# Define Camera model
+class Camera(db.Model):
+    __tablename__ = 'camera'
+    
+    camera_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False) 
+    name = db.Column(db.String(25), nullable=False)
+    area = db.Column(db.String(25), nullable=False)
 
 # Helper function to fetch user by email
 def get_user_by_email(email):
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT user_id, email, password, user_name FROM user WHERE email = %s", (email,))
-    user = cur.fetchone()
-    cur.close()
-    return user
+    return User.query.filter_by(email=email).first()
 
-# Helper function to convert database query result to dictionary
-def dictfetchall(cursor):
-    columns = [col[0] for col in cursor.description]
-    return [dict(zip(columns, row)) for row in cursor.fetchall()]
+# Connection test endpoint
+@app.route('/api/test-connection', methods=['GET'])
+def test_connection():
+    return jsonify({
+        'success': True,
+        'message': 'Connection successful!'
+    }), 200
 
+# login api
 @app.route('/api/user/login', methods=['POST'])
 @swag_from({
     'tags': ['User'],
@@ -90,11 +119,11 @@ def login():
     # Fetch the user from the database
     user = get_user_by_email(email)
 
-    if user and password == user[2]: 
+    if user and password == user.password: 
         user_info = {
-            'user_id': user[0],
-            'email': user[1],
-            'user_name': user[3]
+            'user_id': user.user_id,
+            'email': user.email,
+            'user_name': user.user_name
         }
         return jsonify({'success': True, 'message': 'Login successful', 'user_info': user_info})
     else:
@@ -116,7 +145,7 @@ def login():
                 'properties': {
                     'email': {'type': 'string'},
                     'password': {'type': 'string'},
-                    'username': {'type': 'string'}
+                    'user_name': {'type': 'string'}
                 }
             }
         }
@@ -148,7 +177,7 @@ def register():
     data = request.json
     email = data.get('email')
     password = data.get('password')
-    username = data.get('username')
+    username = data.get('user_name')
 
     if not email or not password or not username:
         return jsonify({'success': False, 'message': 'All fields are required'}), 400
@@ -157,23 +186,24 @@ def register():
     if get_user_by_email(email):
         return jsonify({'success': False, 'message': 'Email already exists'}), 400
 
-    # Securely hash the password before storing
-    hashed_password = generate_password_hash(password)
+    # Get the current maximum user_id
+    max_id = db.session.query(func.coalesce(func.max(User.user_id), 0)).scalar()
 
-    # Insert new user into the database
-    cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO user (email, password, user_name) VALUES (%s, %s, %s)", 
-                (email, hashed_password, username))
-    mysql.connection.commit()
-    cur.close()
+    # Set user_id as max_id + 1
+    new_user_id = max_id + 1
 
-    return jsonify({'success': True, 'message': 'User registered successfully'}), 200
+    # Insert new user into the database with incremented user_id
+    new_user = User(user_id=new_user_id, email=email, password=password, user_name=username)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'success': True, 'message': 'User registered successfully', 'user_id': new_user_id}), 200
 
 @app.route('/api/anomalies/getAnomalies', methods=['GET'])
 @swag_from({
     'tags': ['Anomalies'],
     'summary': 'Get All Anomalies',
-    'description': 'Retrieves all anomalies from the database.',
+    'description': 'Retrieves all anomalies from the database, including camera details.',
     'responses': {
         '200': {
             'description': 'List of anomalies retrieved successfully',
@@ -186,12 +216,12 @@ def register():
                         'items': {
                             'type': 'object',
                             'properties': {
-                                'row_index': {'type': 'integer'},
-                                'camera_name': {'type': 'string'},  
-                                'area': {'type': 'string'},
+                                'anomaly_id': {'type': 'integer'},
+                                'camera_name': {'type': 'string'},
+                                'camera_area': {'type': 'string'},
                                 'date': {'type': 'string', 'format': 'date'},
                                 'time': {'type': 'string', 'format': 'time'},
-                                'duration': {'type': 'integer'},  
+                                'duration': {'type': 'integer'},
                                 'participant': {'type': 'integer'},
                                 'warning': {'type': 'integer'},
                                 'evidence_path': {'type': 'string'}
@@ -210,123 +240,53 @@ def register():
                     'message': {'type': 'string'}
                 }
             }
-        }
-    }
-})
-def get_anomalies():
-    cur = mysql.connection.cursor()
-    cur.execute("""
-        select ROW_NUMBER() OVER () AS row_index, name as camera_name, area, date, time, duration, participant, warning, evidence_path
-        from anomaly a
-        join camera c on a.camera_id = c.camera_id;
-    """)
-        
-    anomalies = dictfetchall(cur)
-    cur.close()
-
-    for anomaly in anomalies:
-        if isinstance(anomaly['time'], timedelta):
-            anomaly['time'] = str(anomaly['time'])
-
-    if anomalies:
-        return jsonify({'success': True, 'data': anomalies}), 200
-    else:
-        return jsonify({'success': False, 'message': 'No anomalies found'}), 404
-
-@app.route('/api/anomalies/getAnomaliesByUser', methods=['POST'])
-@swag_from({
-    'tags': ['Anomalies'],
-    'summary': 'Get Anomalies by User ID',
-    'description': 'Retrieves all anomalies related to a specific user ID.',
-    'parameters': [
-        {
-            'name': 'body',
-            'in': 'body',
-            'required': True,
-            'description': 'JSON body containing user_id',
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'user_id': {'type': 'string'}
-                }
-            }
-        }
-    ],
-    'responses': {
-        '200': {
-            'description': 'List of anomalies retrieved successfully',
+        },
+        '500': {
+            'description': 'Internal server error',
             'schema': {
                 'type': 'object',
                 'properties': {
                     'success': {'type': 'boolean'},
-                    'data': {
-                        'type': 'array',
-                        'items': {
-                            'type': 'object',
-                            'properties': {
-                                'row_index': {'type': 'integer'},
-                                'camera_name': {'type': 'string'},
-                                'area': {'type': 'string'},
-                                'date': {'type': 'string', 'format': 'date'},
-                                'time': {'type': 'string', 'format': 'time'},
-                                'duration': {'type': 'integer'},
-                                'participant': {'type': 'string'},
-                                'warning': {'type': 'string'},
-                                'evidence_path': {'type': 'string'}
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        '400': {
-            'description': 'user_id missing in request',
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'error': {'type': 'string'}
-                }
-            }
-        },
-        '404': {
-            'description': 'No anomalies found for the given user_id',
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'error': {'type': 'string'}
+                    'message': {'type': 'string'}
                 }
             }
         }
     }
 })
-def get_anomalies_by_user():
-    data = request.json
-    user_id = data.get('user_id')
+def get_anomalies():
+    try:
+        # Join Anomaly with Camera to get camera details
+        anomalies = db.session.query(
+            Anomaly,
+            Camera.name.label('camera_name'),
+            Camera.area.label('camera_area')
+        ).join(Camera, Anomaly.camera_id == Camera.camera_id).all()
 
-    if not user_id:
-        return jsonify({'error': 'user_id is required'}), 400
+        # Check if anomalies list is empty
+        if not anomalies:
+            return jsonify({'success': False, 'message': 'No anomalies found'}), 404
 
-    cur = mysql.connection.cursor()
-    cur.execute("""
-        SELECT ROW_NUMBER() OVER () AS row_index, name AS camera_name, area, date, time, duration, participant, warning, evidence_path
-        FROM anomaly a
-        JOIN camera c ON a.camera_id = c.camera_id
-        JOIN user u ON u.user_id = c.user_id
-        WHERE u.user_id = %s;
-    """, (user_id,))
-        
-    anomalies = dictfetchall(cur)
-    cur.close()
+        # Prepare the data to be sent in JSON format
+        result = []
+        for anomaly, camera_name, camera_area in anomalies:
+            anomaly_data = {
+                'anomaly_id': anomaly.anomaly_id,
+                'camera_name': camera_name,
+                'camera_area': camera_area,
+                'date': anomaly.date.strftime('%Y-%m-%d') if anomaly.date else None,
+                'time': anomaly.time.strftime('%H:%M:%S') if anomaly.time else None,
+                'duration': anomaly.duration,
+                'participant': anomaly.participant,
+                'warning': anomaly.warning,
+                'evidence_path': anomaly.evidence_path
+            }
+            result.append(anomaly_data)
 
-    for anomaly in anomalies:
-        if isinstance(anomaly['time'], timedelta):
-            anomaly['time'] = str(anomaly['time'])
+        return jsonify({'success': True, 'data': result}), 200
 
-    if anomalies:
-        return jsonify({'success': True, 'data': anomalies}), 200
-    else:
-        return jsonify({'error': 'No anomalies found for the given user_id'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
