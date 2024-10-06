@@ -28,7 +28,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function AreaC2() {
+export function MaxAnomalyByArea() {
   const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
 
   if (isLoading) return <div>Loading...</div>
@@ -39,17 +39,20 @@ export function AreaC2() {
       (acc, curr) => {
         const date = curr.date
         if (!acc[date]) {
-          acc[date] = { total: 0 }
+          acc[date] = { max: 0, floor: '' }
         }
-        acc[date].total += 1
+        acc[date].max = Math.max(curr.participant, acc[date].max)
+        acc[date].floor = curr.camera_area
         return acc
       },
-      {} as Record<string, { total: number }>,
+      {} as Record<string, { max: number; floor: string }>,
     ),
   ).map(([date, counts]) => ({
     date,
-    total: counts.total,
+    floor: counts.floor,
+    max: counts.max,
   }))
+  console.log(participatebyArea)
   return (
     <Card>
       <CardHeader>
@@ -70,7 +73,7 @@ export function AreaC2() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -104,19 +107,11 @@ export function AreaC2() {
               </linearGradient>
             </defs>
             <Area
-              dataKey="mobile"
+              dataKey="floor"
               type="natural"
               fill="url(#fillMobile)"
               fillOpacity={0.4}
               stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill="url(#fillDesktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
               stackId="a"
             />
           </AreaChart>

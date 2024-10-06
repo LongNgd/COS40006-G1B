@@ -13,7 +13,7 @@ const HorizontalNavbar: React.FC<{ name: string | undefined }> = ({ name }) => {
     navigate({ to: '/' })
   }
   return (
-    <div className="m-4 flex justify-between items-center sticky top-0">
+    <div className="m-4 flex justify-between items-center sticky top-0 z-50">
       <div className="p-2 text-3xl font-bold">{name}</div>
       <div className="p-2 flex items-center gap-4">
         <LucideSun className="w-5 h-5" />

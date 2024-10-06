@@ -2,12 +2,10 @@ import { DatePicker, Flex, Radio, RadioChangeEvent } from 'antd'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { AnomalyByArea } from '../Chart/AnomalyByArea'
-import { AnomalybyWeapon } from '../Chart/AnomalybyWeapon'
-import { AreaC2 } from '../Chart/AreaC2'
-import { BarC } from '../Chart/BarC'
 import { AnomalyByDate } from '../Chart/AnomalyByDate'
+import { AnomalybyWeapon } from '../Chart/AnomalybyWeapon'
+import { MaxAnomalyByArea } from '../Chart/MaxAnomalyByArea'
 import OverallInformation from '../Chart/OverallInformation'
-import { PieC } from '../Chart/PieC'
 
 
 const Dashboard = () => {
@@ -51,10 +49,8 @@ const Dashboard = () => {
         <AnomalybyWeapon/>
         <AnomalyByArea/>
         <div className="col-span-3">
-          <AreaC2/>
+          <MaxAnomalyByArea/>
         </div>
-        <PieC/>
-        <BarC />
       </div>
     </div>
   )

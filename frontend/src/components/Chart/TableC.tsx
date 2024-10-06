@@ -13,7 +13,7 @@ export function TableC() {
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {JSON.stringify(error)}</div>
 
-  console.log(anomalies?.data)
+  // console.log(anomalies?.data)
 
   const columns: ColumnsType<Anomaly> = [
     {

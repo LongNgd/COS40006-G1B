@@ -9,7 +9,6 @@ import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
 
 const OverallInformation = () => {
   const { data: anomalies, isLoading } = useGetAnomaliesQuery()
-  if (isLoading) return <div>Loading...</div>
 
   const activeCamera = [
     ...new Set(anomalies?.data.map((anomaly) => anomaly.camera_area)),
@@ -31,7 +30,9 @@ const OverallInformation = () => {
           <LucideCamera />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{activeCamera}</div>
+          <div className="text-2xl font-bold">
+            {isLoading ? '-' : activeCamera}
+          </div>
           <p className="text-xs text-muted-foreground">
             +20.1% from last month
           </p>
@@ -43,7 +44,9 @@ const OverallInformation = () => {
           <LucideOctagonAlert />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{totalAnomaly}</div>
+          <div className="text-2xl font-bold">
+            {isLoading ? '-' : totalAnomaly}
+          </div>
           <p className="text-xs text-muted-foreground">
             +180.1% from last month
           </p>
@@ -58,7 +61,7 @@ const OverallInformation = () => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {averageParticipant?.toFixed(2)}
+            {isLoading ? '-' : averageParticipant?.toFixed(2)}
           </div>
           <p className="text-xs text-muted-foreground">+19% from last month</p>
         </CardContent>
@@ -71,7 +74,9 @@ const OverallInformation = () => {
           <LucideActivity />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{withWeapon}</div>
+          <div className="text-2xl font-bold">
+            {isLoading ? '-' : withWeapon}
+          </div>
           <p className="text-xs text-muted-foreground">+201 since last hour</p>
         </CardContent>
       </Card>
