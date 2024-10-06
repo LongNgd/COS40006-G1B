@@ -1,6 +1,5 @@
 import { Pie, PieChart } from 'recharts'
 
-import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
 import {
   Card,
   CardContent,
@@ -17,6 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
+import { Anomaly } from '../../api/anomaly.type'
 
 const chartConfig = {
   true: {
@@ -29,14 +29,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function AnomalybyWeapon() {
-  const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
-
-  if (isLoading) return <div>Loading...</div>
-  if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
-
+export function AnomalybyWeapon({ data }: { data: Anomaly[] }) {
   const anomalybyWeapon = Object.entries(
-    anomalies?.data.reduce(
+    data.reduce(
       (acc, curr) => {
         const warning = curr.warning == 1 ? 'true' : 'false'
         acc[warning] = (acc[warning] || 0) + 1

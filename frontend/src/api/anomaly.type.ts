@@ -1,4 +1,4 @@
-export interface Anomaly {
+export type Anomaly = {
   anomaly_id: number,
   row_index: number
   camera_area: string

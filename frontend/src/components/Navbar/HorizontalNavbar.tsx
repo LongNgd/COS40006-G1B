@@ -15,6 +15,7 @@ const HorizontalNavbar: React.FC<{ name: string | undefined }> = ({ name }) => {
   return (
     <div className="m-4 flex justify-between items-center sticky top-0 z-50">
       <div className="p-2 text-3xl font-bold">{name}</div>
+      <div className="text-md text-muted-foreground">Assume that today is 2024-09-29</div>
       <div className="p-2 flex items-center gap-4">
         <LucideSun className="w-5 h-5" />
         <LucideBell className="w-5 h-5" />

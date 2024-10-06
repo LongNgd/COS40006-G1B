@@ -5,22 +5,20 @@ import {
   LucideUser,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
+import { Anomaly } from '../../api/anomaly.type'
 
-const OverallInformation = () => {
-  const { data: anomalies, isLoading } = useGetAnomaliesQuery()
+export const OverallInformation = ({ data }: { data: Anomaly[] }) => {
+  const isLoading = !data
 
-  const activeCamera = [
-    ...new Set(anomalies?.data.map((anomaly) => anomaly.camera_area)),
-  ].length
-  const totalAnomaly = anomalies?.data.length
-  const averageParticipant = anomalies?.data.reduce(
+  const activeCamera = Array.from(
+    new Set(data.map(({ camera_area }) => camera_area)),
+  ).length
+  const totalAnomaly = data.length
+  const averageParticipant = data.reduce(
     (acc, curr, _, { length }) => acc + curr.participant / length,
     0,
   )
-  const withWeapon = anomalies?.data.filter(
-    (anomaly) => anomaly.warning === 1,
-  ).length
+  const withWeapon = data.filter((anomaly) => anomaly.warning === 1).length
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -34,7 +32,7 @@ const OverallInformation = () => {
             {isLoading ? '-' : activeCamera}
           </div>
           <p className="text-xs text-muted-foreground">
-            +20.1% from last month
+            Active Camera in specific day
           </p>
         </CardContent>
       </Card>
@@ -48,7 +46,7 @@ const OverallInformation = () => {
             {isLoading ? '-' : totalAnomaly}
           </div>
           <p className="text-xs text-muted-foreground">
-            +180.1% from last month
+            Total anomaly in specific day
           </p>
         </CardContent>
       </Card>
@@ -63,7 +61,9 @@ const OverallInformation = () => {
           <div className="text-2xl font-bold">
             {isLoading ? '-' : averageParticipant?.toFixed(2)}
           </div>
-          <p className="text-xs text-muted-foreground">+19% from last month</p>
+          <p className="text-xs text-muted-foreground">
+            Average of Paticipant in specific day
+          </p>
         </CardContent>
       </Card>
       <Card>
@@ -77,7 +77,9 @@ const OverallInformation = () => {
           <div className="text-2xl font-bold">
             {isLoading ? '-' : withWeapon}
           </div>
-          <p className="text-xs text-muted-foreground">+201 since last hour</p>
+          <p className="text-xs text-muted-foreground">
+            Number of Anomaly with weapon
+          </p>
         </CardContent>
       </Card>
     </div>

@@ -1,6 +1,6 @@
 import { Pie, PieChart } from 'recharts'
 
-import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
+import { Anomaly } from '../../api/anomaly.type'
 import {
   Card,
   CardContent,
@@ -37,14 +37,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function AnomalyByArea() {
-  const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
-
-  if (isLoading) return <div>Loading...</div>
-  if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
-
+export function AnomalyByArea({ data }: { data: Anomaly[] }) {
   const anomalybyArea = Object.entries(
-    anomalies?.data.reduce(
+    data.reduce(
       (acc, curr) => {
         const area = curr.camera_area.toString().replace(' ', '').toLowerCase()
         acc[area] = (acc[area] || 0) + 1
@@ -68,18 +63,14 @@ export function AnomalyByArea() {
       <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
+          className="mx-auto aspect-square max-h-[300px]"
         >
           <PieChart>
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Pie
-              data={anomalybyArea}
-              dataKey="count"
-              nameKey="area"
-            ></Pie>
+            <Pie data={anomalybyArea} dataKey="count" nameKey="area" />
             <ChartLegend
               content={<ChartLegendContent nameKey="area" />}
               className="-translate-y-2 flex-wrap gap-2 basis-1/4 justify-center"

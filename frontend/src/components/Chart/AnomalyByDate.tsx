@@ -1,6 +1,6 @@
 import { TrendingDown } from 'lucide-react'
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
-import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
+import { Anomaly } from '../../api/anomaly.type'
 import {
   Card,
   CardContent,
@@ -9,29 +9,39 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card'
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart'
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '../ui/chart'
 
 const chartConfig = {
   total: {
     label: 'Total of Anomalies',
     color: '#e11d48',
-  }
+  },
 } satisfies ChartConfig
 
-export function AnomalyByDate() {
-  const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
-
-  if (isLoading) return <div>Loading...</div>
-  if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
+export function AnomalyByDate({ data }: { data: Anomaly[] }) {
+  const checkDataDate = Array.from(new Set(data.map(({ date }) => date)))
 
   const anomalyByDate = Object.entries(
-    anomalies.data.reduce(
+    data.reduce(
       (acc, curr) => {
-        const date = curr.date
-        if (!acc[date]) {
-          acc[date] = { total: 0 }
+        let key
+        if (checkDataDate.length === 1) {
+          key = curr.time
+        } else {
+          key = curr.date
         }
-        acc[date].total += 1
+
+        if (!acc[key]) {
+          acc[key] = { total: 0 }
+        }
+
+        acc[key].total += 1
+
         return acc
       },
       {} as Record<string, { total: number }>,
@@ -45,16 +55,15 @@ export function AnomalyByDate() {
     <Card>
       <CardHeader>
         <CardTitle>Anomalies Over Time</CardTitle>
-        <CardDescription>Number of anomalies per week over the selected time period</CardDescription>
+        <CardDescription>
+          Number of anomalies per week over the selected time period
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <LineChart data={anomalyByDate}>
             <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              label={{ value: 'Day', position: 'insideBottom', offset: 0 }}
-            />
+            <XAxis dataKey="date" />
             <YAxis
               label={{ value: 'Anomalies', angle: -90, position: 'insideLeft' }}
             />
