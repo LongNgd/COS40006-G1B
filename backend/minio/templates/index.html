@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploaded Files</title>
+    <style>
+        .file-item {
+            margin-bottom: 20px;
+        }
+        img {
+            max-width: 200px; /* Limit image size */
+            height: auto;
+        }
+        video {
+            width: 300px; /* Adjust video size as needed */
+            height: auto;
+        }
+        iframe {
+            width: 100%;
+            height: 500px; /* Adjust height as needed */
+        }
+    </style>
+</head>
+<body>
+    <h1>Uploaded Files</h1>
+
+    <!-- Form for uploading files -->
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="*"> <!-- Accept any file type -->
+        <button type="submit">Upload</button>
+    </form>
+
+    <div>
+        {% for file in files %}
+        <div class="file-item">
+            <h3>{{ file[0] }}</h3>
+            {% if file[0].endswith('.jpg') or file[0].endswith('.jpeg') or file[0].endswith('.png') %}
+                <img src="{{ file[1] }}" alt="{{ file[0] }}"> <!-- Display the image -->
+            {% elif file[0].endswith('.mp4') or file[0].endswith('.mov') %}
+                <video controls>
+                    <source src="{{ file[1] }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video> <!-- Display the video -->
+            {% elif file[0].endswith('.pdf') %}
+                <iframe src="{{ file[1] }}" frameborder="0"></iframe> <!-- Display PDF -->
+            {% else %}
+                <p>File type not supported for direct viewing.</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

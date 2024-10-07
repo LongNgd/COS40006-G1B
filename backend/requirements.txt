@@ -6,3 +6,4 @@ flask-swagger-ui
 flask_sqlalchemy
 flasgger
 psycopg2 
+minio
