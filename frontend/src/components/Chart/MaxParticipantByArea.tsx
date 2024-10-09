@@ -1,5 +1,5 @@
 import { TrendingUp } from 'lucide-react'
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 
 import { Anomaly } from '../../api/anomaly.type'
 import {
@@ -13,6 +13,8 @@ import {
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
@@ -22,13 +24,10 @@ const chartConfig: ChartConfig = {
   'Floor 2': { label: 'Second Floor', color: '#f28e63' },
   'Floor 3': { label: 'Third Floor', color: '#2b4559' },
   'Floor 4': { label: 'Fourth Floor', color: '#eed771' },
-  'Floor 5': { label: 'Fifth Floor', color: '#f6c38e' },
+  'Floor 5': { label: 'Fifth Floor', color: '#2563eb' },
 }
 
 export function MaxParticipantByArea({ data }: { data: Anomaly[] }) {
-  const allFloors = Array.from(
-    new Set(data.map(({ camera_area }) => camera_area)),
-  )
   const checkDataDate = Array.from(new Set(data.map(({ date }) => date)))
 
   const participateByArea = Object.entries(
@@ -43,7 +42,6 @@ export function MaxParticipantByArea({ data }: { data: Anomaly[] }) {
         const { camera_area, participant } = curr
         acc[key] = acc[key] || {}
 
-        // Set the maximum participants for the camera_area on this date
         acc[key][camera_area] = Math.max(
           acc[key][camera_area] || 0,
           participant,
@@ -55,13 +53,7 @@ export function MaxParticipantByArea({ data }: { data: Anomaly[] }) {
     ),
   ).map(([date, floors]) => ({
     date,
-    ...allFloors.reduce(
-      (acc, floor) => ({
-        ...acc,
-        [floor]: floors[floor] || 0,
-      }),
-      {},
-    ),
+    ...floors, // Spread the floors directly as the map values
   }))
 
   // console.log(chartConfig)
@@ -79,44 +71,21 @@ export function MaxParticipantByArea({ data }: { data: Anomaly[] }) {
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <AreaChart data={participateByArea}>
-            {Object.keys(chartConfig).map((floorKey) => (
-              <defs key={floorKey}>
-                <linearGradient id={floorKey} x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor={chartConfig[floorKey].color}
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor={chartConfig[floorKey].color}
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-              </defs>
-            ))}
+          <BarChart accessibilityLayer data={participateByArea}>
             <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-            />
+            <XAxis dataKey="date" tickLine={false} tickMargin={10} />
             <YAxis />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
             {Object.keys(chartConfig).map((floorKey) => (
-              <Area
+              <Bar
                 dataKey={floorKey}
-                type="natural"
-                stroke={chartConfig[floorKey].color}
-                fillOpacity={0.4}
                 fill={chartConfig[floorKey].color}
-                stackId="a"
+                radius={4}
                 key={floorKey}
               />
             ))}
-          </AreaChart>
+          </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter>
