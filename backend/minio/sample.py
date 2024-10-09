@@ -87,6 +87,7 @@ def index():
     cursor.execute("SELECT file_name, file_url FROM files")
     files = cursor.fetchall()
     conn.close()
+    print(files)
     return render_template('index.html', files=files)
 
 @app.route('/upload', methods=['POST'])

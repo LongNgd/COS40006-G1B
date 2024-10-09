@@ -13,3 +13,8 @@ services:
       - "9001:9001"               # MinIO console port
     command: server --console-address ":9001" /data
 
+# networks:
+#   default:
+#     external:
+#       name: project1b
+
