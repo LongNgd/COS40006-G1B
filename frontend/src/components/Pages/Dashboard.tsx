@@ -13,6 +13,7 @@ import { AnomalybyWeapon } from '../Chart/AnomalybyWeapon'
 import { MaxParticipantByArea } from '../Chart/MaxParticipantByArea'
 import { OverallInformation } from '../Chart/OverallInformation'
 import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
+import { BarC } from '../Chart/BarC'
 
 const Dashboard = () => {
   const [date, setDate] = useState('2024-09-29')
@@ -85,6 +86,9 @@ const Dashboard = () => {
         <AnomalyByArea data={detailData || []} />
         <div className="col-span-3">
           <MaxParticipantByArea data={detailData || []} />
+        </div>
+        <div className="col-span-3">
+          <BarC data={detailData || []} />
         </div>
       </div>
     </div>
