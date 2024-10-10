@@ -1,5 +1,5 @@
 import { TrendingUp } from 'lucide-react'
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 
 import { Anomaly } from '../../api/anomaly.type'
 import {
@@ -27,10 +27,7 @@ const chartConfig: ChartConfig = {
   'Floor 5': { label: 'Fifth Floor', color: '#2563eb' },
 }
 
-export function MaxParticipantByArea({ data }: { data: Anomaly[] }) {
-  const allFloors = Array.from(
-    new Set(data.map(({ camera_area }) => camera_area)),
-  )
+export function TimePeak({ data }: { data: Anomaly[] }) {
   const checkDataDate = Array.from(new Set(data.map(({ date }) => date)))
 
   const participateByArea = Object.entries(
@@ -56,13 +53,7 @@ export function MaxParticipantByArea({ data }: { data: Anomaly[] }) {
     ),
   ).map(([date, floors]) => ({
     date,
-    ...allFloors.reduce(
-      (acc, floor) => ({
-        ...acc,
-        [floor]: floors[floor] || 0,
-      }),
-      {},
-    ),
+    ...floors, // Spread the floors directly as the map values
   }))
 
   // console.log(chartConfig)
@@ -70,10 +61,9 @@ export function MaxParticipantByArea({ data }: { data: Anomaly[] }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Max Participant By Area</CardTitle>
+        <CardTitle>Area Chart - Gradient</CardTitle>
         <CardDescription>
-          Maximum number of participants in each area over the selected time
-          period
+          Showing total visitors for the last 6 months
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -81,46 +71,21 @@ export function MaxParticipantByArea({ data }: { data: Anomaly[] }) {
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <AreaChart accessibilityLayer data={participateByArea}>
+          <BarChart accessibilityLayer data={participateByArea}>
             <CartesianGrid vertical={false} />
             <XAxis dataKey="date" tickLine={false} tickMargin={10} />
             <YAxis />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <defs>
-              {Object.keys(chartConfig).map((floorKey) => (
-                <linearGradient
-                  id={floorKey}
-                  key={floorKey}
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-desktop)"
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-desktop)"
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-              ))}
-            </defs>
             <ChartLegend content={<ChartLegendContent />} />
             {Object.keys(chartConfig).map((floorKey) => (
-              <Area
+              <Bar
                 dataKey={floorKey}
-                type="natural"
                 fill={chartConfig[floorKey].color}
-                fillOpacity={0.4}
-                stroke={chartConfig[floorKey].color}
-                stackId="a"
+                radius={4}
+                key={floorKey}
               />
             ))}
-          </AreaChart>
+          </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter>

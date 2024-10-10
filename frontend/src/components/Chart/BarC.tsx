@@ -1,5 +1,7 @@
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { TrendingUp } from 'lucide-react'
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 
+import { Anomaly } from '../../api/anomaly.type'
 import {
   Card,
   CardContent,
@@ -7,51 +9,96 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card"
+} from '../ui/card'
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "../ui/chart"
-import { useGetAnomaliesQuery } from "../../api/anomaliesApi"
+} from '../ui/chart'
 
-const chartConfig = {
-  time_and_area: {
-    label: "Anomaly Peak",
-    color: "hsl(var(--chart-1))",
-  },
-} satisfies ChartConfig
+const chartConfig: ChartConfig = {
+  'Floor 1': { label: 'First Floor', color: '#2e8b7b' },
+  'Floor 2': { label: 'Second Floor', color: '#f28e63' },
+  'Floor 3': { label: 'Third Floor', color: '#2b4559' },
+  'Floor 4': { label: 'Fourth Floor', color: '#eed771' },
+  'Floor 5': { label: 'Fifth Floor', color: '#2563eb' },
+}
 
-export function BarC() {
-  const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
+export function BarC({ data }: { data: Anomaly[] }) {
+  const checkDataDate = Array.from(new Set(data.map(({ date }) => date)))
 
-  if (isLoading) return <div>Loading...</div>
-  if (error || !anomalies) return <div>Error: {JSON.stringify(error)}</div>
+  const participateByArea = Object.entries(
+    data.reduce(
+      (acc, curr) => {
+        let key
+        if (checkDataDate.length === 1) {
+          key = curr.time
+        } else {
+          key = curr.date
+        }
+        const { camera_area, participant } = curr
+        acc[key] = acc[key] || {}
+
+        acc[key][camera_area] = Math.max(
+          acc[key][camera_area] || 0,
+          participant,
+        )
+
+        return acc
+      },
+      {} as Record<string, Record<string, number>>,
+    ),
+  ).map(([date, floors]) => ({
+    date,
+    ...floors, // Spread the floors directly as the map values
+  }))
+
+  // console.log(chartConfig)
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart</CardTitle>
-        <CardDescription>Time peak in Area</CardDescription>
+        <CardTitle>Max Participant In Bar Chart</CardTitle>
+        <CardDescription>
+          Number of participants per week over the selected time period
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={anomalies.data}>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
-            <Bar dataKey="number_of_anomalies" fill="red" radius={4} />
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-auto h-[250px] w-full"
+        >
+          <BarChart accessibilityLayer data={participateByArea}>
             <CartesianGrid vertical={false} />
-            <XAxis dataKey="date" label={{ value: 'Time & Area', position: 'insideBottom', offset: -5 }} />
-            <YAxis label={{ value: 'Highest Anomalies', angle: -90, position: 'insideLeft' }} />
-            
+            <XAxis dataKey="date" tickLine={false} tickMargin={10} />
+            <YAxis />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
+            {Object.keys(chartConfig).map((floorKey) => (
+              <Bar
+                dataKey={floorKey}
+                fill={chartConfig[floorKey].color}
+                radius={4}
+                key={floorKey}
+              />
+            ))}
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter>
-
+        <div className="flex w-full items-start gap-2 text-sm">
+          <div className="grid gap-2">
+            <div className="flex items-center gap-2 font-medium leading-none">
+              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+            </div>
+            <div className="flex items-center gap-2 leading-none text-muted-foreground">
+              January - June 2024
+            </div>
+          </div>
+        </div>
       </CardFooter>
     </Card>
   )

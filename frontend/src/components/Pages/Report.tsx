@@ -1,19 +1,63 @@
-import { DatePicker, DatePickerProps, Select } from 'antd'
+import { useState } from 'react'
+import { DatePicker, Select } from 'antd'
 import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
 import { TableC } from '../Chart/TableC'
+import dayjs from 'dayjs'
+import { Anomaly } from '../../api/anomaly.type'
 
-const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-  console.log(date, dateString)
-}
-const handleChange = (value: string) => {
-  console.log(`selected ${value}`)
-}
 const Report = () => {
   const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
-  // console.log(anomalies?.data)
+  const [selectedValues, setSelectedValues] = useState<{
+    cameras: string[]
+    areas: string[]
+    time: string | null
+    warning: string | null
+    date: dayjs.ConfigType | null
+  }>({
+    cameras: [],
+    areas: [],
+    time: null,
+    warning: null,
+    date: null,
+  })
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {JSON.stringify(error)}</div>
+
+  const handleChange = (type: string, value: unknown) => {
+    setSelectedValues({ ...selectedValues, [type]: value })
+  }
+
+  // Function to apply filters
+  const applyFilters = (data: Anomaly[]) => {
+    return data?.filter((anomaly) => {
+      const { cameras, areas, date, time, warning } = selectedValues
+
+      // Filter by cameras
+      if (cameras.length > 0 && !cameras.includes(anomaly.camera_name)) {
+        return false
+      }
+      if (areas.length > 0 && !areas.includes(anomaly.camera_area)) {
+        return false
+      }
+      if (date && !dayjs(anomaly.date).isSame(dayjs(date), 'day')) {
+        return false
+      }
+      if (time) {
+        const anomalyHour = dayjs(anomaly.time, 'HH:mm:ss').hour()
+        const isDay = anomalyHour >= 6 && anomalyHour < 18
+        if (time === 'day' && !isDay) return false
+        if (time === 'night' && isDay) return false
+      }
+      if (warning !== null && anomaly.warning !== parseInt(warning, 10)) {
+        return false
+      }
+
+      return true
+    })
+  }
+
+  const filteredAnomalies = applyFilters(anomalies?.data || [])
 
   return (
     <div className="px-4">
@@ -21,7 +65,7 @@ const Report = () => {
         <Select
           placeholder="Select a Camera"
           mode="multiple"
-          onChange={handleChange}
+          onChange={(value) => handleChange('cameras', value)}
           allowClear
           options={[
             ...new Set(anomalies?.data.map((anomaly) => anomaly.camera_name)),
@@ -30,16 +74,16 @@ const Report = () => {
         <Select
           placeholder="Select a Area"
           mode="multiple"
-          onChange={handleChange}
+          onChange={(value) => handleChange('areas', value)}
           allowClear
           options={[
             ...new Set(anomalies?.data.map((anomaly) => anomaly.camera_area)),
           ].map((area) => ({ label: area, value: area }))}
         />
-        <DatePicker onChange={onChange} />
+        <DatePicker onChange={(date) => handleChange('date', date)} />
         <Select
           placeholder="Select a time"
-          onChange={handleChange}
+          onChange={(value) => handleChange('time', value)}
           allowClear
           options={[
             { value: 'day', label: '6:00-18:00' },
@@ -48,15 +92,15 @@ const Report = () => {
         />
         <Select
           placeholder="Select warning"
-          onChange={handleChange}
-          allowClear
+          onChange={(value) => handleChange('warning', value)}
+          // allowClear
           options={[
             { value: '0', label: 'No Weapon' },
             { value: '1', label: 'Have Weapon' },
           ]}
         />
       </div>
-      <TableC />
+      <TableC data={filteredAnomalies} />
     </div>
   )
 }

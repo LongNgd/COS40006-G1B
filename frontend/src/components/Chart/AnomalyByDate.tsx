@@ -23,7 +23,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function AnomalyByDate({ data }: { data: Anomaly[] }) {
+export const AnomalyByDate = ({ data }: { data: Anomaly[] }) => {
   const checkDataDate = Array.from(new Set(data.map(({ date }) => date)))
 
   const anomalyByDate = Object.entries(

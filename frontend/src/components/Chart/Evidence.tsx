@@ -1,6 +1,10 @@
-const Evidence = () => {
+import ReactPlayer from 'react-player/lazy'
+
+const Evidence = (data: any) => {
   return (
-    <div>Evidence</div>
+    <>
+      <ReactPlayer url="http://localhost:9000/project1b/test/sample-violence1.mp4" />
+    </>
   )
 }
 
