@@ -1,8 +1,8 @@
-import { Button, Modal, Table } from 'antd'
+import { Button, Flex, Modal, Table } from 'antd'
 import { useState } from 'react'
 import { Anomaly } from '../../api/anomaly.type'
-import Evidence from './Evidence'
 import { ColumnsType } from 'antd/es/table'
+import ReactPlayer from 'react-player'
 
 export const TableC = ({ data }: { data: Anomaly[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -64,13 +64,17 @@ export const TableC = ({ data }: { data: Anomaly[] }) => {
             View
           </Button>
           <Modal
-            width={1000}
+            width={700}
             title="Show Evidence Video"
             open={isModalOpen}
             onOk={() => setIsModalOpen(false)}
             onCancel={() => setIsModalOpen(false)}
           >
-            {selectedRecord && <Evidence data={selectedRecord} />}
+            <Flex align="center" justify="center">
+              {selectedRecord && (
+                <ReactPlayer url={selectedRecord.evidence_path} controls />
+              )}
+            </Flex>
           </Modal>
         </>
       ),

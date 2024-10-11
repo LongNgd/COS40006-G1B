@@ -5,7 +5,7 @@ export type Anomaly = {
   camera_name: string
   date: string
   duration: number
-  evidence_path: number
+  evidence_path: string
   participant: number
   time: string
   warning: number

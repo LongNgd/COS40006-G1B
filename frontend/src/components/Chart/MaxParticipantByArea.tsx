@@ -113,6 +113,7 @@ export function MaxParticipantByArea({ data }: { data: Anomaly[] }) {
             {Object.keys(chartConfig).map((floorKey) => (
               <Area
                 dataKey={floorKey}
+                key={floorKey}
                 type="natural"
                 fill={chartConfig[floorKey].color}
                 fillOpacity={0.4}

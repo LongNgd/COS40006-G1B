@@ -1,6 +1,7 @@
 import {
   LucideFileSignature,
   LucideLayoutDashboard,
+  LucideMonitor,
   LucideUsers,
 } from 'lucide-react'
 
@@ -26,6 +27,12 @@ export const navigation: NavigationItem[] = [
     label: 'About',
     isParent: false,
     icon: <LucideUsers />,
+  },
+  {
+    link: '/monitoring',
+    label: 'Camera Monitoring',
+    isParent: false,
+    icon: <LucideMonitor />,
   },
   {
     label: 'Report',
