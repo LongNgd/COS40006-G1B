@@ -6,13 +6,16 @@ import {
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Anomaly } from '../../api/anomaly.type'
+import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
 
 export const OverallInformation = ({ data }: { data: Anomaly[] }) => {
+  const { data: anomalies } = useGetAnomaliesQuery()
   const isLoading = !data
 
   const activeCamera = Array.from(
-    new Set(data.map(({ camera_area }) => camera_area)),
+    new Set(anomalies?.data.map(({ camera_area }) => camera_area)),
   ).length
+  
   const totalAnomaly = data.length
   const averageParticipant = data.reduce(
     (acc, curr, _, { length }) => acc + curr.participant / length,
@@ -53,7 +56,7 @@ export const OverallInformation = ({ data }: { data: Anomaly[] }) => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Average of Paticipant
+            Average of Participant
           </CardTitle>
           <LucideUser />
         </CardHeader>
@@ -62,7 +65,7 @@ export const OverallInformation = ({ data }: { data: Anomaly[] }) => {
             {isLoading ? '-' : averageParticipant?.toFixed(2)}
           </div>
           <p className="text-xs text-muted-foreground">
-            Average of Paticipant in specific day
+            Average of Participant in specific day
           </p>
         </CardContent>
       </Card>

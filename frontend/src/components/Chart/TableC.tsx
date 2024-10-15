@@ -44,6 +44,12 @@ export const TableC = ({ data }: { data: Anomaly[] }) => {
       render: (duration: number) => <span>{duration} seconds</span>,
     },
     {
+      title: 'Participants',
+      dataIndex: 'participant',
+      key: 'participant',
+      sorter: (a, b) => a.participant - b.participant,
+    },
+    {
       title: 'Warning',
       dataIndex: 'warning',
       key: 'warning',

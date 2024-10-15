@@ -50,7 +50,7 @@ export const AnomalyByDate = ({ data }: { data: Anomaly[] }) => {
     date,
     total: counts.total,
   }))
-
+  
   return (
     <Card>
       <CardHeader>
