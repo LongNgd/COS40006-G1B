@@ -1,10 +1,10 @@
 import { Outlet, useLocation } from '@tanstack/react-router'
 
-import HorizontalNavbar from '../Navbar/HorizontalNavbar'
-import Navbar from '../Navbar/Navbar'
-import { ScrollArea } from '../ui/scroll-area'
 import { useState } from 'react'
-import { navigation } from '../Navbar/navigation'
+import { ScrollArea } from '../ui/scroll-area'
+import HorizontalNavbar from './HorizontalNavbar/HorizontalNavbar'
+import { navigation } from './VerticalNavbar/navigation'
+import VerticalNavbar from './VerticalNavbar/VerticalNavbar'
 
 const Layout = () => {
   const location = useLocation()
@@ -28,7 +28,7 @@ const Layout = () => {
   }
   return (
     <div className="flex">
-      <Navbar getLabel={handleClick} />
+      <VerticalNavbar getLabel={handleClick} />
       <ScrollArea className="flex-1 h-lvh">
         <HorizontalNavbar name={name} />
         <div className="m-4">

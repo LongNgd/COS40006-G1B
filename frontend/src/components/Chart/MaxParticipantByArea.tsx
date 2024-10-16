@@ -1,7 +1,7 @@
 import { TrendingUp } from 'lucide-react'
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 
-import { Anomaly } from '../../api/anomaly.type'
+import { Anomaly } from '../../type/anomaly.type'
 import {
   Card,
   CardContent,

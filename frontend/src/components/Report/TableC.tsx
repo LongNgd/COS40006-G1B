@@ -1,6 +1,6 @@
 import { Button, Flex, Modal, Table } from 'antd'
 import { useState } from 'react'
-import { Anomaly } from '../../api/anomaly.type'
+import { Anomaly } from '../../type/anomaly.type'
 import { ColumnsType } from 'antd/es/table'
 import ReactPlayer from 'react-player'
 

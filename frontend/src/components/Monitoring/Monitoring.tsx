@@ -1,25 +1,42 @@
-import { Button, Card, Col, Flex, Modal, notification, Row, Switch } from 'antd'
-import { Info, LucidePlus, Wrench } from 'lucide-react'
-import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
+import {
+  Button,
+  Card,
+  Col,
+  Flex,
+  Modal,
+  notification,
+  Popover,
+  Row,
+  Switch,
+} from 'antd'
+import { CircleMinus, Info, LucidePlus } from 'lucide-react'
 import { useState } from 'react'
+import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
+
+const content = (
+  <div>
+    <p>Content</p>
+    <p>Content</p>
+  </div>
+)
 
 const Monitoring = () => {
   const [api, contextHolder] = notification.useNotification()
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const { data: anomalies } = useGetAnomaliesQuery()
 
   const showModal = () => {
-    setIsModalOpen(true);
-  };
+    setIsModalOpen(true)
+  }
 
   const handleOk = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
 
   const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
 
   const openNotification = (name: string) => {
     api.info({
@@ -36,28 +53,34 @@ const Monitoring = () => {
   return (
     <>
       {contextHolder}
-      <Button type="primary" icon={<LucidePlus/>} onClick={showModal}>
+      <Button type="primary" icon={<LucidePlus />} onClick={showModal}>
         Open Modal
       </Button>
-      <Modal title="Adding Camera " open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal
+        title="Adding Camera "
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
         Camera List will be display in here
       </Modal>
       <Row gutter={[16, 24]}>
         {camera.map((item) => {
           return (
-            <Col className="gutter-row" span={6}>
+            <Col className="gutter-row" span={6} key={item}>
               <Card
-                key={item}
                 actions={[
                   <Switch
                     defaultChecked
                     onChange={() => openNotification(item)}
                   />,
                   <Flex justify="center" align="center">
-                    <Wrench key="setting" />
+                    <CircleMinus key="setting" />
                   </Flex>,
                   <Flex justify="center" align="center">
-                    <Info key="ellipsis" />
+                    <Popover content={content} title="Camera Information" placement="bottom" arrow={false}>
+                      <Info key="ellipsis" />
+                    </Popover>
                   </Flex>,
                 ]}
               >

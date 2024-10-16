@@ -1,6 +1,6 @@
 import { Pie, PieChart } from 'recharts'
 
-import { Anomaly } from '../../api/anomaly.type'
+import { Anomaly } from '../../type/anomaly.type'
 import {
   Card,
   CardContent,

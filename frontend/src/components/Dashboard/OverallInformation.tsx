@@ -5,7 +5,7 @@ import {
   LucideUser,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Anomaly } from '../../api/anomaly.type'
+import { Anomaly } from '../../type/anomaly.type'
 import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
 
 export const OverallInformation = ({ data }: { data: Anomaly[] }) => {

@@ -1,12 +1,14 @@
-import { useState } from 'react'
 import { DatePicker, Select } from 'antd'
-import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
-import { TableC } from './TableC'
 import dayjs from 'dayjs'
-import { Anomaly } from '../../api/anomaly.type'
+import { useState } from 'react'
+import { useGetAnomaliesByUserMutation } from '../../api/anomaliesApi'
+import { Anomaly } from '../../type/anomaly.type'
+import { TableC } from './TableC'
 
 const Report = () => {
-  const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
+  // const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
+  const [getAnomaliesByUser, { isLoading, error, data: anomalies }] =
+    useGetAnomaliesByUserMutation()
   const [selectedValues, setSelectedValues] = useState<{
     cameras: string[]
     areas: string[]
@@ -23,6 +25,12 @@ const Report = () => {
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {JSON.stringify(error)}</div>
+
+  // const getData = async () => {
+  //   await getAnomaliesByUser({user_id: 2})
+  // }
+  // const test = getData()
+  // console.log(test);
 
   const handleChange = (type: string, value: unknown) => {
     setSelectedValues({ ...selectedValues, [type]: value })

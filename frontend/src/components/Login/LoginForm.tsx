@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
@@ -44,12 +45,12 @@ const LoginForm = () => {
     try {
       const loginRes = await login(values)
       if (loginRes.error) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error = loginRes.error as any
         message.error(error.data.message as string)
         return
       }
-      signIn()
+      const userInfo = (loginRes.data as any).user_info; // Use type assertion
+      signIn(userInfo)
       navigate({ to: '/dashboard' })
       message.success('Welcome!')
     } catch (error) {

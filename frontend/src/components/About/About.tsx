@@ -13,7 +13,7 @@ const About = () => {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
               {content.items.map((item) => {
                 return (
-                  <Card>
+                  <Card key={item.title}>
                     <CardHeader className="flex flex-row gap-2 items-center justify-center p-4">
                       <img src={item.image} alt={item.title} width={50} />
                       <CardTitle className="text-xl font-medium">

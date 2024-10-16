@@ -1,6 +1,9 @@
+import { UserRes } from "../type/user.type"
+
 export const useAuth = () => {
-  const signIn = () => {
+  const signIn = (data: UserRes) => {
     localStorage.setItem('isAuthenticated', 'true')
+    localStorage.setItem('user', JSON.stringify(data))
   }
 
   const signOut = () => {

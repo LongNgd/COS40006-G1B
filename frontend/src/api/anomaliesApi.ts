@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { Anomaly } from './anomaly.type'
-import { Response } from './response.type'
+import { Anomaly } from '../type/anomaly.type'
+import { Response } from '../type/response.type'
+import { User } from '../type/user.type'
 
 export const anomaliesApi = createApi({
   reducerPath: 'anomaliesApi',
@@ -11,14 +12,14 @@ export const anomaliesApi = createApi({
     getAnomalies: builder.query<Response<Anomaly[]>, void>({
       query: () => ({ url: 'anomalies/getAnomalies', method: 'GET' }),
     }),
-    filterByDate: builder.mutation<Response<Anomaly>, string>({
-      query: (date) => ({
-        url: `anomalies/filterByDate`,
+    getAnomaliesByUser: builder.mutation<Response<Anomaly[]>, User>({
+      query: (body) => ({
+        url: `anomalies/getAnomaliesByUserId`,
         method: 'POST',
-        body: date,
+        body,
       }),
     }),
   }),
 })
 
-export const { useGetAnomaliesQuery, useFilterByDateMutation } = anomaliesApi
+export const { useGetAnomaliesQuery, useGetAnomaliesByUserMutation } = anomaliesApi

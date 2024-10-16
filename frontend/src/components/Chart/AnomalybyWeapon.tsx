@@ -16,7 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
-import { Anomaly } from '../../api/anomaly.type'
+import { Anomaly } from '../../type/anomaly.type'
 
 const chartConfig = {
   true: {
