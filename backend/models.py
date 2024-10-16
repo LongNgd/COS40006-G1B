@@ -23,6 +23,12 @@ class Anomaly(db.Model):
 class Camera(db.Model):
     __tablename__ = 'camera'
     camera_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String(25), nullable=False)
     area = db.Column(db.String(25), nullable=False)
+    status = db.Column(db.Integer, nullable=False)
+
+class Camera_user(db.Model):
+    __tablename__ = 'camera_user'
+    cu_id = db.Column(db.Integer, primary_key=True)
+    camera_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
