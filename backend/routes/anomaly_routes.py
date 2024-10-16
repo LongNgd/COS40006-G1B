@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flasgger import swag_from
-from models import db,User, Anomaly, Camera
+from models import db,User, Anomaly, Camera, Camera_user
 from datetime import datetime
 
 anomaly_blueprint = Blueprint('anomaly', __name__)
@@ -287,13 +287,14 @@ def get_anomalies_by_user_id():
         if user_id is None:
             return jsonify({'success': False, 'message': 'User ID is required'}), 400
 
-        # Join Anomaly with Camera and User to get camera details and filter by user_id
+        # Join Anomaly with Camera, camera_user, and User to get camera details and filter by user_id
         anomalies = db.session.query(
             Anomaly,
             Camera.name.label('camera_name'),
             Camera.area.label('camera_area')
         ).join(Camera, Anomaly.camera_id == Camera.camera_id) \
-         .join(User, Camera.user_id == User.user_id) \
+         .join(Camera_user, Camera.camera_id == Camera_user.camera_id) \
+         .join(User, User.user_id == Camera_user.user_id) \
          .filter(User.user_id == user_id).all()
 
         # Check if anomalies list is empty

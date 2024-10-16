@@ -1,69 +1,129 @@
 from flask import Blueprint, request, jsonify
 from flasgger import swag_from
-from models import db, Camera
+from models import db, Camera, User, Camera_user
 from sqlalchemy import func
 
 camera_blueprint = Blueprint('camera', __name__)
 
-@camera_blueprint.route('/getCamera', methods=['GET'])
+
+@camera_blueprint.route('/getCameraByUserID', methods=['POST'])
 @swag_from({
     'tags': ['Camera'],
-    'summary': 'Get all camera',
-    'description': 'Get all camera from the database.',
+    'summary': 'Get cameras by user ID',
+    'description': 'Retrieve all cameras associated with a specified user ID.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'user_id': {
+                        'type': 'integer',
+                        'description': 'ID of the user whose cameras are to be retrieved',
+                        'example': 1,
+                        'required': True
+                    }
+                },
+                'required': True
+            }
+        }
+    ],
     'responses': {
         200: {
-            'description': 'Retrieve all camera data',
-            'examples': {
-                'application/json': {
-                    'success': True,
-                    'data': [
-                        {
-                            'camera_id': 1,
-                            'name': 'Camera 1',
-                            'area': 'Entrance',
-                            'status': 1
+            'description': 'Cameras retrieved successfully',
+            'schema': {
+                'type': 'array',
+                'items': {
+                    'type': 'object',
+                    'properties': {
+                        'camera_id': {
+                            'type': 'integer'
                         },
-                        {
-                            'camera_id': 2,
-                            'name': 'Camera 2',
-                            'area': 'Parking',
-                            'status': 1
+                        'name': {
+                            'type': 'string'
+                        },
+                        'area': {
+                            'type': 'string'
+                        },
+                        'status': {
+                            'type': 'integer'
                         }
-                    ]
+                    }
+                }
+            }
+        },
+        400: {
+            'description': 'Invalid input, user_id is required',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'error': {
+                        'type': 'string',
+                        'example': 'user_id is required'
+                    }
+                }
+            }
+        },
+        404: {
+            'description': 'No cameras found for the user',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'message': {
+                        'type': 'string',
+                        'example': 'No cameras found for this user.'
+                    }
                 }
             }
         },
         500: {
             'description': 'Server error',
-            'examples': {
-                'application/json': {
-                    'success': False,
-                    'message': 'Error details'
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'success': {
+                        'type': 'boolean',
+                        'example': False
+                    },
+                    'message': {
+                        'type': 'string',
+                        'example': 'Error details'
+                    }
                 }
             }
         }
     }
 })
-def get_camera():
-    try:
-        # Query all data from the camera table
-        cameras = Camera.query.all()
+def get_cameras_by_user():
+    # Get user_id from the request body
+    data = request.get_json()
+    user_id = data.get('user_id')
+    
+    if user_id is None:
+        return jsonify({"error": "user_id is required"}), 400
+    
+    # Query the cameras associated with the user
+    cameras = db.session.query(Camera).join(Camera_user, Camera.camera_id == Camera_user.camera_id).filter(Camera_user.user_id == user_id).all()
+    
+    # Create a response list
+    camera_list = []
+    for camera in cameras:
+        camera_info = {
+            'camera_id': camera.camera_id,
+            'name': camera.name,
+            'area': camera.area,
+            'status': camera.status
+        }
+        camera_list.append(camera_info)
+    
+    if not camera_list:
+        return jsonify({"message": "No cameras found for this user."}), 404
 
-        # Prepare the result in a list of dictionaries
-        result = []
-        for camera in cameras:
-            camera_data = {
-                'camera_id': camera.camera_id,
-                'name': camera.name,
-                'area': camera.area,
-                'status': camera.status
-            }
-            result.append(camera_data)
+    return jsonify(camera_list), 200
 
-        # Return a JSON response
-        return jsonify({'success': True, 'data': result}), 200
-    except Exception as e:
-        return jsonify({'success': False, 'message': str(e)}), 500
+if __name__ == '__main__':
+    app.run(debug=True)
 
 @camera_blueprint.route('/toggleCameraStatus', methods=['PUT'])
 @swag_from({
@@ -148,11 +208,11 @@ def toggle_camera_status():
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
-@camera_blueprint.route('/getCameraByUserId', methods=['POST'])
+@camera_blueprint.route('/assignCameraToUser', methods=['POST'])
 @swag_from({
     'tags': ['Camera'],
-    'summary': 'Get cameras by user ID',
-    'description': 'Retrieve the details of all cameras associated with a specific user using their unique user_id.',
+    'summary': 'Assign camera to user',
+    'description': 'Assign a camera to a user by adding an entry into the Camera_user table. The unique cu_id is a combination of camera_id and user_id (cu_id = camera_id * 100 + user_id).',
     'parameters': [
         {
             'name': 'body',
@@ -162,8 +222,14 @@ def toggle_camera_status():
                 'properties': {
                     'user_id': {
                         'type': 'integer',
-                        'description': 'ID of the user whose cameras you want to retrieve',
-                        'example': 123,
+                        'description': 'ID of the user to assign the camera to',
+                        'example': 1,
+                        'required': True
+                    },
+                    'camera_id': {
+                        'type': 'integer',
+                        'description': 'ID of the camera to be assigned',
+                        'example': 1,
                         'required': True
                     }
                 }
@@ -173,41 +239,20 @@ def toggle_camera_status():
     ],
     'responses': {
         200: {
-            'description': 'Cameras retrieved successfully',
-            'examples': {
-                'application/json': [
-                    {
-                        'camera_id': 1,
-                        'user_id': 123,
-                        'name': 'Front Gate Camera',
-                        'area': 'Main Gate',
-                        'status': 1
-                    },
-                    {
-                        'camera_id': 2,
-                        'user_id': 123,
-                        'name': 'Back Gate Camera',
-                        'area': 'Back Gate',
-                        'status': 0
-                    }
-                ]
-            }
-        },
-        404: {
-            'description': 'No cameras found for the user',
+            'description': 'Camera assigned successfully',
             'examples': {
                 'application/json': {
-                    'success': False,
-                    'message': 'No cameras found for the user'
+                    'success': True,
+                    'message': 'Camera assigned to user successfully'
                 }
             }
         },
         400: {
-            'description': 'Invalid request',
+            'description': 'Invalid input or camera already assigned',
             'examples': {
                 'application/json': {
                     'success': False,
-                    'message': 'user_id is required'
+                    'message': 'Camera is already assigned to the user'
                 }
             }
         },
@@ -222,36 +267,32 @@ def toggle_camera_status():
         }
     }
 })
-def get_camera_by_user_id():
+def assign_camera_to_user():
     try:
-        # Get the 'user_id' from the request body (JSON)
+        # Get user_id and camera_id from the request body
         data = request.json
         user_id = data.get('user_id')
+        camera_id = data.get('camera_id')
 
-        # Validate that user_id is provided
-        if not user_id:
-            return jsonify({'success': False, 'message': 'user_id is required'}), 400
+        # Validate input
+        if not user_id or not camera_id:
+            return jsonify({'success': False, 'message': 'user_id and camera_id are required'}), 400
 
-        # Query the database for cameras with the given user_id
-        cameras = Camera.query.filter_by(user_id=user_id).all()
+        # Calculate cu_id
+        cu_id = camera_id * 100 + user_id
 
-        # If no cameras exist for the user, return a 404 error
-        if not cameras:
-            return jsonify({'success': False, 'message': 'No cameras found for the user'}), 404
+        # Check if the cu_id already exists
+        existing_assignment = Camera_user.query.filter_by(cu_id=cu_id).first()
 
-        # Prepare a list of camera details
-        camera_data = []
-        for camera in cameras:
-            camera_data.append({
-                'camera_id': camera.camera_id,
-                'user_id': camera.user_id,
-                'name': camera.name,
-                'area': camera.area,
-                'status': camera.status
-            })
+        if existing_assignment:
+            return jsonify({'success': False, 'message': 'Camera is already assigned to the user'}), 400
 
-        return jsonify(camera_data), 200
+        # Create new Camera_user record
+        new_camera_user = Camera_user(cu_id=cu_id, camera_id=camera_id, user_id=user_id)
+        db.session.add(new_camera_user)
+        db.session.commit()
+
+        return jsonify({'success': True, 'message': 'Camera assigned to user successfully'}), 200
 
     except Exception as e:
-        # Handle any exceptions that occur
         return jsonify({'success': False, 'message': str(e)}), 500
