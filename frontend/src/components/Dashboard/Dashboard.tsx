@@ -11,7 +11,7 @@ import { AnomalyByArea } from '../Chart/AnomalyByArea'
 import { AnomalyByDate } from '../Chart/AnomalyByDate'
 import { AnomalybyWeapon } from '../Chart/AnomalybyWeapon'
 import { MaxParticipantByArea } from '../Chart/MaxParticipantByArea'
-import { OverallInformation } from '../Chart/OverallInformation'
+import { OverallInformation } from './OverallInformation'
 import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
 import { BarC } from '../Chart/BarC'
 
@@ -56,7 +56,7 @@ const Dashboard = () => {
   // console.log(detailData)
 
   return (
-    <div className="m-4">
+    <>
       <div className="pb-4">
         <div className="flex justify-between pb-2 text-lg">
           Overview
@@ -91,7 +91,7 @@ const Dashboard = () => {
           <BarC data={detailData || []} />
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

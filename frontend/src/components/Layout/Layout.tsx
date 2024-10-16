@@ -31,7 +31,9 @@ const Layout = () => {
       <Navbar getLabel={handleClick} />
       <ScrollArea className="flex-1 h-lvh">
         <HorizontalNavbar name={name} />
-        <Outlet />
+        <div className="m-4">
+          <Outlet />
+        </div>
       </ScrollArea>
     </div>
   )

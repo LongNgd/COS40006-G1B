@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { DatePicker, Select } from 'antd'
 import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
-import { TableC } from '../Chart/TableC'
+import { TableC } from './TableC'
 import dayjs from 'dayjs'
 import { Anomaly } from '../../api/anomaly.type'
 
@@ -60,7 +60,7 @@ const Report = () => {
   const filteredAnomalies = applyFilters(anomalies?.data || [])
 
   return (
-    <div className="px-4">
+    <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 p-4">
         <Select
           placeholder="Select a Camera"
@@ -101,7 +101,7 @@ const Report = () => {
         />
       </div>
       <TableC data={filteredAnomalies} />
-    </div>
+    </>
   )
 }
 

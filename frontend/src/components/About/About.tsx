@@ -3,7 +3,7 @@ import { aboutContents } from './about.info'
 
 const About = () => {
   return (
-    <div className="m-4">
+    <>
       {aboutContents.map((content) => {
         return (
           <>
@@ -32,7 +32,7 @@ const About = () => {
           </>
         )
       })}
-    </div>
+    </>
   )
 }
 
