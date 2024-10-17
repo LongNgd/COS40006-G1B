@@ -4,18 +4,28 @@ import {
   LucideOctagonAlert,
   LucideUser,
 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
+import { useGetCameraByUserMutation } from '../../api/cameraApi'
 import { Anomaly } from '../../type/anomaly.type'
-import { useGetAnomaliesQuery } from '../../api/anomaliesApi'
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
+import { useEffect } from 'react'
 
 export const OverallInformation = ({ data }: { data: Anomaly[] }) => {
-  const { data: anomalies } = useGetAnomaliesQuery()
-  const isLoading = !data
+  const [getCameraByUser, { isLoading, error, data: camera }] =
+    useGetCameraByUserMutation()
 
-  const activeCamera = Array.from(
-    new Set(anomalies?.data.map(({ camera_area }) => camera_area)),
-  ).length
-  
+  useEffect(() => {
+    const getUser = localStorage.getItem('user')
+    const user = getUser ? JSON.parse(getUser) : null
+    const getData = async () => {
+      await getCameraByUser({ user_id: user?.user_id })
+    }
+    getData()
+  }, [getCameraByUser])
+
+  if (error) return <div>Error: {JSON.stringify(error)}</div>
+
+  const activeCamera = camera?.length
+
   const totalAnomaly = data.length
   const averageParticipant = data.reduce(
     (acc, curr, _, { length }) => acc + curr.participant / length,

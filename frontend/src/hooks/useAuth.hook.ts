@@ -8,6 +8,7 @@ export const useAuth = () => {
 
   const signOut = () => {
     localStorage.removeItem('isAuthenticated')
+    localStorage.removeItem('user')
   }
 
   const isLogged = () => localStorage.getItem('isAuthenticated') === 'true'

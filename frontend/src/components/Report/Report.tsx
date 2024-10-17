@@ -1,6 +1,6 @@
 import { DatePicker, Select } from 'antd'
 import dayjs from 'dayjs'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useGetAnomaliesByUserMutation } from '../../api/anomaliesApi'
 import { Anomaly } from '../../type/anomaly.type'
 import { TableC } from './TableC'
@@ -23,14 +23,17 @@ const Report = () => {
     date: null,
   })
 
+  useEffect(() => {
+    const getUser = localStorage.getItem('user')
+    const user = getUser ? JSON.parse(getUser) : null
+    const getData = async () => {
+      await getAnomaliesByUser({ user_id: user?.user_id })
+    }
+    getData()
+  }, [getAnomaliesByUser])
+
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {JSON.stringify(error)}</div>
-
-  // const getData = async () => {
-  //   await getAnomaliesByUser({user_id: 2})
-  // }
-  // const test = getData()
-  // console.log(test);
 
   const handleChange = (type: string, value: unknown) => {
     setSelectedValues({ ...selectedValues, [type]: value })

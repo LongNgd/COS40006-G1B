@@ -7,7 +7,6 @@ import ReactPlayer from 'react-player'
 export const TableC = ({ data }: { data: Anomaly[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedRecord, setSelectedRecord] = useState<Anomaly | null>(null)
-  console.log(data)
 
   const columns: ColumnsType<Anomaly> = [
     {
