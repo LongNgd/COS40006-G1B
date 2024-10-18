@@ -38,16 +38,24 @@ camera_blueprint = Blueprint('camera', __name__)
                     'type': 'object',
                     'properties': {
                         'camera_id': {
-                            'type': 'integer'
+                            'type': 'integer',
+                            'description': 'ID of the camera',
+                            'example': 1
                         },
                         'name': {
-                            'type': 'string'
+                            'type': 'string',
+                            'description': 'Name of the camera',
+                            'example': 'Entrance Camera'
                         },
                         'area': {
-                            'type': 'string'
+                            'type': 'string',
+                            'description': 'Area where the camera is located',
+                            'example': 'Main Entrance'
                         },
                         'status': {
-                            'type': 'integer'
+                            'type': 'integer',
+                            'description': 'Status of the camera (1 = on, 0 = off)',
+                            'example': 1
                         }
                     }
                 }
@@ -120,7 +128,7 @@ def get_cameras_by_user():
     if not camera_list:
         return jsonify({"message": "No cameras found for this user."}), 404
 
-    return jsonify(camera_list), 200
+    return jsonify({'success': True, 'data': camera_list}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
@@ -293,6 +301,137 @@ def assign_camera_to_user():
         db.session.commit()
 
         return jsonify({'success': True, 'message': 'Camera assigned to user successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@camera_blueprint.route('/api/getUnassignedCamera', methods=['POST'])
+@swag_from({
+    'tags': ['Camera'],
+    'summary': 'Get cameras not assigned to user',
+    'description': 'Retrieve all cameras that are not assigned to a specific user.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'user_id': {
+                        'type': 'integer',
+                        'description': 'ID of the user',
+                        'example': 1,
+                        'required': True
+                    }
+                },
+                'required': True
+            }
+        }
+    ],
+    'responses': {
+        200: {
+            'description': 'Cameras retrieved successfully',
+            'schema': {
+                'type': 'array',
+                'items': {
+                    'type': 'object',
+                    'properties': {
+                        'camera_id': {
+                            'type': 'integer',
+                            'description': 'ID of the camera',
+                            'example': 1
+                        },
+                        'name': {
+                            'type': 'string',
+                            'description': 'Name of the camera',
+                            'example': 'Entrance Camera'
+                        },
+                        'area': {
+                            'type': 'string',
+                            'description': 'Area where the camera is located',
+                            'example': 'Main Entrance'
+                        },
+                        'status': {
+                            'type': 'integer',
+                            'description': 'Status of the camera (1 = on, 0 = off)',
+                            'example': 1
+                        }
+                    }
+                }
+            }
+        },
+        400: {
+            'description': 'Invalid input, user_id is required',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'error': {
+                        'type': 'string',
+                        'example': 'user_id is required'
+                    }
+                }
+            }
+        },
+        404: {
+            'description': 'No unassigned cameras found for the user',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'message': {
+                        'type': 'string',
+                        'example': 'No cameras available for assignment.'
+                    }
+                }
+            }
+        },
+        500: {
+            'description': 'Server error',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'success': {
+                        'type': 'boolean',
+                        'example': False
+                    },
+                    'message': {
+                        'type': 'string',
+                        'example': 'Error details'
+                    }
+                }
+            }
+        }
+    }
+})
+def get_cameras_not_assigned_to_user():
+    try:
+        # Get user_id from the request body
+        data = request.json
+        user_id = data.get('user_id')
+
+        if not user_id:
+            return jsonify({'error': 'user_id is required'}), 400
+
+        # Get all camera IDs that the user is already assigned to
+        assigned_camera_ids = db.session.query(Camera_user.camera_id).filter_by(user_id=user_id).subquery()
+
+        # Query for cameras not assigned to the user
+        cameras = db.session.query(Camera).filter(~Camera.camera_id.in_(assigned_camera_ids)).all()
+
+        # Create a response list
+        camera_list = []
+        for camera in cameras:
+            camera_info = {
+                'camera_id': camera.camera_id,
+                'name': camera.name,
+                'area': camera.area,
+                'status': camera.status
+            }
+            camera_list.append(camera_info)
+
+        if not camera_list:
+            return jsonify({"message": "No cameras available for assignment."}), 404
+
+        return jsonify({'success': True, 'data': camera_list}), 200
 
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
