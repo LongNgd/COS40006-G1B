@@ -7,6 +7,7 @@ from models import db
 from routes.user_routes import user_blueprint
 from routes.anomaly_routes import anomaly_blueprint
 from routes.camera_routes import camera_blueprint
+from routes.notification_routes import notification_blueprint
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +27,7 @@ configure_swagger(app)
 app.register_blueprint(user_blueprint, url_prefix='/api/user')
 app.register_blueprint(anomaly_blueprint, url_prefix='/api/anomalies')
 app.register_blueprint(camera_blueprint, url_prefix='/api/camera')
+app.register_blueprint(notification_blueprint, url_prefix='/api/notification')
 
 # Connection test endpoint
 @app.route('/api/test-connection', methods=['GET'])

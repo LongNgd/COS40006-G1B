@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flasgger import swag_from
-from models import db, Camera, User, Camera_user
+from models import db, Camera, User, Camera_user, Notification
 from sqlalchemy import func
 
 camera_blueprint = Blueprint('camera', __name__)
@@ -136,8 +136,8 @@ if __name__ == '__main__':
 @camera_blueprint.route('/toggleCameraStatus', methods=['PUT'])
 @swag_from({
     'tags': ['Camera'],
-    'summary': 'Switch camera on/off',
-    'description': 'Switch camera on/off (1 = on, 0 = off).',
+    'summary': 'Switch camera on/off and create notification',
+    'description': 'Switch camera on/off (1 = on, 0 = off). When the camera is turned on, a notification will be created with the title: "{camera_name} is on", and the description: "You will be notified if any anomalies are detected in this camera". When the camera is turned off, the notification will be created with the title: "{camera_name} is off", and the description: "You will not be notified if any anomalies are detected in this camera".',
     'parameters': [
         {
             'name': 'body',
@@ -158,7 +158,7 @@ if __name__ == '__main__':
     ],
     'responses': {
         200: {
-            'description': 'Camera status toggled successfully',
+            'description': 'Camera status toggled successfully and notification created',
             'examples': {
                 'application/json': {
                     'success': True,
@@ -204,17 +204,48 @@ def toggle_camera_status():
         if not camera:
             return jsonify({'success': False, 'message': 'Camera not found'}), 404
 
-        # Toggle the status (1 to 0 or 0 to 1)
-        camera.status = 1 if camera.status == 0 else 0
+        # Get current camera status and toggle it (1 to 0 or 0 to 1)
+        new_status = 1 if camera.status == 0 else 0
+        camera.status = new_status
 
         # Save the changes to the database
         db.session.commit()
 
-        # Return the updated status
+        # Create a notification based on the new status
+        # If camera is turned on
+        if new_status == 1:
+            title = f'{camera.name} is on'
+            desc = 'You will be notified if any anomalies are detected in this camera'
+        else:
+            # If camera is turned off
+            title = f'{camera.name} is off'
+            desc = 'You will not be notified if any anomalies are detected in this camera'
+
+        # Get the highest noti_id and increment by 1 for the new notification
+        max_noti_id = db.session.query(func.max(Notification.noti_id)).scalar() or 0
+        new_noti_id = max_noti_id + 1
+
+        # Create a new notification record
+        new_notification = Notification(
+            noti_id=new_noti_id,
+            cam_id=camera.camera_id,
+            title=title,
+            desc=desc,
+            read_status=0,  # Assuming 0 is for unread
+            date=func.current_date(),
+            time=func.current_time()
+        )
+
+        # Add and commit the new notification
+        db.session.add(new_notification)
+        db.session.commit()
+
+        # Return the updated status and success message
         return jsonify({'success': True, 'camera_id': camera.camera_id, 'status': camera.status}), 200
 
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
+
 
 @camera_blueprint.route('/assignCameraToUser', methods=['POST'])
 @swag_from({
