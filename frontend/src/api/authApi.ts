@@ -7,8 +7,8 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://127.0.0.1:5000/api/',
   }),
-  endpoints: (builder) => ({
-    login: builder.mutation<Response<UserRes>, UserReq>({
+  endpoints: (build) => ({
+    login: build.mutation<Response<UserRes>, UserReq>({
       query: (userInfo) => ({
         url: 'user/login',
         method: 'POST',

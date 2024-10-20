@@ -8,9 +8,9 @@ export const cameraApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://127.0.0.1:5000/api/',
   }),
-  tagTypes: ['Camera'],
-  endpoints: (builder) => ({
-    getCameraByUser: builder.mutation<Camera[], User>({
+  tagTypes: ['Camera', 'Notification'],
+  endpoints: (build) => ({
+    getCameraByUser: build.mutation<Response<Camera[]>, User>({
       query: (userInfo) => ({
         url: 'camera/getCameraByUserID',
         method: 'POST',
@@ -18,7 +18,7 @@ export const cameraApi = createApi({
       }),
       invalidatesTags: ['Camera'],
     }),
-    getCameraStatus: builder.mutation<Response<Camera>, CameraStatus>( {
+    getCameraStatus: build.mutation<Response<Camera>, CameraStatus>({
       query: (userInfo) => ({
         url: 'camera/toggleCameraStatus',
         method: 'PUT',
@@ -29,4 +29,5 @@ export const cameraApi = createApi({
   }),
 })
 
-export const { useGetCameraByUserMutation, useGetCameraStatusMutation } = cameraApi
+export const { useGetCameraByUserMutation, useGetCameraStatusMutation } =
+  cameraApi

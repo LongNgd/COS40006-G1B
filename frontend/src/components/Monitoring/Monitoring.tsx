@@ -89,7 +89,7 @@ const Monitoring = () => {
         Camera List will be display in here
       </Modal>
       <Row gutter={[16, 24]}>
-        {camera?.map((item) => {
+        {camera?.data.map((item) => {
           return (
             <Col className="gutter-row" span={6} key={item.camera_id}>
               <Card

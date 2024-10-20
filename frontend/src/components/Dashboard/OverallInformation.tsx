@@ -32,7 +32,7 @@ export const OverallInformation = ({
 
   if (error) return <div>Error: {JSON.stringify(error)}</div>
 
-  const activeCamera = camera?.length
+  const activeCamera = camera?.data.length
 
   const totalAnomaly = data.length
   const averageParticipant = data.reduce(

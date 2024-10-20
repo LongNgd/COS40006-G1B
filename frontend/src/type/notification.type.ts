@@ -1,5 +1,9 @@
 export type Notification = {
-    title: string,
-    description: string,
-    status: number,
-  }
+  noti_id: number
+  cam_id: number
+  date: string
+  time: string
+  title: string
+  desc: string
+  read_status: number
+}

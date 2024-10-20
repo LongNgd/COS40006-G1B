@@ -1,35 +1,21 @@
 import { Flex } from 'antd'
+import type { Notification } from '../../../type/notification.type'
 
-const items = [
-  {
-    title: 'Camera 1 is now being monitored',
-    description:
-      'You will be notified if any anomalies are detected in this camera',
-    key: '0',
-  },
-  {
-    title: 'Camera 1 is now being monitored',
-    description:
-      'You will be notified if any anomalies are detected in this camera',
-    key: '1',
-  },
-  {
-    title: 'Camera 1 is now being monitored',
-    description:
-      'You will be notified if any anomalies are detected in this camera',
-    key: '2',
-  },
-]
+interface NotificationProps {
+  data: Notification[]
+}
 
-const Notification = () => {
+const Notification = (data: NotificationProps) => {
   return (
     <>
-      {items.map((item) => {
-        if (!item) return null
+      {data.data.map((item) => {
         return (
-          <Flex key={item.key} gap="small" vertical>
-            <p className="font-semibold">{item.title}</p>
-            <p>{item.description}</p>
+          <Flex key={item.noti_id} gap="small" vertical>
+            <Flex justify='space-between' align='center'>
+              <p className="font-semibold">{item.title}</p>
+              <p className="text-muted-foreground">{item.date}</p>
+            </Flex>
+            <p>{item.desc}</p>
           </Flex>
         )
       })}

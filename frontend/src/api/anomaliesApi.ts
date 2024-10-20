@@ -8,11 +8,11 @@ export const anomaliesApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://127.0.0.1:5000/api/',
   }),
-  endpoints: (builder) => ({
-    getAnomalies: builder.query<Response<Anomaly[]>, void>({
+  endpoints: (build) => ({
+    getAnomalies: build.query<Response<Anomaly[]>, void>({
       query: () => ({ url: 'anomalies/getAnomalies', method: 'GET' }),
     }),
-    getAnomaliesByUser: builder.mutation<Response<Anomaly[]>, User>({
+    getAnomaliesByUser: build.mutation<Response<Anomaly[]>, User>({
       query: (body) => ({
         url: `anomalies/getAnomaliesByUserId`,
         method: 'POST',
