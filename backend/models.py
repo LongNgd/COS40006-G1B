@@ -32,3 +32,13 @@ class Camera_user(db.Model):
     cu_id = db.Column(db.Integer, primary_key=True)
     camera_id = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, nullable=False)
+
+class Notification(db.Model):
+    __tablename__ = 'notification'
+    noti_id = db.Column(db.Integer, primary_key=True)
+    cam_id = db.Column(db.Integer, nullable=False)
+    title = db.Column(db.String(25), nullable=False)
+    desc = db.Column(db.String(50), nullable=False)
+    read_status = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Time, nullable=False)    
