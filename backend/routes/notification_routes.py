@@ -66,7 +66,7 @@ def get_all_notifications():
             })
 
         # Return the list of notifications as a JSON response
-        return jsonify(notification_list), 200
+        return jsonify({'success': True, 'data': notification_list}), 200
 
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
