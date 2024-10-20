@@ -3,13 +3,15 @@ import {
   Card,
   Col,
   Flex,
+  message,
   Modal,
   notification,
-  Popover,
+  Popconfirm,
+  PopconfirmProps,
   Row,
   Switch,
 } from 'antd'
-import { CircleMinus, Info, LucidePlus } from 'lucide-react'
+import { CircleMinus, LucidePlus, LucideSettings } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
   useGetCameraByUserMutation,
@@ -49,19 +51,22 @@ const Monitoring = () => {
   }
 
   const modifyStatus = async (camera: Camera, status: boolean) => {
+    await getCameraStatus({ camera_id: camera.camera_id })
+    api.info({
+      message: `Camera ${camera.name} is ${status ? 'ON' : 'OFF'}`,
+      description: `You will ${status ? '' : 'NOT'} be notified if any anomalies are detected in this camera`,
+      placement: 'bottomRight',
+    })
     if (camera.status === 1) {
       status = false
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       status = true
     }
+  }
 
-    await getCameraStatus({ camera_id: camera.camera_id })
-    api.info({
-      message: `Camera ${camera.name} is now being monitored`,
-      description: `You will be notified if any anomalies are detected in this camera`,
-      placement: 'bottomRight',
-    })
+  const confirm: PopconfirmProps['onConfirm'] = (e) => {
+    console.log(e)
+    message.success('Remove successfully')
   }
 
   return (
@@ -73,7 +78,7 @@ const Monitoring = () => {
         onClick={showModal}
         className="mb-4"
       >
-        Open Modal
+        Connect to Camera
       </Button>
       <Modal
         title="Adding Camera "
@@ -88,26 +93,25 @@ const Monitoring = () => {
           return (
             <Col className="gutter-row" span={6} key={item.camera_id}>
               <Card
+                hoverable
                 actions={[
                   <Switch
-                    onChange={(checked) => modifyStatus(item, checked)}
+                    onChange={(status) => modifyStatus(item, status)}
                     defaultChecked={item.status === 1 ? true : false}
                   />,
                   <Flex justify="center" align="center">
-                    <CircleMinus key="setting" />
+                    <Popconfirm
+                      title="Delete the Camera"
+                      description={`Are you sure you want to delete ${item.name}?`}
+                      onConfirm={confirm}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <CircleMinus key="setting" />
+                    </Popconfirm>
                   </Flex>,
                   <Flex justify="center" align="center">
-                    <Popover
-                      content={
-                        <p>
-                          Camera {item.name} is used in {item.area}
-                        </p>
-                      }
-                      placement="bottom"
-                      arrow={false}
-                    >
-                      <Info key="ellipsis" />
-                    </Popover>
+                    <LucideSettings />
                   </Flex>,
                 ]}
               >

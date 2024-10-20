@@ -25,7 +25,7 @@ const HorizontalNavbar: React.FC<{ name: string | undefined }> = ({ name }) => {
           placement="bottomRight"
         >
           <Badge count={3}>
-            <LucideBell className="w-6 h-6" />
+            <LucideBell className="w-6 h-6 hover:cursor-pointer" />
           </Badge>
         </Popover>
         <Popover

@@ -9,7 +9,15 @@ import { Anomaly } from '../../type/anomaly.type'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { useEffect } from 'react'
 
-export const OverallInformation = ({ data }: { data: Anomaly[] }) => {
+interface OverallInformationProps {
+  data: Anomaly[]
+  loading: boolean
+}
+
+export const OverallInformation = ({
+  data,
+  loading,
+}: OverallInformationProps) => {
   const [getCameraByUser, { isLoading, error, data: camera }] =
     useGetCameraByUserMutation()
 
@@ -56,7 +64,7 @@ export const OverallInformation = ({ data }: { data: Anomaly[] }) => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {isLoading ? '-' : totalAnomaly}
+            {loading ? '-' : totalAnomaly}
           </div>
           <p className="text-xs text-muted-foreground">
             Total anomaly in specific day
@@ -72,7 +80,7 @@ export const OverallInformation = ({ data }: { data: Anomaly[] }) => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {isLoading ? '-' : averageParticipant?.toFixed(2)}
+            {loading ? '-' : averageParticipant?.toFixed(2)}
           </div>
           <p className="text-xs text-muted-foreground">
             Average of Participant in specific day
@@ -87,9 +95,7 @@ export const OverallInformation = ({ data }: { data: Anomaly[] }) => {
           <LucideActivity />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {isLoading ? '-' : withWeapon}
-          </div>
+          <div className="text-2xl font-bold">{loading ? '-' : withWeapon}</div>
           <p className="text-xs text-muted-foreground">
             Number of Anomaly with weapon
           </p>
