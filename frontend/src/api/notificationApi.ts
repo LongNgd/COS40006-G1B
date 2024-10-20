@@ -9,7 +9,7 @@ export const notificationApi = createApi({
   }),
   tagTypes: ['Notification'],
   endpoints: (build) => ({
-    getNotification: build.query<Notification[], void>({
+    getNotification: build.query<Response<Notification[]>, void>({
       query: () => ({
         url: 'notification/notifications',
         method: 'GET',

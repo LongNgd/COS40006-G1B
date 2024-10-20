@@ -11,7 +11,7 @@ const HorizontalNavbar: React.FC<{ name: string | undefined }> = ({ name }) => {
 
   const { data: notification } = useGetNotificationQuery()
 
-  const unRead = notification?.length
+  const unRead = notification?.data.length
 
   return (
     <div className="m-4 flex justify-between items-center sticky top-0 z-50">
@@ -22,7 +22,7 @@ const HorizontalNavbar: React.FC<{ name: string | undefined }> = ({ name }) => {
       <div className="p-2 flex items-center gap-4">
         <LucideSun className="w-5 h-5" />
         <Popover
-          content={<Notification data={notification || []}/>}
+          content={<Notification data={notification?.data || []} />}
           trigger="click"
           title={<p className="text-xl font-bold">Notification</p>}
           open={openNotification}
