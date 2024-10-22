@@ -71,7 +71,7 @@ def get_all_notifications():
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
-@notification_blueprint.route('/notifications/toggle-read', methods=['PUT'])
+@notification_blueprint.route('/toggle-read', methods=['PUT'])
 @swag_from({
     'tags': ['Notifications'],
     'summary': 'Toggle read status of a notification',
