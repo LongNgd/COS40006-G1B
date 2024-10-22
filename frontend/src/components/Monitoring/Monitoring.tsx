@@ -18,6 +18,7 @@ import {
   useGetCameraStatusMutation,
 } from '../../api/cameraApi'
 import { Camera } from '../../type/camera.type'
+import CameraList from './CameraList'
 
 const Monitoring = () => {
   const [api, contextHolder] = notification.useNotification()
@@ -86,7 +87,7 @@ const Monitoring = () => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        Camera List will be display in here
+        <CameraList />
       </Modal>
       <Row gutter={[16, 24]}>
         {camera?.data.map((item) => {

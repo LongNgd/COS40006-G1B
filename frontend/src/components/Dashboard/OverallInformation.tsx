@@ -32,7 +32,8 @@ export const OverallInformation = ({
 
   if (error) return <div>Error: {JSON.stringify(error)}</div>
 
-  const activeCamera = camera?.data.length
+  const totalActiveCamera = camera?.data.length
+  const activeCamera = camera?.data.filter((camera) => camera.status === 1).length
 
   const totalAnomaly = data.length
   const averageParticipant = data.reduce(
@@ -50,7 +51,7 @@ export const OverallInformation = ({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {isLoading ? '-' : activeCamera}
+            {isLoading ? '-' : `${activeCamera} / ${totalActiveCamera}`}
           </div>
           <p className="text-xs text-muted-foreground">
             Active Camera in specific day

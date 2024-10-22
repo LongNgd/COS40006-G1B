@@ -18,6 +18,14 @@ export const cameraApi = createApi({
       }),
       invalidatesTags: ['Camera'],
     }),
+    getUnassignCameraByUser: build.mutation<Response<Camera[]>, User>({
+      query: (userInfo) => ({
+        url: 'camera/api/getUnassignedCamera',
+        method: 'POST',
+        body: userInfo,
+      }),
+      invalidatesTags: ['Camera'],
+    }),
     getCameraStatus: build.mutation<Response<Camera>, CameraStatus>({
       query: (userInfo) => ({
         url: 'camera/toggleCameraStatus',
@@ -29,5 +37,8 @@ export const cameraApi = createApi({
   }),
 })
 
-export const { useGetCameraByUserMutation, useGetCameraStatusMutation } =
-  cameraApi
+export const {
+  useGetCameraByUserMutation,
+  useGetUnassignCameraByUserMutation,
+  useGetCameraStatusMutation,
+} = cameraApi
