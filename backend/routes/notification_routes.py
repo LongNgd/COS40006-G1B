@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models import db, Notification  # Assuming you have a Notification model in models.py
+from models import db, Notification
 from flasgger import swag_from
 
 # Create a new blueprint for the notifications
@@ -71,46 +71,19 @@ def get_all_notifications():
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
-@notification_blueprint.route('/toggle-read', methods=['PUT'])
+
+@notification_blueprint.route('/notifications', methods=['DELETE'])
 @swag_from({
     'tags': ['Notifications'],
-    'summary': 'Toggle read status of a notification',
-    'description': 'Toggle the read status of a specific notification (0 = unread, 1 = read).',
-    'parameters': [
-        {
-            'name': 'body',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'noti_id': {
-                        'type': 'integer',
-                        'description': 'ID of the notification to toggle read status',
-                        'example': 1
-                    }
-                },
-                'required': ['noti_id']
-            }
-        }
-    ],
+    'summary': 'Delete all notifications',
+    'description': 'Remove all notifications from the system.',
     'responses': {
         200: {
-            'description': 'Read status toggled successfully',
+            'description': 'All notifications deleted successfully',
             'examples': {
                 'application/json': {
                     'success': True,
-                    'noti_id': 1,
-                    'read_status': 1
-                }
-            }
-        },
-        404: {
-            'description': 'Notification not found',
-            'examples': {
-                'application/json': {
-                    'success': False,
-                    'message': 'Notification not found'
+                    'message': 'All notifications deleted successfully'
                 }
             }
         },
@@ -125,31 +98,15 @@ def get_all_notifications():
         }
     }
 })
-def toggle_read_status():
+def delete_all_notifications():
     try:
-        # Get the noti_id from the request body (JSON)
-        data = request.json
-        noti_id = data.get('noti_id')
-
-        # Check if noti_id is provided
-        if not noti_id:
-            return jsonify({'success': False, 'message': 'noti_id is required'}), 400
-
-        # Find the notification by noti_id
-        notification = Notification.query.filter_by(noti_id=noti_id).first()
-
-        # Check if the notification exists
-        if not notification:
-            return jsonify({'success': False, 'message': 'Notification not found'}), 404
-
-        # Toggle the read status (0 to 1 or 1 to 0)
-        notification.read_status = 1 if notification.read_status == 0 else 0
-
-        # Save the changes to the database
+        # Delete all notifications from the database
+        Notification.query.delete()
         db.session.commit()
 
-        # Return the updated status
-        return jsonify({'success': True, 'noti_id': notification.noti_id, 'read_status': notification.read_status}), 200
+        # Return success message
+        return jsonify({'success': True, 'message': 'All notifications deleted successfully'}), 200
 
     except Exception as e:
+        db.session.rollback()  # Rollback in case of error
         return jsonify({'success': False, 'message': str(e)}), 500
