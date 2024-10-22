@@ -20,7 +20,7 @@ export const cameraApi = createApi({
     }),
     getUnassignCameraByUser: build.mutation<Response<Camera[]>, User>({
       query: (userInfo) => ({
-        url: 'camera/api/getUnassignedCamera',
+        url: 'camera/getUnassignedCamera',
         method: 'POST',
         body: userInfo,
       }),

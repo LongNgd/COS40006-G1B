@@ -28,6 +28,7 @@ const AuthenticatedProfileLazyImport = createFileRoute(
 const AuthenticatedMonitoringLazyImport = createFileRoute(
   '/_authenticated/monitoring',
 )()
+const AuthenticatedIssueLazyImport = createFileRoute('/_authenticated/issue')()
 const AuthenticatedDashboardLazyImport = createFileRoute(
   '/_authenticated/dashboard',
 )()
@@ -71,6 +72,13 @@ const AuthenticatedMonitoringLazyRoute =
   } as any).lazy(() =>
     import('./routes/_authenticated/monitoring.lazy').then((d) => d.Route),
   )
+
+const AuthenticatedIssueLazyRoute = AuthenticatedIssueLazyImport.update({
+  path: '/issue',
+  getParentRoute: () => AuthenticatedRoute,
+} as any).lazy(() =>
+  import('./routes/_authenticated/issue.lazy').then((d) => d.Route),
+)
 
 const AuthenticatedDashboardLazyRoute = AuthenticatedDashboardLazyImport.update(
   {
@@ -127,6 +135,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardLazyImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/issue': {
+      id: '/_authenticated/issue'
+      path: '/issue'
+      fullPath: '/issue'
+      preLoaderRoute: typeof AuthenticatedIssueLazyImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/monitoring': {
       id: '/_authenticated/monitoring'
       path: '/monitoring'
@@ -156,6 +171,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedAboutLazyRoute: typeof AuthenticatedAboutLazyRoute
   AuthenticatedDashboardLazyRoute: typeof AuthenticatedDashboardLazyRoute
+  AuthenticatedIssueLazyRoute: typeof AuthenticatedIssueLazyRoute
   AuthenticatedMonitoringLazyRoute: typeof AuthenticatedMonitoringLazyRoute
   AuthenticatedProfileLazyRoute: typeof AuthenticatedProfileLazyRoute
   AuthenticatedReportLazyRoute: typeof AuthenticatedReportLazyRoute
@@ -164,6 +180,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAboutLazyRoute: AuthenticatedAboutLazyRoute,
   AuthenticatedDashboardLazyRoute: AuthenticatedDashboardLazyRoute,
+  AuthenticatedIssueLazyRoute: AuthenticatedIssueLazyRoute,
   AuthenticatedMonitoringLazyRoute: AuthenticatedMonitoringLazyRoute,
   AuthenticatedProfileLazyRoute: AuthenticatedProfileLazyRoute,
   AuthenticatedReportLazyRoute: AuthenticatedReportLazyRoute,
@@ -179,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/about': typeof AuthenticatedAboutLazyRoute
   '/dashboard': typeof AuthenticatedDashboardLazyRoute
+  '/issue': typeof AuthenticatedIssueLazyRoute
   '/monitoring': typeof AuthenticatedMonitoringLazyRoute
   '/profile': typeof AuthenticatedProfileLazyRoute
   '/report': typeof AuthenticatedReportLazyRoute
@@ -190,6 +208,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/about': typeof AuthenticatedAboutLazyRoute
   '/dashboard': typeof AuthenticatedDashboardLazyRoute
+  '/issue': typeof AuthenticatedIssueLazyRoute
   '/monitoring': typeof AuthenticatedMonitoringLazyRoute
   '/profile': typeof AuthenticatedProfileLazyRoute
   '/report': typeof AuthenticatedReportLazyRoute
@@ -202,6 +221,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_authenticated/about': typeof AuthenticatedAboutLazyRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardLazyRoute
+  '/_authenticated/issue': typeof AuthenticatedIssueLazyRoute
   '/_authenticated/monitoring': typeof AuthenticatedMonitoringLazyRoute
   '/_authenticated/profile': typeof AuthenticatedProfileLazyRoute
   '/_authenticated/report': typeof AuthenticatedReportLazyRoute
@@ -215,6 +235,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/about'
     | '/dashboard'
+    | '/issue'
     | '/monitoring'
     | '/profile'
     | '/report'
@@ -225,6 +246,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/about'
     | '/dashboard'
+    | '/issue'
     | '/monitoring'
     | '/profile'
     | '/report'
@@ -235,6 +257,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/_authenticated/about'
     | '/_authenticated/dashboard'
+    | '/_authenticated/issue'
     | '/_authenticated/monitoring'
     | '/_authenticated/profile'
     | '/_authenticated/report'
@@ -278,6 +301,7 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/about",
         "/_authenticated/dashboard",
+        "/_authenticated/issue",
         "/_authenticated/monitoring",
         "/_authenticated/profile",
         "/_authenticated/report"
@@ -292,6 +316,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/dashboard": {
       "filePath": "_authenticated/dashboard.lazy.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/issue": {
+      "filePath": "_authenticated/issue.lazy.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/monitoring": {

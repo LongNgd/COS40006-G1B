@@ -19,10 +19,12 @@ import {
 } from '../../api/cameraApi'
 import { Camera } from '../../type/camera.type'
 import CameraList from './CameraList'
+import ReactPlayer from 'react-player'
 
 const Monitoring = () => {
   const [api, contextHolder] = notification.useNotification()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCameraList, setIsCameraList] = useState(false)
+  const [isEvidence, setIsEvidence] = useState(false)
 
   const [getCameraByUser, { error, data: camera }] =
     useGetCameraByUserMutation()
@@ -38,18 +40,6 @@ const Monitoring = () => {
   }, [getCameraByUser])
 
   if (error) return <div>Error: {JSON.stringify(error)}</div>
-
-  const showModal = () => {
-    setIsModalOpen(true)
-  }
-
-  const handleOk = () => {
-    setIsModalOpen(false)
-  }
-
-  const handleCancel = () => {
-    setIsModalOpen(false)
-  }
 
   const modifyStatus = async (camera: Camera, status: boolean) => {
     await getCameraStatus({ camera_id: camera.camera_id })
@@ -76,16 +66,15 @@ const Monitoring = () => {
       <Button
         type="primary"
         icon={<LucidePlus />}
-        onClick={showModal}
+        onClick={() => setIsCameraList(true)}
         className="mb-4"
       >
         Connect to Camera
       </Button>
       <Modal
         title="Adding Camera "
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        open={isCameraList}
+        onCancel={() => setIsCameraList(false)}
       >
         <CameraList />
       </Modal>
@@ -115,9 +104,24 @@ const Monitoring = () => {
                     <LucideSettings />
                   </Flex>,
                 ]}
+                onClick={() => setIsEvidence(true)}
               >
                 <p>{item.name}</p>
               </Card>
+              <Modal
+                width={700}
+                title="Show Evidence Video"
+                open={isEvidence}
+                onCancel={() => setIsEvidence(false)}
+              >
+                <Flex align="center" justify="center">
+                  <ReactPlayer
+                    url="../../src/assets/violence.mp4"
+                    playing
+                    loop
+                  />
+                </Flex>
+              </Modal>
             </Col>
           )
         })}

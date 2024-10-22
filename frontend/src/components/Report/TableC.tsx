@@ -72,7 +72,6 @@ export const TableC = ({ data }: { data: Anomaly[] }) => {
             width={700}
             title="Show Evidence Video"
             open={isModalOpen}
-            onOk={() => setIsModalOpen(false)}
             onCancel={() => setIsModalOpen(false)}
           >
             <Flex align="center" justify="center">

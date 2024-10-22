@@ -1,8 +1,9 @@
 import {
-  LucideFileSignature,
+  LucideFileSpreadsheet,
+  LucideFileWarning,
   LucideLayoutDashboard,
   LucideMonitor,
-  LucideUsers,
+  LucideUsers
 } from 'lucide-react'
 
 type NavigationItem = {
@@ -35,9 +36,15 @@ export const navigation: NavigationItem[] = [
     icon: <LucideMonitor />,
   },
   {
+    link: '/issue',
+    label: 'Log Issue',
+    isParent: false,
+    icon: <LucideFileWarning />,
+  },
+  {
     label: 'Report',
     isParent: true,
-    icon: <LucideFileSignature />,
+    icon: <LucideFileSpreadsheet />,
     children: [
       { label: 'Physical Assault', link: '/report' },
       { label: 'Student lateness', link: '/demo1' },
