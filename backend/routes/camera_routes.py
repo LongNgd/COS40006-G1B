@@ -336,7 +336,7 @@ def assign_camera_to_user():
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
-@camera_blueprint.route('/api/getUnassignedCamera', methods=['POST'])
+@camera_blueprint.route('/getUnassignedCamera', methods=['POST'])
 @swag_from({
     'tags': ['Camera'],
     'summary': 'Get cameras not assigned to user',
