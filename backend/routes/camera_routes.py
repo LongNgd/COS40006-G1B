@@ -130,8 +130,6 @@ def get_cameras_by_user():
 
     return jsonify({'success': True, 'data': camera_list}), 200
 
-if __name__ == '__main__':
-    app.run(debug=True)
 
 @camera_blueprint.route('/toggleCameraStatus', methods=['PUT'])
 @swag_from({
