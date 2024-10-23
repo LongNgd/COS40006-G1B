@@ -5,13 +5,17 @@ import Notification from './Notification'
 import User from './User'
 import { useGetNotificationQuery } from '../../../api/notificationApi'
 
-const HorizontalNavbar: React.FC<{ name: string | undefined }> = ({ name }) => {
+interface HorizontalNavbarProps {
+  name: string | undefined
+}
+
+const HorizontalNavbar = ({ name }: HorizontalNavbarProps) => {
   const [openAvatar, setOpenAvatar] = useState(false)
   const [openNotification, setOpenNotification] = useState(false)
 
   const { data: notification } = useGetNotificationQuery()
 
-  const unRead = notification?.data.length
+  const notificationCount = notification?.data.length
 
   return (
     <div className="m-4 flex justify-between items-center sticky top-0 z-50">
@@ -24,12 +28,11 @@ const HorizontalNavbar: React.FC<{ name: string | undefined }> = ({ name }) => {
         <Popover
           content={<Notification data={notification?.data || []} />}
           trigger="click"
-          title={<p className="text-xl font-bold">Notification</p>}
           open={openNotification}
           onOpenChange={setOpenNotification}
           placement="bottomRight"
         >
-          <Badge size="small" count={unRead}>
+          <Badge size="small" count={notificationCount}>
             <LucideBell className="w-5 h-5 hover:cursor-pointer" />
           </Badge>
         </Popover>

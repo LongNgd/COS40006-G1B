@@ -16,7 +16,15 @@ export const notificationApi = createApi({
       }),
       providesTags: ['Notification'],
     }),
+    deleteAllNotification: build.mutation<Response<null>, void>({
+      query: () => ({
+        url: 'notification/notifications',
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Notification'],
+    }),
   }),
 })
 
-export const { useGetNotificationQuery } = notificationApi
+export const { useGetNotificationQuery, useDeleteAllNotificationMutation } =
+  notificationApi
