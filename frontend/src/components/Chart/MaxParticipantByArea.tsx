@@ -1,5 +1,11 @@
 import { TrendingUp } from 'lucide-react'
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis
+} from 'recharts'
 
 import { Anomaly } from '../../type/anomaly.type'
 import {
@@ -81,47 +87,21 @@ export function MaxParticipantByArea({ data }: { data: Anomaly[] }) {
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <AreaChart accessibilityLayer data={participateByArea}>
+          <BarChart accessibilityLayer data={participateByArea}>
             <CartesianGrid vertical={false} />
             <XAxis dataKey="date" tickLine={false} tickMargin={10} />
             <YAxis />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <defs>
-              {Object.keys(chartConfig).map((floorKey) => (
-                <linearGradient
-                  id={floorKey}
-                  key={floorKey}
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-desktop)"
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-desktop)"
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-              ))}
-            </defs>
             <ChartLegend content={<ChartLegendContent />} />
             {Object.keys(chartConfig).map((floorKey) => (
-              <Area
+              <Bar
                 dataKey={floorKey}
-                key={floorKey}
-                type="natural"
                 fill={chartConfig[floorKey].color}
-                fillOpacity={0.4}
-                stroke={chartConfig[floorKey].color}
-                stackId="a"
+                radius={4}
+                key={floorKey}
               />
             ))}
-          </AreaChart>
+          </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter>

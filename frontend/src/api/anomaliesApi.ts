@@ -9,10 +9,10 @@ export const anomaliesApi = createApi({
     baseUrl: 'http://127.0.0.1:5000/api/',
   }),
   endpoints: (build) => ({
-    getAnomalies: build.query<Response<Anomaly[]>, void>({
-      query: () => ({ url: 'anomalies/getAnomalies', method: 'GET' }),
-    }),
-    getAnomaliesByUser: build.mutation<Response<Anomaly[]>, User>({
+    // getAnomalies: build.query<Response<Anomaly[]>, void>({
+    //   query: () => ({ url: 'anomalies/getAnomalies', method: 'GET' }),
+    // }),
+    getAnomaliesByUser: build.query<Response<Anomaly[]>, User>({
       query: (body) => ({
         url: `anomalies/getAnomaliesByUserId`,
         method: 'POST',
@@ -22,4 +22,4 @@ export const anomaliesApi = createApi({
   }),
 })
 
-export const { useGetAnomaliesQuery, useGetAnomaliesByUserMutation } = anomaliesApi
+export const { useGetAnomaliesByUserQuery } = anomaliesApi

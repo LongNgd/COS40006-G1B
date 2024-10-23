@@ -7,14 +7,14 @@ export const notificationApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://127.0.0.1:5000/api/',
   }),
-  tagTypes: ['Notification'],
+  tagTypes: ['Notification', 'Camera'],
   endpoints: (build) => ({
     getNotification: build.query<Response<Notification[]>, void>({
       query: () => ({
         url: 'notification/notifications',
         method: 'GET',
       }),
-      providesTags: ['Notification'],
+      providesTags: ['Notification', 'Camera'],
     }),
     deleteAllNotification: build.mutation<Response<null>, void>({
       query: () => ({

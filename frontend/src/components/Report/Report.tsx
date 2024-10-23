@@ -1,14 +1,14 @@
 import { DatePicker, Select } from 'antd'
 import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
-import { useGetAnomaliesByUserMutation } from '../../api/anomaliesApi'
+import { useState } from 'react'
+import { useGetAnomaliesByUserQuery } from '../../api/anomaliesApi'
 import { Anomaly } from '../../type/anomaly.type'
 import { TableC } from './TableC'
 
 const Report = () => {
-  // const { data: anomalies, error, isLoading } = useGetAnomaliesQuery()
-  const [getAnomaliesByUser, { isLoading, error, data: anomalies }] =
-    useGetAnomaliesByUserMutation()
+  const getUser = localStorage.getItem('user')
+  const user = getUser ? JSON.parse(getUser) : null
+  const { isLoading, error, data: anomalies } = useGetAnomaliesByUserQuery(user)
   const [selectedValues, setSelectedValues] = useState<{
     cameras: string[]
     areas: string[]
@@ -22,15 +22,6 @@ const Report = () => {
     warning: null,
     date: null,
   })
-
-  useEffect(() => {
-    const getUser = localStorage.getItem('user')
-    const user = getUser ? JSON.parse(getUser) : null
-    const getData = async () => {
-      await getAnomaliesByUser({ user_id: user?.user_id })
-    }
-    getData()
-  }, [getAnomaliesByUser])
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {JSON.stringify(error)}</div>

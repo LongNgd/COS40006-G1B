@@ -9,7 +9,7 @@ interface NotificationProps {
 
 const Notification = (data: NotificationProps) => {
   const [deleteNotification, { isLoading }] = useDeleteAllNotificationMutation()
-  const HandleDelete = async () => {
+  const handleDelete = async () => {
     await deleteNotification()
   }
   return (
@@ -19,22 +19,22 @@ const Notification = (data: NotificationProps) => {
         <Button
           color="danger"
           variant="text"
-          onClick={HandleDelete}
+          onClick={handleDelete}
           disabled={isLoading}
         >
-          Clear All
+          Clear All Notification
         </Button>
       </Flex>
-      <ScrollArea className="w-auto h-40">
-        {data.data.length === 0 ? (
-          <Empty
-            description={
-              <Typography.Text>
-                There are no notifications to display
-              </Typography.Text>
-            }
-          />
-        ) : (
+      {data.data.length === 0 ? (
+        <Empty
+          description={
+            <Typography.Text>
+              There are no notifications to display
+            </Typography.Text>
+          }
+        />
+      ) : (
+        <ScrollArea className="h-64">
           <List
             dataSource={data.data}
             renderItem={(item) => (
@@ -49,8 +49,8 @@ const Notification = (data: NotificationProps) => {
               </List.Item>
             )}
           />
-        )}
-      </ScrollArea>
+        </ScrollArea>
+      )}
     </>
   )
 }

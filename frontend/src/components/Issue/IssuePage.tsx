@@ -1,8 +1,7 @@
+import { Empty } from 'antd'
 
 const IssuePage = () => {
-  return (
-    <div>IssuePage</div>
-  )
+  return <Empty />
 }
 
 export default IssuePage

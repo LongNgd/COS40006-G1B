@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Anomaly } from '../../type/anomaly.type'
 import { ColumnsType } from 'antd/es/table'
 import ReactPlayer from 'react-player'
+import ReportForm from './ReportForm'
 
 export const TableC = ({ data }: { data: Anomaly[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -70,9 +71,10 @@ export const TableC = ({ data }: { data: Anomaly[] }) => {
           </Button>
           <Modal
             width={700}
-            title="Show Evidence Video"
+            title={<ReportForm />}
             open={isModalOpen}
             onCancel={() => setIsModalOpen(false)}
+            footer={null}
           >
             <Flex align="center" justify="center">
               {selectedRecord && (

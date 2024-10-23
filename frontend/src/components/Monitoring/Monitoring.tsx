@@ -11,35 +11,24 @@ import {
   Row,
   Switch,
 } from 'antd'
-import { CircleMinus, LucidePlus, LucideSettings } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { CircleMinus, LucideAppWindow } from 'lucide-react'
+import { useState } from 'react'
+import ReactPlayer from 'react-player'
 import {
-  useGetCameraByUserMutation,
-  useGetCameraStatusMutation,
+  useGetCameraByUserQuery,
+  useUpdateCameraStatusMutation,
 } from '../../api/cameraApi'
 import { Camera } from '../../type/camera.type'
 import CameraList from './CameraList'
-import ReactPlayer from 'react-player'
 
 const Monitoring = () => {
   const [api, contextHolder] = notification.useNotification()
-  const [isCameraList, setIsCameraList] = useState(false)
   const [isEvidence, setIsEvidence] = useState(false)
+  const getUser = localStorage.getItem('user')
+  const user = getUser ? JSON.parse(getUser) : null
 
-  const [getCameraByUser, { error, data: camera }] =
-    useGetCameraByUserMutation()
-  const [getCameraStatus] = useGetCameraStatusMutation()
-
-  useEffect(() => {
-    const getUser = localStorage.getItem('user')
-    const user = getUser ? JSON.parse(getUser) : null
-    const getData = async () => {
-      await getCameraByUser({ user_id: user?.user_id })
-    }
-    getData()
-  }, [getCameraByUser])
-
-  if (error) return <div>Error: {JSON.stringify(error)}</div>
+  const { data: camera, isLoading } = useGetCameraByUserQuery(user)
+  const [getCameraStatus] = useUpdateCameraStatusMutation()
 
   const modifyStatus = async (camera: Camera, status: boolean) => {
     await getCameraStatus({ camera_id: camera.camera_id })
@@ -63,27 +52,13 @@ const Monitoring = () => {
   return (
     <>
       {contextHolder}
-      <Button
-        type="primary"
-        icon={<LucidePlus />}
-        onClick={() => setIsCameraList(true)}
-        className="mb-4"
-      >
-        Connect to Camera
-      </Button>
-      <Modal
-        title="Adding Camera "
-        open={isCameraList}
-        onCancel={() => setIsCameraList(false)}
-      >
-        <CameraList />
-      </Modal>
+      <CameraList />
       <Row gutter={[16, 24]}>
         {camera?.data.map((item) => {
           return (
             <Col className="gutter-row" span={6} key={item.camera_id}>
               <Card
-                hoverable
+                loading={isLoading}
                 actions={[
                   <Switch
                     onChange={(status) => modifyStatus(item, status)}
@@ -100,17 +75,19 @@ const Monitoring = () => {
                       <CircleMinus key="setting" />
                     </Popconfirm>
                   </Flex>,
-                  <Flex justify="center" align="center">
-                    <LucideSettings />
-                  </Flex>,
+                  <Button
+                    type="link"
+                    icon={<LucideAppWindow />}
+                    onClick={() => setIsEvidence(true)}
+                    disabled={item.status === 0}
+                  />,
                 ]}
-                onClick={() => setIsEvidence(true)}
               >
                 <p>{item.name}</p>
               </Card>
               <Modal
                 width={700}
-                title="Show Evidence Video"
+                title={item.name}
                 open={isEvidence}
                 onCancel={() => setIsEvidence(false)}
               >

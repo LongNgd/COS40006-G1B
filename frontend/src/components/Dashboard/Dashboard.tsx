@@ -1,29 +1,21 @@
 import { Flex, Radio, RadioChangeEvent, Skeleton } from 'antd'
 import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
-import { useGetAnomaliesByUserMutation } from '../../api/anomaliesApi'
+import { useState } from 'react'
+import { useGetAnomaliesByUserQuery } from '../../api/anomaliesApi'
 import { AnomalyByArea } from '../Chart/AnomalyByArea'
 import { AnomalyByDate } from '../Chart/AnomalyByDate'
 import { AnomalybyWeapon } from '../Chart/AnomalybyWeapon'
-import { BarC } from '../Chart/BarC'
 import { OverallInformation } from './OverallInformation'
+import { MaxParticipantByArea } from '../Chart/MaxParticipantByArea'
 
 const Dashboard = () => {
   const date = '2024-09-29'
   const [timeRange, setTimeRange] = useState('month')
+  const getUser = localStorage.getItem('user')
+  const user = getUser ? JSON.parse(getUser) : null
 
   // const { data: anomalies } = useGetAnomaliesQuery()
-  const [getAnomaliesByUser, { isLoading, error, data: anomalies }] =
-    useGetAnomaliesByUserMutation()
-
-  useEffect(() => {
-    const getUser = localStorage.getItem('user')
-    const user = getUser ? JSON.parse(getUser) : null
-    const getData = async () => {
-      await getAnomaliesByUser({ user_id: user?.user_id })
-    }
-    getData()
-  }, [getAnomaliesByUser])
+  const { isLoading, error, data: anomalies } = useGetAnomaliesByUserQuery(user)
 
   const options = [
     { label: 'Today', value: 'today' },
@@ -77,7 +69,7 @@ const Dashboard = () => {
           <Skeleton />
         ) : (
           <div className="col-span-3">
-            <BarC data={detailData || []} />
+            <MaxParticipantByArea data={detailData || []} />
           </div>
         )}
       </div>

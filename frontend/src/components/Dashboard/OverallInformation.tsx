@@ -4,10 +4,9 @@ import {
   LucideOctagonAlert,
   LucideUser,
 } from 'lucide-react'
-import { useGetCameraByUserMutation } from '../../api/cameraApi'
+import { useGetCameraByUserQuery } from '../../api/cameraApi'
 import { Anomaly } from '../../type/anomaly.type'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { useEffect } from 'react'
 
 interface OverallInformationProps {
   data: Anomaly[]
@@ -18,22 +17,16 @@ export const OverallInformation = ({
   data,
   loading,
 }: OverallInformationProps) => {
-  const [getCameraByUser, { isLoading, error, data: camera }] =
-    useGetCameraByUserMutation()
-
-  useEffect(() => {
-    const getUser = localStorage.getItem('user')
-    const user = getUser ? JSON.parse(getUser) : null
-    const getData = async () => {
-      await getCameraByUser({ user_id: user?.user_id })
-    }
-    getData()
-  }, [getCameraByUser])
+  const getUser = localStorage.getItem('user')
+  const user = getUser ? JSON.parse(getUser) : null
+  const { isLoading, error, data: camera } = useGetCameraByUserQuery(user)
 
   if (error) return <div>Error: {JSON.stringify(error)}</div>
 
   const totalActiveCamera = camera?.data.length
-  const activeCamera = camera?.data.filter((camera) => camera.status === 1).length
+  const activeCamera = camera?.data.filter(
+    (camera) => camera.status === 1,
+  ).length
 
   const totalAnomaly = data.length
   const averageParticipant = data.reduce(
